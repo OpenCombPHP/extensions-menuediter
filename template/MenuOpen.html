@@ -1,0 +1,52 @@
+<h2>MenuOpen</h2>
+<lib name='jquery' />
+<msgqueue/>
+<lib name='jquery.progressbar' />
+<lib name='jquery.ztree' />
+<script type="text/javascript">
+jQuery(function(){
+	//树数据
+	classList = {=$classJson};
+	//初始化树
+	jquery.fn.zTree.init(jquery("#classTree"), {
+		view: {
+			expandSpeed: 0
+		},
+		check:{
+			enable:true,
+			chkboxType:{ "Y": "ps", "N": "ps" }
+		},
+	}, classList);
+});
+</script>
+<style>
+.testMenu{
+	width:100px;
+}
+</style>
+<form method="post">
+控制器:<widget id="controller_name"/><br/>
+视图路径:<widget id="viewXpath"/><br/>
+控件ID:<widget id="widget_id"/><br/>
+打开:<input type="submit" value="打开" />
+</form>
+<br/>
+<pre>
+{=$sItem}
+</pre>
+<div id="classTree">
+</div>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery('.item_edit').click(function(){
+		jQuery.ajax({
+			url : "?c=org.opencomb.opencms.article.MoveArticles&rspn=msgqueue",
+			data : "&from=" + selectedCat.join('_') + "&to="+targetCid,
+			success : function(msg){
+				jQuery("#ajaxMsg").html(msg);
+			}
+		});
+	});
+	
+});
+</script>

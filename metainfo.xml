@@ -1,0 +1,15 @@
+<Extension>
+
+	<name>menuediter</name>
+	<version>0.1</version>
+	<title>扩展管理</title>
+	
+	<class>org.opencomb.menuediter.MenuEditer</class>
+	
+	<package folder="/class" namespace="org.opencomb.menuediter" />
+	
+	<template folder="/template" />
+	
+	<publicFolder folder="/public" />
+	
+</Extension>
