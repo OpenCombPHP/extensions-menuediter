@@ -148,6 +148,7 @@ class ItemEditer extends ControlPanel
 	{	
 		if($this->viewItemEditer->isSubmit($this->params))
 		{
+			$aSetting = Extension::flyweight('menuediter')->setting();
 			$arrMenulist=array();
 			//读取Menu参数
 			$this->viewItemEditer->loadWidgets ( $this->params );
@@ -155,254 +156,146 @@ class ItemEditer extends ControlPanel
 			$sDepth=$this->viewItemEditer->widget('depth')->value();
 			$sLink=$this->viewItemEditer->widget('link')->value();
 			$sActive=$this->viewItemEditer->widget('active')->value();
+			$arrItem=array('title'=>$sTitle,'depth'=>$sDepth,'link'=>$sLink,'active'=>$sActive);
 			
 			$sControllerName=$this->params->get('controllerName');
 			$sViewPath=$this->params->get('viewPath');
 			$sMenuId=$this->params->get('sMenuId');
 			$xpathTarget=$this->params->get('xpath');
-// 			$sControllerName=$this->viewItemEditer->widget('hide_controllername')->value();
-// 			$sViewPath=$this->viewItemEditer->widget('hide_viewpath')->value();
-// 			$sWidgetId=$this->viewItemEditer->widget('hide_widgetid')->value();
-
- 			$aSetting = Extension::flyweight('menuediter')->setting();
+		
  			//获得menu的相关信息
- 			$sXpath=$this->params->get('xpath');
+ 			$sXpath='';
+ 			$sXpathTarget=$this->params->get('xpath');
  			$sControllerName=$this->params->get('controllerName');
  			$sViewPath=$this->params->get('viewPath');
  			$sMenuId=$this->params->get('sMenuId');
  			//从setting中取得数组创建Menu
  			$akey=$aSetting->key('/'.$sControllerName,true);
- 			$arrMenuSetting=$akey->item($sViewPath.$sMenuId);
- 			//var_dump($arrMenuSetting);
- 			$aMenu=BeanFactory::singleton()->createBean($arrMenuSetting);
- 			$aItem=$aMenu->getItemByPath(substr($sXpath,1));
- 			//var_dump($aItem);
- 			$aItem->setLink($this->viewItemEditer->widget('link')->value());
- 			$aMenuIterator=$aMenu->itemIterator();
- 			$arrlist=array();
- 			$this->itemSetting($aMenuIterator, $arrlist);
+ 			$arrSettingOld=$akey->item($sViewPath.$sMenuId);
+ 			$arrSettingNew=array();
+ 			$this->settingEdit($arrSettingOld,$arrItem,$sXpath,$sXpathTarget,$arrSettingNew);
  			$akey->deleteItem($sViewPath.$sMenuId);
- 			$arrlist['class']='menu';
- 			$arrlist['id']=$sViewPath;
- 			$akey->setItem($sViewPath.$sMenuId,$arrlist);
+ 			$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
 		}
  		else 
  		{
  			$aSetting = Extension::flyweight('menuediter')->setting();
  			//获得menu的相关信息
- 			$sXpath=$this->params->get('xpath');
+ 			$sXpath='';
+ 			$sXpathTarget=$this->params->get('xpath');
  			$sControllerName=$this->params->get('controllerName');
  			$sViewPath=$this->params->get('viewPath');
  			$sMenuId=$this->params->get('sMenuId');
- 			//从setting中取得数组创建Menu
+ 			
+ 			//从setting中取得数组
  			$akey=$aSetting->key('/'.$sControllerName,true);
- 			$arrMenuSetting=$akey->item($sViewPath.$sMenuId);
- 			//var_dump($arrMenuSetting);
- 			$aMenu=BeanFactory::singleton()->createBean($arrMenuSetting);
-			//遍历Menu,初始化页面	
- 			$aMenuIterator=$aMenu->itemIterator();
- 			$this->searchItem($aMenuIterator,'',$sXpath);
+ 			$arrSetting=$akey->item($sViewPath.$sMenuId);
+ 			$this->displayItem($arrSetting, $sXpath, $sXpathTarget);
  		}	
 	}
 	
-	//Menu初始化页面
-	public function menuEdit(&$aMenuIterator,$xpath,$xpathTarget){
-	
-		foreach($aMenuIterator as $aItem)
-		{
-			$xpathOld=$xpath;
-			$xpath=$xpath.'/'.$aItem->id();
-			if($aItem->title())
-			{
-				if($xpath==$xpathTarget)
-				{
-					$aItem->setLink($this->viewItemEditer->widget('link')->setValue($aItem->link()));
-				}
-				$sTitle=$aItem->title();
+	public function displayItem($arrSetting,$sXpath,$sXpathTarget)
+	{
+		foreach($arrSetting as $key=>$item)
+		{	
+			$sXpathOld=$sXpath;
+			if($key=='xpath'){
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
-			if($aItem->subMenu())
-			{
-				$this->menuEdit($aItem->subMenu()->itemIterator(),$xpath,$xpathTarget);
-				$xpath=$xpathOld;
+			if($sXpath==$sXpathTarget){
+				$this->viewItemEditer->widget('title')->setValue($arrSetting['title']);
+				$this->viewItemEditer->widget('depth')->setValue($arrSetting['depth']);
+				$this->viewItemEditer->widget('link')->setValue($arrSetting['link']);
+				$this->viewItemEditer->widget('active')->setValue($arrSetting['active']);
+				return;
 			}
-			else{
-				$xpath=$xpathOld;
+			if(is_array($item))
+			{
+				$this->displayItem($item,$sXpath,$sXpathTarget);
+				$sXpath=$sXpathOld;
 			}
 		}
 	}
 	
 	//Menu初始化页面
-	public function searchItem($aMenuIterator,$xpath,$xpathTarget){
+// 	public function searchItem($aMenuIterator,$xpath,$xpathTarget){
 		
-		foreach($aMenuIterator as $aItem)
-		{
-			$xpathOld=$xpath;
-			$xpath=$xpath.'/'.$aItem->id();
-			if($aItem->title())
-			{
-				if($xpath==$xpathTarget)
-				{
-					$this->viewItemEditer->widget('title')->setValue($aItem->title());
-					$this->viewItemEditer->widget('link')->setValue($aItem->link());
-					$this->viewItemEditer->widget('active')->setValue($aItem->isActive());
-					return;
-				}
-				$sTitle=$aItem->title();
-			}
-			if($aItem->subMenu())
-			{
-				$this->searchItem($aItem->subMenu()->itemIterator(),$xpath,$xpathTarget);
-				$xpath=$xpathOld;
-			}
-			else{
-				$xpath=$xpathOld;
-			}
-		}
-	}
-	
-	//将Menu转换成数组存放在settings中
-	public function itemSetting($aMenuIterator,&$arrlist)
-	{
-		$arrI=&$arrlist;
-		foreach($aMenuIterator as $key=>$aItem)
-		{
-			if($aItem->title())
-			{
-				$arrI=&$arrlist['item:'.$key];
-				$arrI=array('title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
-				$arrI=&$arrlist;
-			}
-			if($aItem->subMenu())
-			{
-				$arrI=&$arrI['item:'.$key];
-				$this->itemSetting($aItem->subMenu()->itemIterator(),$arrI);
-			}
-		}
-	}
-	
-	//Menu遍历
-	public function itemIt($arra,$xpath,$arrItem,$xpath3,$sControllerName,$sViewPath,$sWidgetId)
-	{
-		$s='<ul style=margin-left:10px>';
-		$sParentMenu='';
-		foreach($arra as $aItem)
-		{
-			$xpath2=$xpath;
-			$xpath=$xpath.'/'.$aItem->id();
-			$s=$s."<li xpath=\"$xpath\">";
-			if($aItem->title())
-			{
-				if($xpath==$xpath3)
-				{
-					$arrItem['title'];
-					$arrItem['depth'];
-					$arrItem['active'];
-					$arrItem['link'];
-					
-				}else
-				{
-					$sTitle=$aItem->title();
-					$sDepth=$aItem->depth();
-					$bActive=$aItem->isActive();
-					$sLink=substr($aItem->link(),1);
-					$sItemId=$aItem->id();
-					$sParentMenu=$aItem->parentMenu()->title();
-					$s=$s."<a href=\"?c=org.opencomb.menuediter.ItemEditer&title=$sTitle
-					&depth=$sDepth&active=$bActive&parentMenu=$sParentMenu\">".
-					$aItem->title().'</a>'.
-					'&nbsp'.'&nbsp'.'&nbsp'.'&nbsp'.'&nbsp'.'&nbsp'.'&nbsp'.'&nbsp'.'&nbsp'."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$xpath&itemid=$sItemId&parentMenu=$sParentMenu&controllerName=$sControllerName&viewPath=$sViewPath&sMenuId=$sWidgetId\">".'删除'.'</a>'.
-					'&nbsp'.'&nbsp'."<a>".'新建'.'</a>'.
-					'&nbsp'.'&nbsp'."<a href=\"?c=org.opencomb.menuediter.ItemEditer&title=$sTitle
-					&depth=$sDepth&active=$bActive&parentMenu=$sParentMenu\" class=\"item_edit\">".'编辑'.'</a>'.
-					'&nbsp'.'&nbsp'."<a>".'向上'.'</a>'.
-					'|'.'&nbsp'.'&nbsp'."<a>".'向下'.'</a>';
-				}
-			}
-			if($aItem->subMenu())
-			{
-				$s=$s.$this->itemIt($aItem->subMenu()->itemIterator(),$xpath,$xpath3,$sControllerName,$sViewPath,$sWidgetId);
-				$xpath=$xpath2;
-	
-			}
-			else
-			{
-				$xpath=$xpath2;
-			}
-			$s=$s.'</li>';
-	
-		}
-		$s=$s.'</ul>';
-		return $s;
-	}
-	
-	
-// 	public function searchItem($arrMenu,$sItemId)
-// 	{
-// 		foreach($arrMenu as $key=>$item)
+// 		foreach($aMenuIterator as $aItem)
 // 		{
-// 			if($key==$sItemId)
-// 			{
-// 				$this->viewItemEditer->widget('title')->setValue($arrMenu[$key]['title']);
-// 				$this->viewItemEditer->widget('depth')->setValue($arrMenu[$key]['depth']);
-// 				$this->viewItemEditer->widget('link')->setValue($arrMenu[$key]['link']);
-// 				$this->viewItemEditer->widget('active')->setValue($arrMenu[$key]['active']);
-// 				return;
-// 			}
-// 			elseif(is_array($item))
-// 			{
-// 				$this->searchItem($item,$sItemId);
-// 			}
-// 		}
-// 	}
-	
-// 	public function itemIt($arra,&$arrlist,$sTitle,$sDepth,$sLink,$sActive,$sHideItem)
-// 	{
-// 		$arrI=&$arrlist;
-// 		foreach($arra as $key=>$aItem)
-// 		{
-	
+// 			$xpathOld=$xpath;
+// 			$xpath=$xpath.'/'.$aItem->id();
 // 			if($aItem->title())
 // 			{
-
-// 				if($aItem->id()==$sHideItem)
+// 				if($xpath==$xpathTarget)
 // 				{
-// 					$arrI=&$arrlist[$key];
-// 					$arrI=array('title'=>$sTitle,'link'=>$sLink,'active'=>$sActive,'depth'=>$sDepth,'children'=>array());
-// 					$arrI=&$arrlist;
+// 					$this->viewItemEditer->widget('title')->setValue($aItem->title());
+// 					$this->viewItemEditer->widget('link')->setValue($aItem->link());
+// 					$this->viewItemEditer->widget('active')->setValue($aItem->isActive());
+// 					return;
 // 				}
-// 				else {
-// 					$arrI=&$arrlist[$key];
-// 					$arrI=array('title'=>$aItem->title(),'link'=>$aItem->link(),'active'=>$aItem->isActive(),'depth'=>$aItem->depth(),'children'=>array());
-// 					$arrI=&$arrlist;
-// 				}	
+// 				$sTitle=$aItem->title();
 // 			}
 // 			if($aItem->subMenu())
 // 			{
-// 				$arrI=&$arrI[$key]['children'];
-// 				$this->itemIt($aItem->subMenu()->itemIterator(),$arrI,$sTitle,$sDepth,$sLink,$sActive,$sHideItem);
+// 				$this->searchItem($aItem->subMenu()->itemIterator(),$xpath,$xpathTarget);
+// 				$xpath=$xpathOld;
+// 			}
+// 			else{
+// 				$xpath=$xpathOld;
 // 			}
 // 		}
 // 	}
 	
-// 	public function arrIt($arra)
+	//将Menu转换成数组存放在settings中
+// 	public function itemSetting($aMenuIterator,&$arrlist)
 // 	{
-// 		foreach($arra as $key=>$value)
+// 		$arrI=&$arrlist;
+// 		foreach($aMenuIterator as $key=>$aItem)
 // 		{
-// 			if($key=="testSub1")
+// 			if($aItem->title())
 // 			{
-// 				$this->arrIt($value);
+// 				$arrI=&$arrlist['item:'.$key];
+// 				$arrI=array('title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
+// 				$arrI=&$arrlist;
 // 			}
-// 			else {
-// 				continue;
-// 			}
-// 			if($arra['title']=='testSub11' and $arra['depth']==2)
+// 			if($aItem->subMenu())
 // 			{
-// 				echo "找到了";
+// 				$arrI=&$arrI['item:'.$key];
+// 				$this->itemSetting($aItem->subMenu()->itemIterator(),$arrI);
 // 			}
-// 		}	
-		
+// 		}
 // 	}
 	
+	//setting编辑
+	public function settingEdit($arrSettingOld,$arrItem,$sXpath,$sXpathTarget,&$arrSettingNew){
+		foreach($arrSettingOld as $key=>$item)
+		{
+			//上一级xpath
+			$sXpathOld=$sXpath;
+			if($key=='xpath'){
+				$sXpath=$sXpath.$arrSettingOld['xpath'].'/';
+			}
+			
+			//找到需要编辑的元素
+			if($sXpath==$sXpathTarget){
+				$arrSettingNew['title']=$arrItem['title'];
+				$arrSettingNew['depth']=$arrItem['depth'];
+				$arrSettingNew['link']=$arrItem['link'];
+				$arrSettingNew['active']=$arrItem['active'];
+			}
+			else
+			{
+				$arrSettingNew[$key]=$arrSettingOld[$key];
+			}
+			
+			//如果是数组递归
+			if(is_array($arrSettingOld[$key]))
+			{	
+				$this->settingEdit($arrSettingOld[$key],$arrItem,$sXpath,$sXpathTarget,$arrSettingNew[$key]);
+				$sXpath=$sXpathOld;
+			}
+		}
+	}
 }
 
 ?>

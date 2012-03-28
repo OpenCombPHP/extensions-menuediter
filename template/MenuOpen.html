@@ -27,7 +27,7 @@ jQuery(function(){
 <form method="post">
 控制器:<widget id="controller_name"/><br/>
 视图路径:<widget id="viewXpath"/><br/>
-控件ID:<widget id="widget_id"/><br/>
+控件ID:<widget id="menu_id"/><br/>
 打开:<input type="submit" value="打开" />
 </form>
 <br/>
@@ -36,6 +36,7 @@ jQuery(function(){
 </pre>
 <div id="classTree">
 </div>
+{=$sMenu}
 <script type="text/javascript">
 jQuery(function(){
 	jQuery('.item_edit').click(function(){
