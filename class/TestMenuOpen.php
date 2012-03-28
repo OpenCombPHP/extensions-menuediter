@@ -96,62 +96,65 @@ class TestMenuOpen extends ControlPanel
 // 		$this->xunhuan($arrTest);
 // 		var_dump($arrTest);
  		
-// 		$xpath='';
+// 		$sXpath='';
  		$sViewPath='menuOpen';
  		$sWidgetId='testMenu';
  		//存放setting
  		
- 		$arrTotal=array();
+ 		$arrSetting=array();
 		$sControllerName='org\\opencomb\\menuediter\\TestMenuOpen';
 		$aController = new $sControllerName();
 		$aMenu=$aController->viewByName('menuOpen')->widget('testMenu');
 		$aMenuIter=$aMenu->itemIterator();
- 		$arrTotal['class']='menu';
- 		$arrTotal['id']='testMenu';
- 		$this->itemSetting($aMenuIter,$arrTotal);
+ 		$arrSetting['class']='menu';
+ 		$arrSetting['id']='testMenu';
+ 		$this->itemSetting($aMenuIter,$arrSetting);//var_dump($arrSetting);exit;
  		$aSetting = Extension::flyweight('menuediter')->setting();
  		$akey=$aSetting->key('/'.'dd',true);
- 		$akey->setItem($sViewPath.$sWidgetId,$arrTotal);
+ 		$akey->setItem($sViewPath.$sWidgetId,$arrSetting);
  		
 // 		//$aMenuNew=BeanFactory::singleton()->createBean($arrTotal);
 // 		//Menu::createBean($arrTotal, true);
 // 		//$aArrTotald=$aMenuNew->itemIterator();
 // 		//var_dump($aArrTotald);
 // 		//$ssss=$this->itemItTest($aArrTotald,'');
-// 		//$s=$this->itemIt($aMenuIter,$xpath,$sControllerName,$sViewPath,$sWidgetId);
+// 		//$s=$this->itemIt($aMenuIter,$sXpath,$sControllerName,$sViewPath,$sWidgetId);
 // 		//var_dump($ssss);
 
 	
 		
-		//var_dump($this->displaySetting($arrTotal,$xpath1));
+		//var_dump($this->displaySetting($arrTotal,$sXpath1));
  		//$this->itemSetting($aMenuIter,$arrTotal);
  		//$arrXpath=explode('/','item:B/item:BB2');
-		$xpath='';
- 		$xpathTarget='item:B/item:BB2/';
- 		$aSetting = Extension::flyweight('menuediter')->setting();
- 		$akey=$aSetting->key('/'.'dd',true);
- 		$arrSetting=$akey->item($sViewPath.$sWidgetId);
+// 		$sXpath='';
+//  		$sXpathTarget='item:B/item:BB2/';
+//  		$aSetting = Extension::flyweight('menuediter')->setting();
+//  		$akey=$aSetting->key('/'.'dd',true);
+//  		$arrSetting=$akey->item($sViewPath.$sWidgetId);
  		
-		$arrSettingNew=array();
-		$this->settingEdit($arrSetting,'',$xpathTarget,$arrSettingNew);
-		var_dump($arrSettingNew);
-		//$this->arrMerge($arrSetting,$xpath1,'item:B/item:BB2/',$arrlist);
+// 		$arrSettingNew=array();
+// 		$this->settingEdit($arrSetting,'',$sXpathTarget,$arrSettingNew);
+		//var_dump($arrSettingNew);
+		//$this->arrMerge($arrSetting,$sXpath1,'item:B/item:BB2/',$arrlist);
 		//var_dump($arrlist);
 		//$this->arrMerge($arrSetting,$arrlist,$arrXpath[0]);
-		$aMenu=BeanFactory::singleton()->createBean($arrSettingNew);
-		$arra=$aMenu->itemIterator();
-		var_dump($this->itemMerge($arra));
+// 		$aMenu=BeanFactory::singleton()->createBean($arrSettingNew);
+// 		$arra=$aMenu->itemIterator();
+		//var_dump($this->itemMerge($arra));
+		$arrXpath=array();
+		$this->xpathOption($arrSetting,'',0,$arrXpath);
+		var_dump($arrXpath);
 	}
 	
-	public function settingEdit($arrSetting,$xpath,$xpathTarget,&$arrSettingNew){
+	public function settingEdit($arrSetting,$sXpath,$sXpathTarget,&$arrSettingNew){
 		foreach($arrSetting as $key=>$item)
 		{
-			$xpathOld=$xpath;
+			$sXpathOld=$sXpath;
 			if($key=='xpath'){
-				$xpath=$xpath.$arrSetting['xpath'].'/';
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
 			
-			if($xpath==$xpathTarget){
+			if($sXpath==$sXpathTarget){
 				$arrSettingNew['title']="成功";
 			}
 			else 
@@ -161,8 +164,26 @@ class TestMenuOpen extends ControlPanel
 			
 			if(is_array($arrSetting[$key]))
 			{	//exit;
-				$this->settingEdit($arrSetting[$key],$xpath,$xpathTarget,$arrSettingNew[$key]);
-				$xpath=$xpathOld;
+				$this->settingEdit($arrSetting[$key],$sXpath,$sXpathTarget,$arrSettingNew[$key]);
+				$sXpath=$sXpathOld;
+			}
+		}
+	}
+	
+	
+	public function xpathOption($arrSetting,$sXpath,$i,&$arrXpath){
+		foreach($arrSetting as $key=>$item)
+		{	
+			$sXpathOld=$sXpath;
+			if($key=='xpath'){
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+				$arrXpath[$i++]=$sXpath;
+			}
+			
+			if(is_array($arrSetting[$key]))
+			{	
+				$this->xpathOption($arrSetting[$key],$sXpath,$i++,$arrXpath);
+				$sXpath=$sXpathOld;
 			}
 		}
 	}
@@ -220,18 +241,18 @@ class TestMenuOpen extends ControlPanel
 // 		return $arrTest;
 // 	}
 	
-	public function arrMerge($arrSetting,$xpath,$xpathTarget,&$arrlist){
+	public function arrMerge($arrSetting,$sXpath,$sXpathTarget,&$arrlist){
 		foreach($arrSetting as $key=>$item)
 		{	
-			$xpathOld=$xpath;
+			$sXpathOld=$sXpath;
 			if($key=='xpath'){
-				$xpath=$xpath.$arrSetting['xpath'].'/';
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
 			
-			if($xpath==$xpathTarget)
+			if($sXpath==$sXpathTarget)
 			{
 				if($key=='title')
-				{	echo "chenggong";
+				{	
 					$arrI=&$arrlist[$arrSetting['xpath']];
 					$arrI=array('xpath'=>'成功','title'=>'成功');
 					$arrI=&$arrlist;
@@ -240,8 +261,8 @@ class TestMenuOpen extends ControlPanel
 				if(is_array($item))
 				{
 					$arrI=&$arrlist[$item['xpath']];
-					$this->arrMerge($item,$xpath,$xpathTarget,$arrI);
-					$xpath=$xpathOld;
+					$this->arrMerge($item,$sXpath,$sXpathTarget,$arrI);
+					$sXpath=$sXpathOld;
 				}	
 			}
 			else 
@@ -256,21 +277,21 @@ class TestMenuOpen extends ControlPanel
 				if(is_array($item))
 				{
 					$arrI=&$arrlist[$item['xpath']];
-					$this->arrMerge($item,$xpath,$xpathTarget,$arrI);
-					$xpath=$xpathOld;
+					$this->arrMerge($item,$sXpath,$sXpathTarget,$arrI);
+					$sXpath=$sXpathOld;
 				}
 			}
 		}
 	}
 	
-// 	public function settingEdit($arrSetting,$xpath,$xpathTarget)
+// 	public function settingEdit($arrSetting,$sXpath,$sXpathTarget)
 // 	{
 // 		foreach($arrSetting as $key=>$item)
 // 		{
-// 			$xpathOld=$xpath;
+// 			$sXpathOld=$sXpath;
 // 			if($key=='xpath'){
-// 				$xpath=$xpath.$arrSetting['xpath'].'/';
-// 				if($xpath==$xpathTarget)
+// 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+// 				if($sXpath==$sXpathTarget)
 // 				{	echo "sdfsdfsdfsdfddddddddd";
 // 					if($key=='title'){
 // 					$arrSetting[$key]="成功";var_dump($arrSetting);break;
@@ -280,25 +301,25 @@ class TestMenuOpen extends ControlPanel
 // 			}
 // 			if(is_array($item))
 // 			{
-// 				$this->settingEdit($item,$xpath,$xpathTarget);
-// 				$xpath=$xpathOld;
+// 				$this->settingEdit($item,$sXpath,$sXpathTarget);
+// 				$sXpath=$sXpathOld;
 // 			}
 // 		}
 // 		//return $arrSetting;
 // 	}
 	
 	//settings数组递归方法 Menu转换成setting
-	public function itemSetting($arra,&$arrlist)
+	public function itemSetting($arra,&$arrSetting)
 	{
-		$arrI=&$arrlist;
+		$arrI=&$arrSetting;
 		foreach($arra as $key=>$aItem)
 		{	
 			
 			if($aItem->title())
 			{	
-				$arrI=&$arrlist['item:'.$key];
+				$arrI=&$arrSetting['item:'.$key];
 				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
-				$arrI=&$arrlist;
+				$arrI=&$arrSetting;
 			}
 			if($aItem->subMenu())
 			{
@@ -309,24 +330,24 @@ class TestMenuOpen extends ControlPanel
 	}
 	
 	//从setting中读取Menu并显示
-	public function displaySetting($arrSetting,$xpath)
+	public function displaySetting($arrSetting,$sXpath)
 	{
 		$sMenu='<ul style=margin-left:10px>';
 		foreach($arrSetting as $key=>$item)
 		{
-			$xpathOld=$xpath;
+			$sXpathOld=$sXpath;
 			if($key=='xpath'){
-				$xpath=$xpath.$arrSetting['xpath'].'/';
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
 			$sMenu=$sMenu."<li>";
 			if($key=='title')
 			{
-				$sMenu=$sMenu."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$xpath\">".$arrSetting['title'].'</a>';
+				$sMenu=$sMenu."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$sXpath\">".$arrSetting['title'].'</a>';
 			}
 			if(is_array($item))
 			{	
-				$sMenu=$sMenu.$this->displaySetting($item,$xpath);
-				$xpath=$xpathOld;
+				$sMenu=$sMenu.$this->displaySetting($item,$sXpath);
+				$sXpath=$sXpathOld;
 			}
 			$sMenu=$sMenu."</li>";
 		}
@@ -349,31 +370,31 @@ class TestMenuOpen extends ControlPanel
 // 		}
 // 	}
 	
-	public function itemItTest($arra,$xpath)
+	public function itemItTest($arra,$sXpath)
 	{ 
 		$s='<ul style=margin-left:10px>';
 		//$sParentMenu='';
 		foreach($arra as $aItem)
-		{echo "确实参数的好坏".$aItem->title();
-			$xpath2=$xpath;
-			$xpath=$xpath.'/'.$aItem->id();
-			$s=$s."<li xpath=\"$xpath\">";
+		{
+			$sXpath2=$sXpath;
+			$sXpath=$sXpath.'/'.$aItem->id();
+			$s=$s."<li xpath=\"$sXpath\">";
 			if($aItem->title())
 			{
 	
 				$sTitle=$aItem->title();
 				//$sParentMenu=$aItem->parentMenu()->title();
-				$s=$s.'<a>'.$aItem->title().'</a>'.'&nbsp'.'&nbsp'."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$xpath\">".'删除'.'</a>';
+				$s=$s.'<a>'.$aItem->title().'</a>'.'&nbsp'.'&nbsp'."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$sXpath\">".'删除'.'</a>';
 	
 			}
 			if($aItem->subMenu())
-			{	echo "这是submenu";
-				$s=$s.$this->itemItTest($aItem->subMenu()->itemIterator(),$xpath);
-				$xpath=$xpath2;
+			{	
+				$s=$s.$this->itemItTest($aItem->subMenu()->itemIterator(),$sXpath);
+				$sXpath=$sXpath2;
 	
 			}
 			else{
-				$xpath=$xpath2;
+				$sXpath=$sXpath2;
 			}
 			$s=$s.'</li>';
 	
@@ -383,31 +404,31 @@ class TestMenuOpen extends ControlPanel
 	}
 	
 	
-	public function itemIt($arra,$xpath,$sControllerName,$sViewPath,$sWidgetId)
+	public function itemIt($arra,$sXpath,$sControllerName,$sViewPath,$sWidgetId)
 	{
 		$s='<ul style=margin-left:10px>';
 		$sParentMenu='';
 		foreach($arra as $aItem)
 		{
-			$xpath2=$xpath;
-			$xpath=$xpath.'/'.$aItem->id();
-			$s=$s."<li xpath=\"$xpath\">";
+			$sXpath2=$sXpath;
+			$sXpath=$sXpath.'/'.$aItem->id();
+			$s=$s."<li xpath=\"$sXpath\">";
 			if($aItem->title())
 			{
 				
 				$sTitle=$aItem->title();
 				$sParentMenu=$aItem->parentMenu()->title();
-				$s=$s.'<a>'.$aItem->title().'</a>'.'&nbsp'.'&nbsp'."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$xpath\">".'删除'.'</a>';
+				$s=$s.'<a>'.$aItem->title().'</a>'.'&nbsp'.'&nbsp'."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$sXpath\">".'删除'.'</a>';
 
 			}
 			if($aItem->subMenu())
 			{
-				$s=$s.$this->itemIt($aItem->subMenu()->itemIterator(),$xpath,$sControllerName,$sViewPath,$sWidgetId);
-				$xpath=$xpath2;
+				$s=$s.$this->itemIt($aItem->subMenu()->itemIterator(),$sXpath,$sControllerName,$sViewPath,$sWidgetId);
+				$sXpath=$sXpath2;
 				
 			}
 			else{
-				$xpath=$xpath2;
+				$sXpath=$sXpath2;
 			}
 			$s=$s.'</li>';
 			

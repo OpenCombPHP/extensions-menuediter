@@ -229,24 +229,24 @@ class MenuOpen extends ControlPanel
 	}
 	
 	//从setting直接读取Menu，显示
-	public function displaySetting($arrSetting,$xpath)
+	public function displaySetting($arrSetting,$sXpath)
 	{
 		$sMenu='<ul style=margin-left:10px>';
 		foreach($arrSetting as $key=>$item)
 		{
-			$xpathOld=$xpath;
+			$sXpathOld=$sXpath;
 			if($key=='xpath'){
-				$xpath=$xpath.$arrSetting['xpath'].'/';
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
-			$sMenu=$sMenu."<li>";
+			$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 			if($key=='title')
 			{
-				$sMenu=$sMenu."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$xpath\">".$arrSetting['title'].'</a>';
+				$sMenu=$sMenu."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$sXpath\">".$arrSetting['title'].'</a>';
 			}
 			if(is_array($item))
 			{
-				$sMenu=$sMenu.$this->displaySetting($item,$xpath);
-				$xpath=$xpathOld;
+				$sMenu=$sMenu.$this->displaySetting($item,$sXpath);
+				$sXpath=$sXpathOld;
 			}
 			$sMenu=$sMenu."</li>";
 		}

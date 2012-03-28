@@ -152,11 +152,14 @@ class ItemEditer extends ControlPanel
 			$arrMenulist=array();
 			//读取Menu参数
 			$this->viewItemEditer->loadWidgets ( $this->params );
+			var_dump($this->params['xpathOption']);exit;
 			$sTitle=$this->viewItemEditer->widget('title')->value();
 			$sDepth=$this->viewItemEditer->widget('depth')->value();
 			$sLink=$this->viewItemEditer->widget('link')->value();
 			$sActive=$this->viewItemEditer->widget('active')->value();
 			$arrItem=array('title'=>$sTitle,'depth'=>$sDepth,'link'=>$sLink,'active'=>$sActive);
+			
+			
 			
 			$sControllerName=$this->params->get('controllerName');
 			$sViewPath=$this->params->get('viewPath');
@@ -191,6 +194,10 @@ class ItemEditer extends ControlPanel
  			$akey=$aSetting->key('/'.$sControllerName,true);
  			$arrSetting=$akey->item($sViewPath.$sMenuId);
  			$this->displayItem($arrSetting, $sXpath, $sXpathTarget);
+ 			
+ 			$arrXpath=array();
+ 			$this->xpathOption($arrSetting,'',0,$arrXpath);
+ 			$this->viewItemEditer->variables()->set('arrXpath',$arrXpath);//var_dump($arrXpath);exit;
  		}	
 	}
 	
@@ -295,6 +302,26 @@ class ItemEditer extends ControlPanel
 				$sXpath=$sXpathOld;
 			}
 		}
+	}
+	
+	//移动选项xpath
+	public function xpathOption($arrSetting,$sXpath,$i,&$arrXpath){
+		foreach($arrSetting as $key=>$item)
+		{
+			$i++;
+			$sXpathOld=$sXpath;
+			if($key=='xpath'){
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+				$arrXpath[$i]=$sXpath;
+			}
+	
+			if(is_array($arrSetting[$key]))
+			{
+				$i=$i+$this->xpathOption($arrSetting[$key],$sXpath,$i++,$arrXpath);
+				$sXpath=$sXpathOld;
+			}
+		}
+		return $i;
 	}
 }
 
