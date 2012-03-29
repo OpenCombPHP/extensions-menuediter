@@ -24,8 +24,8 @@ class TestMenuOpen extends ControlPanel
 	{
 		return array(
 			'title'=> '文章内容',
-			'view:menuOpen'=>array(
-				'template'=>'MenuOpen.html',
+			'view:testMenuOpen'=>array(
+				'template'=>'TestMenuOpen.html',
 				'class'=>'form',
 				'widgets' => array(
 					array(
@@ -33,6 +33,11 @@ class TestMenuOpen extends ControlPanel
 						'class'=>'text',
 						'title'=>'控制器'		
 					),
+						array(
+								'id'=>'controller_name1',
+								'class'=>'text',
+								'title'=>'控制器'
+						),
 					array(
 						'id'=>'viewXpath',
 						'class'=>'text',
@@ -101,17 +106,17 @@ class TestMenuOpen extends ControlPanel
  		$sWidgetId='testMenu';
  		//存放setting
  		
- 		$arrSetting=array();
-		$sControllerName='org\\opencomb\\menuediter\\TestMenuOpen';
-		$aController = new $sControllerName();
-		$aMenu=$aController->viewByName('menuOpen')->widget('testMenu');
-		$aMenuIter=$aMenu->itemIterator();
- 		$arrSetting['class']='menu';
- 		$arrSetting['id']='testMenu';
- 		$this->itemSetting($aMenuIter,$arrSetting);//var_dump($arrSetting);exit;
- 		$aSetting = Extension::flyweight('menuediter')->setting();
- 		$akey=$aSetting->key('/'.'dd',true);
- 		$akey->setItem($sViewPath.$sWidgetId,$arrSetting);
+//  		$arrSetting=array();
+// 		$sControllerName='org\\opencomb\\menuediter\\TestMenuOpen';
+// 		$aController = new $sControllerName();
+// 		$aMenu=$aController->viewByName('menuOpen')->widget('testMenu');
+// 		$aMenuIter=$aMenu->itemIterator();
+//  		$arrSetting['class']='menu';
+//  		$arrSetting['id']='testMenu';
+//  		$this->itemSetting($aMenuIter,$arrSetting);//var_dump($arrSetting);exit;
+//  		$aSetting = Extension::flyweight('menuediter')->setting();
+//  		$akey=$aSetting->key('/'.'dd',true);
+//  		$akey->setItem($sViewPath.$sWidgetId,$arrSetting);
  		
 // 		//$aMenuNew=BeanFactory::singleton()->createBean($arrTotal);
 // 		//Menu::createBean($arrTotal, true);
@@ -128,9 +133,9 @@ class TestMenuOpen extends ControlPanel
  		//$arrXpath=explode('/','item:B/item:BB2');
 // 		$sXpath='';
 //  		$sXpathTarget='item:B/item:BB2/';
-//  		$aSetting = Extension::flyweight('menuediter')->setting();
-//  		$akey=$aSetting->key('/'.'dd',true);
-//  		$arrSetting=$akey->item($sViewPath.$sWidgetId);
+ 		$aSetting = Extension::flyweight('menuediter')->setting();
+ 		$akey=$aSetting->key('/'.'dd',true);
+ 		$arrSetting=$akey->item($sViewPath.$sWidgetId);
  		
 // 		$arrSettingNew=array();
 // 		$this->settingEdit($arrSetting,'',$sXpathTarget,$arrSettingNew);
@@ -141,9 +146,32 @@ class TestMenuOpen extends ControlPanel
 // 		$aMenu=BeanFactory::singleton()->createBean($arrSettingNew);
 // 		$arra=$aMenu->itemIterator();
 		//var_dump($this->itemMerge($arra));
-		$arrXpath=array();
-		$this->xpathOption($arrSetting,'',0,$arrXpath);
-		var_dump($arrXpath);
+// 		$arrXpath=array();
+// 		$this->xpathOption($arrSetting,'',0,$arrXpath);
+// 		var_dump($arrXpath);
+		$arrJson=array();
+ 		$this->jsonSetting($arrSetting, '', $arrJson);
+ 		$sJsonSetting=json_encode($arrJson);
+ 		$this->viewTestMenuOpen->variables()->set('sJsonSetting',$sJsonSetting);
+	}
+	
+	public function jsonSetting($arrSetting,$sXpath,&$arrJson){
+		foreach($arrSetting as $key=>$item)
+		{	
+			$sXpathOld=$sXpath;
+			if($key=='xpath'){
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+				$arrJson[$sXpath]=array('title'=>$arrSetting['title'],
+						'xpath'=>$arrSetting['xpath'],'link'=>$arrSetting['link'],
+						'depth'=>$arrSetting['depth'],'active'=>$arrSetting['active']);
+			}
+	
+			if(is_array($arrSetting[$key]))
+			{
+				$this->jsonSetting($arrSetting[$key],$sXpath,$arrJson);
+				$sXpath=$sXpathOld;
+			}
+		}
 	}
 	
 	public function settingEdit($arrSetting,$sXpath,$sXpathTarget,&$arrSettingNew){

@@ -27,31 +27,7 @@ class ItemEditer extends ControlPanel
 				'template'=>'ItemEditer.html',
 				'class'=>'form',
 				'widgets' => array(
-					array(
-						'id'=>'title',
-						'class'=>'text',
-						'title'=>'Item标题'		
-					),
-					array(
-							'id'=>'parentMenu',
-							'class'=>'text',
-							'title'=>'上一级菜单'
-					),
-					array(
-							'id'=>'depth',
-							'class'=>'text',
-							'title'=>'层级'
-					),
-					array(
-							'id'=>'link',
-							'class'=>'text',
-							'title'=>'link',
-					),
-					array(
-							'id'=>'active',
-							'class'=>'text',
-							'title'=>'激活'
-					),
+
 					array(
 							'id'=>'hide_ItemId',
 							'class'=>'text',
@@ -324,7 +300,7 @@ class ItemEditer extends ControlPanel
 // 		return $i;
 // 	}
 	
-	//移动选项xpath
+	
 	public function xpathOption($arrSetting,$sXpath,$sTitle,$i,&$arrXpath){
 		foreach($arrSetting as $key=>$item)
 		{
