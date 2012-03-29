@@ -103,30 +103,30 @@ class MenuOpen extends ControlPanel
 //  		$akey->setItem($sViewPath.$sWidgetId,$arrSetting);
 
  		if($this->viewMenuOpen->isSubmit($this->params))
- 		{
+ 		{	
 			$this->viewMenuOpen->loadWidgets($this->params);
 			$sControllerName=$this->viewMenuOpen->widget('controller_name')->value();
-			$sControllerName=str_replace('.','\\',$sControllerName);//echo $sControllerName;exit;
+			$sControllerName=str_replace('.','\\',$sControllerName);
 			$sViewPath=$this->viewMenuOpen->widget('viewXpath')->value();
 			$sMenuId=$this->viewMenuOpen->widget('menu_id')->value();
 			
 			$aSetting = Extension::flyweight('menuediter')->setting();
 			$akey=$aSetting->key('/'.$sControllerName,true);
 			
-			if($akey->hasItem($sViewPath.$sMenuId))
-			{
+			if($aSetting->hasItem('/'.$sControllerName,$sViewPath.$sMenuId))
+			{	
 				$sXpath='';
 				$arrSetting=$akey->Item($sViewPath.$sMenuId);
 				$sMenu=$this->displaySetting($arrSetting,$sXpath);
 				$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
 			}
 			else
-			{
+			{	
 				// 检查 控制器类 是否有效
 				if( !class_exists($sControllerName) or !new $sControllerName() instanceof IController)
-				{	//echo $sControllerName."dd";exit;
-				$skey="无此控制器";
-				$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+				{	
+					$skey="无此控制器";
+					$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
 				return;
 				}
 				else {
@@ -136,7 +136,6 @@ class MenuOpen extends ControlPanel
 				// 检查视图
 				if( !$aView = View::xpath($aController->mainView(),$sViewPath))
 				{
-					echo $sControllerName;exit;
 					$skey="无此视图";
 					$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
 					return;
@@ -174,13 +173,12 @@ class MenuOpen extends ControlPanel
 	
 	//将BeanConfig中的Menue转换成数组存放在setting中
 	public function itemSetting($aMenuIterator,&$arrSetting)
-	{
+	{	
 		$arrI=&$arrSetting;
 		foreach($aMenuIterator as $key=>$aItem)
 		{
-	
 			if($aItem->title())
-			{
+			{	$aItem->title();
 				$arrI=&$arrSetting['item:'.$key];
 				$arrI=array('xpath'=>$aItem->id(),'title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
 				$arrI=&$arrSetting;
@@ -195,15 +193,15 @@ class MenuOpen extends ControlPanel
 	
 	//从BeanConfig中读取Menu，显示
 	public function itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId)
-	{
+	{	
 		$sItem='<ul style=margin-left:10px>';
 		foreach($aMenuIterator as $aItem)
-		{
+		{	
 			$sXpathOld=$sXpath;
 			$sXpath=$sXpath.$aItem->id().'/';
 			$sItem=$sItem."<li xpath=\"$sXpath\">";
 			if($aItem->title())
-			{
+			{	
 				$sTitle=$aItem->title();
 				$sDepth=$aItem->depth();
 				$bActive=$aItem->isActive();

@@ -196,7 +196,7 @@ class ItemEditer extends ControlPanel
  			$this->displayItem($arrSetting, $sXpath, $sXpathTarget);
  			
  			$arrXpath=array();
- 			$this->xpathOption($arrSetting,'',0,$arrXpath);
+ 			$this->xpathOption($arrSetting,'','',0,$arrXpath);
  			$this->viewItemEditer->variables()->set('arrXpath',$arrXpath);//var_dump($arrXpath);exit;
  		}	
 	}
@@ -304,21 +304,44 @@ class ItemEditer extends ControlPanel
 		}
 	}
 	
+	//第一版移动选项xpath
+// 	public function xpathOption($arrSetting,$sXpath,$i,&$arrXpath){
+// 		foreach($arrSetting as $key=>$item)
+// 		{
+// 			$i++;
+// 			$sXpathOld=$sXpath;
+// 			if($key=='xpath'){
+// 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+// 				$arrXpath[$i]=$sXpath;
+// 			}
+	
+// 			if(is_array($arrSetting[$key]))
+// 			{
+// 				$i=$i+$this->xpathOption($arrSetting[$key],$sXpath,$i++,$arrXpath);
+// 				$sXpath=$sXpathOld;
+// 			}
+// 		}
+// 		return $i;
+// 	}
+	
 	//移动选项xpath
-	public function xpathOption($arrSetting,$sXpath,$i,&$arrXpath){
+	public function xpathOption($arrSetting,$sXpath,$sTitle,$i,&$arrXpath){
 		foreach($arrSetting as $key=>$item)
 		{
 			$i++;
 			$sXpathOld=$sXpath;
+			$sTitleOld=$sTitle;
 			if($key=='xpath'){
 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
-				$arrXpath[$i]=$sXpath;
+				$sTitle=$sTitle.$arrSetting['title'].'/';
+				$arrXpath[$sXpath]=$sTitle;
 			}
 	
 			if(is_array($arrSetting[$key]))
 			{
-				$i=$i+$this->xpathOption($arrSetting[$key],$sXpath,$i++,$arrXpath);
+				$i=$i+$this->xpathOption($arrSetting[$key],$sXpath,$sTitle,$i++,$arrXpath);
 				$sXpath=$sXpathOld;
+				$sTitle=$sTitleOld;
 			}
 		}
 		return $i;
