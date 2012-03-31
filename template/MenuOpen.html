@@ -13,11 +13,12 @@
 		document.getElementById('hide_item_controllerName').value=json['controllername'];
 		document.getElementById('hide_item_viewPath').value=json['viewpath'];
 		document.getElementById('hide_item_menuId').value=json['menuid'];
+		document.getElementById('hide_item_xpath').value=xPath1;
 		document.getElementById('itemEdit').style.display="";
 	}
 </script>
 <form method="post">
-	控制器:<widget id="controller_name" onclick="itemEdit()"/><br/>
+	控制器:<widget id="controller_name"/><br/>
 	视图路径:<widget id="viewXpath"/><br/>
 	控件ID:<widget id="menu_id"/><br/>
 	<input type="submit" value="打开" />
@@ -37,9 +38,10 @@
 		链接:<widget id="link"/><br/>
 		激活:<widget id="active"/><br/>
 		<widget id="hide_flag_item"/><br/>
-		<widget id="hide_item_controllerName"/><br/>
-		<widget id="hide_item_viewPath"/><br/>
-		<widget id="hide_item_menuId"/><br/>
+		<widget id="hide_item_controllerName"/>
+		<widget id="hide_item_viewPath"/>
+		<widget id="hide_item_menuId"/>
+		<widget id="hide_item_xpath"/>
 		<input type="submit" value="保存" />
 	</form>
 </div>

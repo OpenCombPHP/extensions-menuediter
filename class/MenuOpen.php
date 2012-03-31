@@ -93,6 +93,12 @@ class MenuOpen extends ControlPanel
 							'title'=>'编辑项menuId'
 					),
 					array(
+							'id'=>'hide_item_xpath',
+							'class'=>'text',
+							'type'=>'hidden',
+							'title'=>'编辑项menuId'
+					),
+					array(
 						'id'=>'testMenu',
 						'class'=>'menu',
 						'title'=>'sddsd',
@@ -146,34 +152,90 @@ class MenuOpen extends ControlPanel
  				$aSetting = Extension::flyweight('menuediter')->setting();
  				$akey=$aSetting->key('/'.$sControllerName,true);
  				
+ 				
+
  				if($aSetting->hasItem('/'.$sControllerName,$sViewPath.$sMenuId))
- 				{
- 					$sTitle=$this->viewItemEditer->widget('title')->value();
- 					$sDepth=$this->viewItemEditer->widget('depth')->value();
- 					$sLink=$this->viewItemEditer->widget('link')->value();
- 					$sActive=$this->viewItemEditer->widget('active')->value();
- 					$arrItem=array();
- 					$sXpath='';
- 					$sXpathTarget=$this->params->get('xpath');
- 					$arrItem=array('title'=>$sTitle,'depth'=>$sDepth,'link'=>$sLink,'active'=>$sActive);
- 					$akey=$aSetting->key('/'.$sControllerName,true);
- 					$arrSettingOld=$akey->item($sViewPath.$sMenuId);
- 					$arrSettingNew=array();
- 					$this->settingEdit($arrSettingOld,$arrItem,$sXpath,$sXpathTarget,$arrSettingNew);
- 					$akey->deleteItem($sViewPath.$sMenuId);
- 					$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+ 				{		$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();//echo $sXpathFrom;exit;
+ 						$sXpathOption=$this->params->get('xpathOption');
+ 						$arrToXpath=explode('/',$sXpathFrom);
+ 						array_pop($arrToXpath);var_dump($arrToXpath);
+ 						$arrSettingOld=array();
+ 						$arrSettingDelete=array();
+ 						$arrSettingChild=array();
+ 						$arrItemSettingMiddle=array();
+ 						$arrSettingNew=array();
+
+ 						$arrSettingOld=$akey->item($sViewPath.$sMenuId);
+ 						$arrSettingDelete=$arrSettingOld;
+ 						
+ 						
+ 						
+ 						//$this->settingItemdelete(0,$arrSettingOld, '', $arrToXpath, $arrSettingDelete);
+ 						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
+
+ 						$this->itemSettingEdit($arrSettingOld, '', $sXpathFrom, $arrItemSettingMiddle,$arrSettingChild);
+
+ 						$this->settingEditXpathOption($arrSettingDelete, '', $sXpathOption,$sXpathFrom, $arrSettingNew,$arrSettingChild);
+ 						$akey->deleteItem($sViewPath.$sMenuId);
+ 						$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+ 						echo "<pre>";
+ 						print_r($arrSettingNew);
+ 						echo "</pre>";exit;
+
+//  					$sTitle=$this->viewItemEditer->widget('title')->value();
+//  					$sDepth=$this->viewItemEditer->widget('depth')->value();
+//  					$sLink=$this->viewItemEditer->widget('link')->value();
+//  					$sActive=$this->viewItemEditer->widget('active')->value();
+//  					$arrItem=array();
+//  					$sXpath='';
+//  					$sXpathTarget=$this->params->get('xpath');
+//  					$arrItem=array('title'=>$sTitle,'depth'=>$sDepth,'link'=>$sLink,'active'=>$sActive);
+//  					$akey=$aSetting->key('/'.$sControllerName,true);
+//  					$arrSettingOld=$akey->item($sViewPath.$sMenuId);
+//  					$arrSettingNew=array();
+//  					$this->settingEdit($arrSettingOld,$arrItem,$sXpath,$sXpathTarget,$arrSettingNew);
+//  					$akey->deleteItem($sViewPath.$sMenuId);
+//  					$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
  				}
  				else {
- 					$arrSettingOld=array();
- 					$aController = new $sControllerName();
- 					$aView = View::xpath($aController->mainView(),$sViewPath );
- 					$aMenu=$aView->widget($sMenuId);
- 					$aMenuIterator=$aMenu->itemIterator();
- 					$this->itemSetting($aMenuIterator,$arrSettingOld);
- 					$arrSettingNew=array();
- 					$this->settingEdit($arrSettingOld,$arrItem,$sXpath,$sXpathTarget,$arrSettingNew);
- 					$akey->deleteItem($sViewPath.$sMenuId);
- 					$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+ 					$sXpathOption=$this->params->get('xpathOption');
+ 					if($sXpathOption==$this->viewMenuOpen->widget('hide_item_xpath')->value())
+ 					{
+ 							;	
+ 					}else {
+ 						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
+ 						$sXpathOption=$this->params->get('xpathOption');
+ 						$arrToXpath=explode('/',$sXpathOption);
+ 						array_pop($arrToXpath);
+ 						$arrSettingOld=array();
+ 						$arrSettingDelete=array();
+ 						$arrSettingChild=array();
+ 						$arrItemSettingMiddle=array();
+ 						$arrSettingNew=array();
+ 						
+ 						$aController = new $sControllerName();
+ 						$aView = View::xpath($aController->mainView(),$sViewPath );
+ 						$aMenu=$aView->widget($sMenuId);
+ 						$aMenuIterator=$aMenu->itemIterator();
+ 						$this->itemSetting($aMenuIterator,$arrSettingOld);
+ 						$this->settingItemdelete(0,$arrSettingOld, '', $arrToXpath, $arrSettingDelete);
+ 						var_dump($arrSettingDelete);
+ 						$this->itemSettingEdit($arrSettingOld, '', $sXpathFrom, $arrItemSettingMiddle,$arrSettingChild);
+ 						
+ 						$this->settingEditXpathOption($arrSettingDelete, '', $sXpathOption,$sXpathFrom, $arrSettingNew,$arrSettingChild);
+ 						
+ 					}
+//  					$arrSettingOld=array();
+//  					$aController = new $sControllerName();
+//  					$aView = View::xpath($aController->mainView(),$sViewPath );
+//  					$aMenu=$aView->widget($sMenuId);
+//  					$aMenuIterator=$aMenu->itemIterator();
+//  					$this->itemSetting($aMenuIterator,$arrSettingOld);
+//  					$this->itemSetting($aMenuIterator,$arrSettingOld);
+//  					$arrSettingNew=array();
+//  					$this->settingEdit($arrSettingOld,$arrItem,$sXpath,$sXpathTarget,$arrSettingNew);
+//  					$akey->deleteItem($sViewPath.$sMenuId);
+//  					$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
  				}
  				
  			}else
@@ -189,6 +251,7 @@ class MenuOpen extends ControlPanel
  				if($aSetting->hasItem('/'.$sControllerName,$sViewPath.$sMenuId))
  				{
  					$arrJson=array();
+ 					$arrXpath=array();
  					$sXpath='';
  					$arrSetting=$akey->Item($sViewPath.$sMenuId);
  					$sMenu=$this->displaySetting($arrSetting,$sXpath);
@@ -198,6 +261,8 @@ class MenuOpen extends ControlPanel
  					$arrJson['menuid']=$sMenuId;
  					$this->jsonSetting($arrSetting, $sXpath, $arrJson);
  					$this->viewMenuOpen->variables()->set('sJsonSetting',json_encode($arrJson));
+ 					$this->xpathOption($arrSetting,'','',0,$arrXpath);
+ 					$this->viewMenuOpen->variables()->set('arrXpath',$arrXpath);
  				}
  				else {
  					$arrJson=array();
@@ -267,7 +332,7 @@ class MenuOpen extends ControlPanel
 			if($aItem->title())
 			{	$aItem->title();
 				$arrI=&$arrSetting['item:'.$key];
-				$arrI=array('xpath'=>$aItem->id(),'title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
+				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
 				$arrI=&$arrSetting;
 			}
 			if($aItem->subMenu())
@@ -285,7 +350,7 @@ class MenuOpen extends ControlPanel
 		foreach($aMenuIterator as $aItem)
 		{	
 			$sXpathOld=$sXpath;
-			$sXpath=$sXpath.$aItem->id().'/';
+			$sXpath=$sXpath.'Item:'.$aItem->id().'/';
 			$sItem=$sItem."<li xpath=\"$sXpath\">";
 			if($aItem->title())
 			{	
@@ -326,7 +391,8 @@ class MenuOpen extends ControlPanel
 			$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 			if($key=='title')
 			{
-				$sMenu=$sMenu."<a href=\"?c=org.opencomb.menuediter.ItemEditer&xpath=$sXpath\">".$arrSetting['title'].'</a>';
+				$sMenu=$sMenu."<a>".$arrSetting['title'].'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+						"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>';
 			}
 			if(is_array($item))
 			{
@@ -412,6 +478,113 @@ class MenuOpen extends ControlPanel
 			}
 		}
 	}
+	
+	//获得修改的item
+	public function itemSettingEdit($arrSetting,$sXpath,$sXpathTarget,&$arrItemSettingNew,&$arrSettingChild)
+	{
+		foreach($arrSetting as $key=>$item)
+		{	
+			$sXpathOld=$sXpath;
+			if($key=='xpath'){
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+			}
+			if($sXpath==$sXpathTarget){
+				
+				if(!is_array($arrSetting[$key])){
+					var_dump($arrItemSettingNew);echo "<br/>"."<br/>"."<br/>";
+					$arrSettingChild=$arrItemSettingNew;
+				}
+			}
+			else
+			{
+				$arrItemSettingNew[$key]=$arrSetting[$key];
+			}
+	
+			if(is_array($arrSetting[$key]))
+			{
+				$this->itemSettingEdit($arrSetting[$key],$sXpath,$sXpathTarget,$arrItemSettingNew[$key],$arrSettingChild);
+				$sXpath=$sXpathOld;
+			}
+		}
+	}
+	
+	//删除一个item
+	public function settingItemdelete(&$arrSettingDelete,$arrXpathTarget)
+	{
+		foreach($arrSettingDelete as $key=>&$item)
+		{
+			for($i=0;$i<count($arrXpathTarget);$i++)
+			{
+				if($key==$arrXpathTarget[$i])
+				{
+					if($i==count($arrXpathTarget)-1)
+					{
+						unset($arrSettingDelete[$key]);
+					}
+					else {
+						$this->settingItemdelete($arrSettingDelete[$key],$arrXpathTarget);
+					}
+				}
+			}
+		}
+	}
+	
+	//删除一个item
+// 	public function settingItemdelete($h,$arrSetting,$sXpath,$arrXpathTarget,&$arrSettingDelete)
+// 	{
+// 		foreach($arrSetting as $key=>$item)
+// 		{
+// 			for($i=$h;$i<count($arrXpathTarget);$i++)
+// 			{
+// 				if($key==$arrXpathTarget[$i])
+// 				{
+// 					if($i==count($arrXpathTarget)-1)
+// 					{
+// 						//continue;
+// 						unset($arrSetting[$key]);
+// 						unset($arrSettingDelete[$key]);
+// 						$i++;
+// 					}else {
+// 						$arrSettingDelete[$key]=$arrSetting[$key];
+// 						$i=$i+$this->settingItemdelete($i,$arrSetting[$key],$sXpath,$arrXpathTarget,$arrSettingDelete[$key]);
+// 					}
+// 				}
+// 				else {
+// 				$arrSettingDelete[$key]=$arrSetting[$key];
+// 				}
+// 			}
+// 		}
+// 		return $i;
+// 	}
+	
+	public function settingEditXpathOption($arrSetting,$sXpath,$sXpathTarget,$sXpathFirst,&$arrSettingNew,$arrSettingChild){
+		foreach($arrSetting as $key=>$item)
+		{
+			$sXpathOld=$sXpath;
+			if($key=='xpath'){
+				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+			}
+	
+			if($sXpath==$sXpathTarget){
+				$arrSettingNew[$arrSettingChild['xpath']]=$arrSettingChild;
+			}
+			else
+			{	if($sXpath==$sXpathFirst){
+				unset($arrSetting[$key]);
+			}else {
+				$arrSettingNew[$key]=$arrSetting[$key];
+			}
+	
+			}
+	
+			if(is_array($arrSetting[$key]))
+			{
+				$this->settingEditXpathOption($arrSetting[$key],$sXpath,$sXpathTarget,$sXpathFirst,$arrSettingNew[$key],$arrSettingChild);
+				$sXpath=$sXpathOld;
+			}
+		}
+	}
+	
 // 	//settings数组递归方法
 // 	public function itemSetting($arra,&$arrlist)
 // 	{

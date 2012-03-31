@@ -249,36 +249,7 @@ class ItemEditer extends ControlPanel
 // 		}
 // 	}
 	
-	//setting编辑
-	public function settingEdit($arrSettingOld,$arrItem,$sXpath,$sXpathTarget,&$arrSettingNew){
-		foreach($arrSettingOld as $key=>$item)
-		{
-			//上一级xpath
-			$sXpathOld=$sXpath;
-			if($key=='xpath'){
-				$sXpath=$sXpath.$arrSettingOld['xpath'].'/';
-			}
-			
-			//找到需要编辑的元素
-			if($sXpath==$sXpathTarget){
-				$arrSettingNew['title']=$arrItem['title'];
-				$arrSettingNew['depth']=$arrItem['depth'];
-				$arrSettingNew['link']=$arrItem['link'];
-				$arrSettingNew['active']=$arrItem['active'];
-			}
-			else
-			{
-				$arrSettingNew[$key]=$arrSettingOld[$key];
-			}
-			
-			//如果是数组递归
-			if(is_array($arrSettingOld[$key]))
-			{	
-				$this->settingEdit($arrSettingOld[$key],$arrItem,$sXpath,$sXpathTarget,$arrSettingNew[$key]);
-				$sXpath=$sXpathOld;
-			}
-		}
-	}
+
 	
 	//第一版移动选项xpath
 // 	public function xpathOption($arrSetting,$sXpath,$i,&$arrXpath){
