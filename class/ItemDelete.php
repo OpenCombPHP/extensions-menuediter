@@ -26,60 +26,90 @@ class ItemDelete extends ControlPanel
 			'view:itemDelete'=>array(
 				'template'=>'ItemDelete.html',
 				'class'=>'form',
-				'widgets' => array(
-					array(
-							'id'=>'testMenu',
-							'class'=>'menu',
-							'title'=>'sddsd',
-							'item:testSub2'=>array(
-									'title'=>'testSub2',
-							),
-							'item:testSub1'=>array(
-									'title'=>'testSub1',
-									'menu'=>'1',
-// 									'tearoff'=>1,
-// 									'showDepths'=>5,
-									'item:testSub11'=>array(
-											'title'=>'testSub11',
-											'menu'=>'1',
-											'item:testSub111'=>array(
-													'title'=>'testSub111',
-											)
-									),
-									'item:testSub12'=>array(
-											'title'=>'testSub12',
-											'menu'=>'1',
-											'item:testSub121'=>array(
-													'title'=>'testSub121',
-											),
-											'item:testSub122'=>array(
-													'title'=>'testSub122',
-											)
-									),
-							),
-							'item:testSub3'=>array(
-									'title'=>'testSub3',
-									'menu'=>1,
-									'item:testSub12'=>array(
-											'title'=>'testSub12',
-											'menu'=>'1',
-											'item:testSub121'=>array(
-													'title'=>'testSub121',
-											),
-											'item:testSub122'=>array(
-													'title'=>'testSub122',
-											)
-									),
-							),
-					)
-				),
 			),
 		);
 	}
 	
 	public function process()
 	{	
+		$sXpathTo=$this->params->get('xpath');
+		$arrToXpath=explode('/',$sXpathTo);
+		array_pop($arrToXpath);
+		$sControllerName=$sXpathTo=$this->params->get('controllername');
+		$sViewPath=$sXpathTo=$this->params->get('viewpath');
+		$sMenuId=$sXpathTo=$this->params->get('menuid');
 		
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		
+		if($aSetting->hasItem('/'.$sControllerName,$sViewPath.$sMenuId))
+		{
+			$akey=$aSetting->key('/'.$sControllerName,true);
+			$arrSettingOld=$akey->Item($sViewPath.$sMenuId);
+			$arrSettingNew=$arrSettingOld;
+			$this->settingItemdelete($arrSettingNew, $arrToXpath);
+			$akey->deleteItem($sViewPath.$sMenuId);
+			$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+		}
+		else{
+			$arrSettingOld=array();
+			$akey=$aSetting->key('/'.$sControllerName,true);
+			$aController = new $sControllerName();
+			$aView = View::xpath($aController->mainView(),$sViewPath );
+			$aMenu=$aView->widget($sMenuId);
+			//将menu组成字符串在页面显示
+			$arrJson=array();
+			$arrSetting=array();
+			$sXpath='';
+			$aMenuIterator=$aMenu->itemIterator();;
+		
+			//将menu遍历成数组存放在settting
+			$this->itemSetting($aMenuIterator,$arrSettingOld);
+			$arrSettingNew=$arrSettingOld;
+
+			$this->settingItemdelete($arrSettingNew, $arrToXpath);
+			$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+		}
+		
+	}
+	
+	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)
+	{
+		foreach($arrSettingNew as $key=>&$item)
+		{
+			for($i=0;$i<count($arrXpathTarget);$i++)
+			{
+				if($key==$arrXpathTarget[$i])
+				{
+					if($i==count($arrXpathTarget)-1)
+					{
+						unset($arrSettingNew[$key]);
+					}
+					else {
+						$this->settingItemdelete($arrSettingNew[$key],$arrXpathTarget);
+					}
+				}
+			}
+		}
+	}
+	
+	public function itemSetting($aMenuIterator,&$arrSettingOld)
+	{
+		$arrI=&$arrSettingOld;
+		foreach($aMenuIterator as $key=>$aItem)
+		{	
+			if($aItem->title())
+			{	
+				$aItem->title();
+				$arrI=&$arrSettingOld['item:'.$key];
+				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
+				$arrI=&$arrSettingOld;
+			}
+			if($aItem->subMenu())
+			{
+				$arrI=&$arrI['item:'.$key];
+				$this->itemSetting($aItem->subMenu()->itemIterator(),$arrI);
+			}
+		}
 	}
 }
 
