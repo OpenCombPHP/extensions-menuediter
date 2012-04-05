@@ -527,7 +527,11 @@ class MenuOpen extends ControlPanel
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
 						"删除".'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
 						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
-						"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>';
+						"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'&nbsp'.'|'.'&nbsp'.
+						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
 			}
 			if(is_array($item))
 			{
@@ -712,10 +716,10 @@ class MenuOpen extends ControlPanel
 				}
 				else
 				{	if($sXpath==$sXpathFirst){
-					unset($arrSetting[$key]);
-				}else {
-					$arrSettingNew[$key]=$arrSetting[$key];
-				}
+						unset($arrSetting[$key]);
+					}else {
+						$arrSettingNew[$key]=$arrSetting[$key];
+					}
 			
 				}
 			
