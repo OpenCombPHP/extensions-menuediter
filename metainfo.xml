@@ -10,5 +10,6 @@
 	
 	<template folder="/template" />
 	
+	<priority>9</priority>
 	
 </Extension>
