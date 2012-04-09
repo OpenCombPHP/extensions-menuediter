@@ -48,6 +48,8 @@ class ItemDelete extends ControlPanel
 			$arrSettingNew=$arrSettingOld;
 			$this->settingItemdelete($arrSettingNew, $arrToXpath);
 			$akey->deleteItem($sViewPath.$sMenuId);
+			$arrSettingNew['id']=$sMenuId;
+			$arrSettingNew['class']='menu';
 			$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
 		}
 		else{
@@ -67,8 +69,15 @@ class ItemDelete extends ControlPanel
 			$arrSettingNew=$arrSettingOld;
 
 			$this->settingItemdelete($arrSettingNew, $arrToXpath);
+			$arrSettingNew['id']=$sMenuId;
+			$arrSettingNew['class']='menu';
 			$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
 		}
+		
+		$sControllerNamePage=str_replace('\\','.',$sControllerName);
+		$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationdelete=locationdelete&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+		$this->viewItemDelete->createMessage(Message::success,"%s ",$skey='删除成功');
+		$this->location($sUrl,0);
 		
 	}
 	

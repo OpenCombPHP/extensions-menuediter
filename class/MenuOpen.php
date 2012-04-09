@@ -207,6 +207,7 @@ class MenuOpen extends ControlPanel
  			
  				if($aSetting->hasItem('/'.$sControllerName,$sViewPath.$sMenuId))
  				{		
+ 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
  						$akey=$aSetting->key('/'.$sControllerName,true);
  						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
@@ -230,13 +231,17 @@ class MenuOpen extends ControlPanel
  						$arrSettingChild['active']=$this->viewMenuOpen->widget('active')->value();
  						$this->settingEditXpathOption($arrSettingDelete, '', $sXpathOption,$sXpathFrom, $arrSettingNew,$arrSettingChild);
  						$akey->deleteItem($sViewPath.$sMenuId);
+ 						$arrSettingNew['id']=$sMenuId;
+ 						$arrSettingNew['class']='menu';
  						$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
  						
  						//$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
  						//$this->viewMenuOpen->variables()->set('sClear',$sClear);
- 						$this->readSetting(null,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  				}else {
  						$akey=$aSetting->key('/'.$sControllerName,true);
+ 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
  						$arrSettingOld=array();
  						$aController = new $sControllerName();
  						$aView = View::xpath($aController->mainView(),$sViewPath );
@@ -271,8 +276,8 @@ class MenuOpen extends ControlPanel
  						$arrSettingNew['class']='menu';
  						$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
  						
- 						$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
- 						$this->viewMenuOpen->variables()->set('sClear',$sClear);
+ 						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  				}
  			}elseif($this->viewMenuOpen->widget('hide_flag_create_item')->value()==2){
  				
@@ -281,12 +286,11 @@ class MenuOpen extends ControlPanel
  				$sMenuId=$this->viewMenuOpen->widget('hide_create_item_menuId')->value();
  				
  				$aSetting = Extension::flyweight('menuediter')->setting();
- 				$akey=$aSetting->key('/'.$sControllerName,true);
- 				
- 				
- 				
+
  				if($aSetting->hasItem('/'.$sControllerName,$sViewPath.$sMenuId))
  				{
+ 					$sControllerNamePage=str_replace('\\', '.', $sControllerName);
+ 					
  					$akey=$aSetting->key('/'.$sControllerName,true);
  					$arrSettingOld=$akey->Item($sViewPath.$sMenuId);
  					
@@ -320,8 +324,11 @@ class MenuOpen extends ControlPanel
  					$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
  					$this->viewMenuOpen->variables()->set('sClear',$sClear);
  					
- 					$this->readSetting(null,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 					$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 					$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  				}else {
+ 					$sControllerNamePage=str_replace('\\', '.', $sControllerName);
+ 					
  					$akey=$aSetting->key('/'.$sControllerName,true);
  					$sItemId='item:'.$this->viewMenuOpen->widget('create_item_id')->value();
  					$sXpathTo=$this->viewMenuOpen->widget('hide_item_create_xpath')->value();
@@ -355,8 +362,8 @@ class MenuOpen extends ControlPanel
  					$arrSettingNew['id']=$sMenuId;
  					$arrSettingNew['class']='menu';
  					$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
- 					$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
- 					$this->viewMenuOpen->variables()->set('sClear',$sClear);
+					$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+					$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  				}
  			}else {
  				$sControllerNamePage=$this->viewMenuOpen->widget('controller_name')->value();
@@ -371,7 +378,7 @@ class MenuOpen extends ControlPanel
  					$this->readSetting($sControllerNamePage,false,null,$sViewPath,$sMenuId);
  				}
  				else {
- 					$this->readBeanConfit();
+ 					$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
  				}
  			}
  		}elseif($this->params->get('history')=='history'){
@@ -380,12 +387,19 @@ class MenuOpen extends ControlPanel
  			$this->viewMenuOpen->widget('menu_id')->setValue($this->params->get('menuid'));
  			$this->getHistory();
  		}elseif($this->params->get('locationsort')=='locationsort'){
- 			echo "LOCATION";
- 			$sControllerName=$this->params->get('controllername');
- 			$sControllerName=str_replace('.','\\',$sControllerName);
+ 			$sControllerNamePage=$this->params->get('controllername');
+ 			$sControllerName=str_replace('.','\\',$sControllerNamePage);
  			$sViewPath=$this->params->get('viewpath');
  			$sMenuId=$this->params->get('menuid');
- 			$this->readSetting(null,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 			$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 			$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+ 		}elseif($this->params->get('locationdelete')=='locationdelete'){
+ 			$sControllerNamePage=$this->params->get('controllername');
+ 			$sControllerName=str_replace('.','\\',$sControllerNamePage);
+ 			$sViewPath=$this->params->get('viewpath');
+ 			$sMenuId=$this->params->get('menuid');
+ 			$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 			$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  		}else {
 			$this->getHistory();
  		}
@@ -431,7 +445,11 @@ class MenuOpen extends ControlPanel
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
 						"删除".'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
 						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
-				"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>';
+				"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'&nbsp'.'|'.'&nbsp'.
+						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
 			}
 			if($aItem->subMenu())
 			{
@@ -749,6 +767,7 @@ class MenuOpen extends ControlPanel
 		$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
 	}
 	
+	//从setting中读取已有的menu
 	public function readSetting($sControllerNamePageFormal=null,$bFlag=true,$sControllerNameFormal,$sViewPathFormal,$sMenuIdFormal)
 	{
 		$sControllerNamePage=$sControllerNamePageFormal;
@@ -812,13 +831,21 @@ class MenuOpen extends ControlPanel
 		$this->viewMenuOpen->variables()->set('sClear',$sClear);
 	}
 	
-	public function readBeanConfig()
+	//从Beanconfig中读取menu
+	public function readBeanConfig($sControllerNamePageFormal=null,$bFlag=true,$sControllerNameFormal,$sViewPathFormal,$sMenuIdFormal)
 	{
-		$sControllerNamePage=$this->viewMenuOpen->widget('controller_name')->value();
-		$sControllerNames=$this->viewMenuOpen->widget('controller_name')->value();
-		$sControllerName=str_replace('.','\\',$sControllerNamePage);
-		$sViewPath=$this->viewMenuOpen->widget('viewXpath')->value();
-		$sMenuId=$this->viewMenuOpen->widget('menu_id')->value();
+		//$sControllerNamePage=$this->viewMenuOpen->widget('controller_name')->value();
+		//$sControllerName=str_replace('.','\\',$sControllerNamePage);
+		$sControllerNamePage=$sControllerNamePageFormal;
+		if($bFlag)
+		{
+			$sControllerName=$sControllerNameFormal;
+		}
+		else {
+			$sControllerName=str_replace('.','\\',$sControllerNamePage);
+		}
+		$sViewPath=$sViewPathFormal;
+		$sMenuId=$sMenuIdFormal;
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		
 		$arrJson=array();
@@ -905,6 +932,12 @@ class MenuOpen extends ControlPanel
 			}
 			$this->getHistory();
 		}
+	}
+	
+	public function setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId){
+		$this->viewMenuOpen->widget('controller_name')->setValue($sControllerNamePage);
+		$this->viewMenuOpen->widget('viewXpath')->setValue($sViewPath);
+		$this->viewMenuOpen->widget('menu_id')->setValue($sMenuId);
 	}
 // 	//settings数组递归方法
 // 	public function itemSetting($arra,&$arrlist)
