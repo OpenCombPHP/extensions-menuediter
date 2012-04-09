@@ -26,7 +26,7 @@ class MainMenuAspect
 		$arrConfig = aop_call_origin() ;
 		$arrConfig['frameview:frameView']['widget:mainMenu']['item:system']['item:platform-manage']['item:menuediter']
 							=array(
-									'title'=>'菜单编集' ,
+									'title'=>'菜单编辑' ,
 									'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
 									'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
 									);
