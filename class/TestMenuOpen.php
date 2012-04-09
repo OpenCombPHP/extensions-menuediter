@@ -120,7 +120,7 @@ class TestMenuOpen extends ControlPanel
 										)
   								),
 								'item:BB2'=>array(
-										'title'=>'BB2',
+										'title'=>'BB1',
 										'menu'=>'1',
 										'item:BBB2'=>array(
 												'title'=>'BBB2',
