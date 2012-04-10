@@ -8,6 +8,8 @@
 	
 	<package folder="/class" namespace="org.opencomb.menuediter" />
 	
+	<publicFolder folder="/public" />
+
 	<template folder="/template" />
 	
 	<priority>9</priority>

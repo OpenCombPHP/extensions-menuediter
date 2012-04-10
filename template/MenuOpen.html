@@ -1,3 +1,4 @@
+<css src="menuediter:css/style.css" />
 <h2>MenuOpen</h2>
 <msgqueue/>
 <script type="text/javascript">
@@ -35,60 +36,61 @@
 	
 </script>
 <div>
-	<div style="float:left;">
+	<div class="mo-left">
 	<form method="post">
-		控制器:<widget id="controller_name"/><br/>
-		视图路径:<widget id="viewXpath"/><br/>
-		控件ID:<widget id="menu_id"/><br/>
-		<input type="submit" value="打开" />
+		<p>控制器： <widget id="controller_name"/></p>
+		<p>视图路径：<widget id="viewXpath"/></p>
+		<p>控件ID： <widget id="menu_id"/></p>
+		<p><input type="submit" class="coresystem-form-button" value="打　开" /></p>
 	</form>
-	<br/>
-		{=$sHistory}
+	<div class="mo-history">{=$sHistory}</div>
 	</div>
 	
-	<div style="float:left;">
+	<div class="mo-middle">
 	<pre>
 	{=$sMenu}
 	{=$sClear}
 	</pre>
 	</div>
-	
-	<div id="itemCreate" style="display:none;float:left">
+	<div class="mo-right">
+	<div id="itemCreate" style="display:none;" class="mo-right-item">
 	<h2>项目新建</h2>
 		<form method="post">
-			项目ID：<widget id="create_item_id" /><br/>
-			标题:<widget id="create_title" /><br/>
-			层级数量:<widget id="create_depth"/><br/>
-			链接:<widget id="create_link"/><br/>
-			激活:<widget id="create_active"/><br/>
-			<widget id="hide_flag_create_item"/><br/>
+			<p>项目ID：<widget id="create_item_id" /></p>
+			<p>标题:<widget id="create_title" /></p>
+			<p>层级数量:<widget id="create_depth"/></p>
+			<p>链接:<widget id="create_link"/></p>
+			<p>激活:<widget id="create_active"/></p>
+			<widget id="hide_flag_create_item"/>
 			<widget id="hide_create_item_controllerName"/>
 			<widget id="hide_create_item_viewPath"/>
 			<widget id="hide_create_item_menuId"/>
 			<widget id="hide_item_create_xpath"/>
-			<input type="submit" value="保存" />
+			<input type="submit" class="coresystem-form-button" value="保　存" />
 		</form>
 	</div>
 	
-	<div id="itemEdit" style="display:none;float:left">
+	<div id="itemEdit" style="display:none;" class="mo-right-item">
 	<h2>项目编辑</h2>
 		<form method="post">
-			<select name=xpathOption >
+			<p><select name=xpathOption >
 				<foreach for="$arrXpath" key='sKeyPath' item='xpathselect'>
 					<option value="{=$sKeyPath}" >{=$xpathselect}</option>
 				</foreach>
-			</select><br/><br/>
-			标题:<widget id="title" /><br/>
-			层级数量:<widget id="depth"/><br/>
-			链接:<widget id="link"/><br/>
-			激活:<widget id="active"/><br/>
+			</select>
+			</p>
+			<p>标题:<widget id="title" /></p>
+			<p>层级数量:<widget id="depth"/></p>
+			<p>链接:<widget id="link"/></p>
+			<p>激活:<widget id="active"/></p>
 			<widget id="hide_flag_edit_item"/>
 			<widget id="hide_item_controllerName"/>
 			<widget id="hide_item_viewPath"/>
 			<widget id="hide_item_menuId"/>
 			<widget id="hide_item_xpath"/>
-			<input type="submit" value="保存" />
+			<input type="submit" class="coresystem-form-button" value="保　存" />
 		</form>
+	</div>
 	</div>
 </div>
 
