@@ -799,7 +799,7 @@ class MenuOpen extends ControlPanel
 		$sXpath='';
 		$arrSetting=$akey->Item($sViewPath.$sMenuId);
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
-		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.
 				"<a href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
@@ -897,7 +897,7 @@ class MenuOpen extends ControlPanel
 		$sXpath='';
 		$aMenuIterator=$aMenu->itemIterator();
 		$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
-		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.
 				"<a href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		
