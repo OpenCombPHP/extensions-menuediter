@@ -243,7 +243,7 @@ class MenuOpen extends ControlPanel
  						$sControllerNamePage=str_replace('\\','.',$sControllerName);
  						$arrSettingOld=array();
  						$aController = new $sControllerName();
- 						$aView = View::xpath($aController->mainView(),$sViewPath );
+ 						$aView = View::findXPath($aController->mainView(),$sViewPath );
  						$aMenu=$aView->widget($sMenuId);
  						$aMenuIterator=$aMenu->itemIterator();
  						$this->itemSetting($aMenuIterator,$arrSettingOld);
@@ -333,7 +333,7 @@ class MenuOpen extends ControlPanel
  					$sXpathTo=$this->viewMenuOpen->widget('hide_item_create_xpath')->value();
  					$arrSettingOld=array();
  					$aController = new $sControllerName();
- 					$aView = View::xpath($aController->mainView(),$sViewPath );
+ 					$aView = View::findXPath($aController->mainView(),$sViewPath );
  					$aMenu=$aView->widget($sMenuId);
  					$aMenuIterator=$aMenu->itemIterator();
  					$this->itemSetting($aMenuIterator,$arrSettingOld);

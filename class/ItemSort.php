@@ -116,7 +116,7 @@ class ItemSort extends ControlPanel
 			$arrSettingOld=array();
 			$akey=$aSetting->key('/'.$sControllerName,true);
 			$aController = new $sControllerName();
-			$aView = View::xpath($aController->mainView(),$sViewPath );
+			$aView = View::findXPath($aController->mainView(),$sViewPath );
 			$aMenu=$aView->widget($sMenuId);
 			//将menu组成字符串在页面显示
 			$arrJson=array();
