@@ -1,0 +1,45 @@
+<h2>MenuOpen</h2>
+<msgqueue/>
+<script type="text/javascript">
+	function itemCreate(xPath1)
+	{
+		
+		var xPath = xPath1;
+		document.getElementById('hide_flag_item').value=2;
+		
+		document.getElementById('hide_item_create_xpath').value=xPath1;
+		alert(xPath1);
+		document.getElementById('itemCreate').style.display="";
+	}
+</script>
+<!--  
+<form method="post">
+	控制器:<widget id="controller_name"/><br/>
+	视图路径:<widget id="viewXpath"/><br/>
+	控件ID:<widget id="menu_id"/><br/>
+	<input type="submit" value="打开" />
+</form>
+<br/>
+-->
+<widget id="testMenu"/>
+<div id="itemCreate" style="display:none">
+<h2>项目编辑</h2>
+	<form method="post">
+		项目ID：<widget id="create_item_id" /><br/>
+		标题:<widget id="create_title" /><br/>
+		层级数量:<widget id="create_depth"/><br/>
+		链接:<widget id="create_link"/><br/>
+		激活:<widget id="create_active"/><br/>
+		<widget id="hide_flag_item"/><br/>
+		<widget id="hide_item_controllerName"/>
+		<widget id="hide_item_viewPath"/>
+		<widget id="hide_item_menuId"/>
+		<widget id="hide_item_create_xpath"/>
+		<input type="submit" value="保存" />
+	</form>
+</div>
+<br/>
+<pre>
+{=$sMenu}
+</pre>
+<br/>
