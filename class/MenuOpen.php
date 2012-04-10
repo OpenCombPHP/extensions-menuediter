@@ -15,7 +15,6 @@ use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
-use org\jecat\framework\mvc\controller\Controller;
 
 class MenuOpen extends ControlPanel
 {
@@ -862,13 +861,13 @@ class MenuOpen extends ControlPanel
 		}
 		
 		// 检查视图
-		if( !$aView = View::xpath($aController->mainView(),$sViewPath))
+		if( !$aView = View::findXPath($aController->mainView(),$sViewPath))
 		{
 			$skey="无此视图";
 			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
 			return;
 		}else {
-			$aView = View::xpath($aController->mainView(),$sViewPath );
+			$aView = View::findXPath($aController->mainView(),$sViewPath );
 		}
 		
 		// 检查菜单
