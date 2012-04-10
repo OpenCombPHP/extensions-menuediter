@@ -1,5 +1,7 @@
 <?php
 namespace org\opencomb\menuediter;
+use org\jecat\framework\verifier\Length;
+
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\message\Message;
 use org\jecat\framework\lang\oop\ClassLoader;
@@ -210,6 +212,15 @@ class MenuOpen extends ControlPanel
  						$akey=$aSetting->key('/'.$sControllerName,true);
  						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
+ 						
+ 						//if()
+ 						if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
+ 						{
+ 							$skey="移动层级错误";
+ 							$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 							return;
+ 						}
+ 						
  						$arrToXpath=explode('/',$sXpathFrom);
  						array_pop($arrToXpath);
  						$arrSettingOld=array();
@@ -439,14 +450,14 @@ class MenuOpen extends ControlPanel
 				$sDepth=$aItem->depth();
 				$bActive=$aItem->isActive();
 				$sLink=substr($aItem->link(),1);
-				$sItem=$sItem.'<a>'.$aItem->title().'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+				$sItem=$sItem.'<a>'.$aItem->title().'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
-						"删除".'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
-						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
-				"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+						"删除".'</a>'.
+						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.
+				"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'&nbsp'.'|'.'&nbsp'.
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'|'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
 			}
@@ -478,14 +489,14 @@ class MenuOpen extends ControlPanel
 			$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 			if($key=='title')
 			{
-				$sMenu=$sMenu."<a>".$arrSetting['title'].'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+				$sMenu=$sMenu."<a>".$arrSetting['title'].'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
-						"删除".'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
-						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
-						"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+						"删除".'</a>'.
+						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.
+						"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'&nbsp'.'|'.'&nbsp'.
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'|'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
 			}
@@ -741,6 +752,7 @@ class MenuOpen extends ControlPanel
 		}
 	}
 	
+	
 	public function getHistory()
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
@@ -869,7 +881,6 @@ class MenuOpen extends ControlPanel
 		}else {
 			$aView = View::findXPath($aController->mainView(),$sViewPath );
 		}
-		
 		// 检查菜单
 		if( !$aMenu=$aView->widget($sMenuId) or !$aMenu instanceof Menu)
 		{
@@ -938,7 +949,52 @@ class MenuOpen extends ControlPanel
 		$this->viewMenuOpen->widget('viewXpath')->setValue($sViewPath);
 		$this->viewMenuOpen->widget('menu_id')->setValue($sMenuId);
 	}
-// 	//settings数组递归方法
+	
+	//判断编辑Item时，移动层级
+	public function xPathOptionBool($sXpathFrom,$sXpathOption)
+	{
+		$bflag=true;
+		$h=0;
+		$arrXpathForm=explode('/',$sXpathFrom);
+		$arrXpathOption=explode('/',$sXpathOption);
+		array_pop($arrXpathForm);
+		array_pop($arrXpathOption);
+		if(count($arrXpathForm)>=count($arrXpathOption))
+		{
+			for($i=0;$i<count($arrXpathOption);$i++)
+			{
+				if($arrXpathForm[$i]==$arrXpathOption[$i])
+				{
+					$h++;
+				}
+			}
+			if($h==count($arrXpathOption))
+			{
+				return false;
+			}
+			else{
+				return true;
+			}
+		}elseif(count($arrXpathForm)<=count($arrXpathOption))
+		{
+			for($i=0;$i<count($arrXpathForm);$i++)
+			{
+				if($arrXpathForm[$i]==$arrXpathOption[$i])
+				{
+					$h++;
+				}
+			}
+			if($h==count($arrXpathForm))
+			{
+				return false;
+			}else{
+				return true;
+			}
+		}
+		//return $bflag;
+	}
+	
+	// 	//settings数组递归方法
 // 	public function itemSetting($arra,&$arrlist)
 // 	{
 // 		$arrI=&$arrlist;
