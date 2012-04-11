@@ -847,7 +847,7 @@ class MenuOpen extends ControlPanel
 			$this->getHistory();
 		}
 		
-		$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
+		$sClear="<a class=\"mo-clear\" href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
 		$this->viewMenuOpen->variables()->set('sClear',$sClear);
 	}
 	
