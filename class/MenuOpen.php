@@ -453,7 +453,7 @@ class MenuOpen extends ControlPanel
 				$sDepth=$aItem->depth();
 				$bActive=$aItem->isActive();
 				$sLink=substr($aItem->link(),1);
-				$sItem=$sItem.'<span>'.$aItem->title().'</span>'.
+				$sItem=$sItem.'<span>'.$aItem->title().'</span>'.'<em>'.
 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
 						"删除".'</a>'.
@@ -462,7 +462,7 @@ class MenuOpen extends ControlPanel
 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.
 						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>'.'</em>';
 			}
 			if($aItem->subMenu())
 			{
@@ -497,7 +497,7 @@ class MenuOpen extends ControlPanel
 			
 			if($key=='title')
 			{
-				$sMenu=$sMenu."<span>".$arrSetting['title'].'</span>'.
+				$sMenu=$sMenu."<span>".$arrSetting['title'].'</span>'.'<em>'.
 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
 						"删除".'</a>'.
@@ -506,7 +506,7 @@ class MenuOpen extends ControlPanel
 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.
 						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>'.'</em>';
 			}
 			if(is_array($item))
 			{
@@ -812,7 +812,7 @@ class MenuOpen extends ControlPanel
 		$arrSetting=$akey->Item($sViewPath.$sMenuId);
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
-				"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
+				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
 		$arrJson['controllername']=$sControllerName;
@@ -910,7 +910,7 @@ class MenuOpen extends ControlPanel
 		$aMenuIterator=$aMenu->itemIterator();
 		$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
-				"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
+				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		
 		//将menu遍历成数组存放在settting

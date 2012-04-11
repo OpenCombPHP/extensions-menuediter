@@ -11,6 +11,7 @@
 .mo-middile-ul li{ line-height:170%;}
 .mo-middile-ul li:hover{ background:#F7F3DF;}
 .mo-middile-ul span{margin-right:10px;display:inline-block; min-width:100px; text-align:left;}
+.mo-middile-ul em{ display:inline-block; float:right}
 .mo-middile-ul a{ font-size:12px; color:#999;padding:0 6px 0 20px;background:url(../images/mo-icon.gif) no-repeat}
 .mo-middile-ul a:hover{ color:#09c;border-radius:3px;background:url(../images/mo-icon.gif) no-repeat}
 .mo-middile-ul a img{margin-right:3px; margin-top:-2px;}
