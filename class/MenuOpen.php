@@ -227,6 +227,8 @@ class MenuOpen extends ControlPanel
  						$arrSettingDelete=array();
  						$arrSettingChild=array();
  						$arrItemSettingMiddle=array();
+ 						
+ 						
  						$arrSettingNew=array();
 
  						$arrSettingOld=$akey->item($sViewPath.$sMenuId);
@@ -904,11 +906,14 @@ class MenuOpen extends ControlPanel
 		}
 		
 		//将menu组成字符串在页面显示
+		$arrSettingOld=array();
 		$arrJson=array();
 		$arrSetting=array();
 		$sXpath='';
 		$aMenuIterator=$aMenu->itemIterator();
-		$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
+		$this->itemSetting($aMenuIterator,$arrSettingOld);
+		$sMenu=$this->displaySetting($arrSettingOld,$sXpath,$sControllerName,$sViewPath,$sMenuId);
+		//$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
 				"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;

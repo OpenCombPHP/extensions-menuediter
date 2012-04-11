@@ -21,6 +21,15 @@ class MenuEditer extends Extension
 			, 'mainMenu'
 			, array(__CLASS__,'buildControlPanelMenu')
 		) ;
+		/*
+		Menu::registerBuildHandle(
+				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+				, 'frameView'
+				, 'mainMenu'
+				, array(__CLASS__,'buildControlPanelMenu2')
+		) ;
+		*/
+		
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
@@ -30,5 +39,18 @@ class MenuEditer extends Extension
 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
 				);
+	}
+	
+	static public function buildControlPanelMenu2(array & $arrConfig)
+	{
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		$akey=$aSetting->key('/'.'org\opencomb\coresystem\mvc\controller\ControlPanelFrame',true);
+		$arrConfig=$akey->Item('frameView'.'mainMenu');
+		//var_dump($arrConfig);
+// 		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
+// 				'title'=>'菜单编辑' ,
+// 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
+// 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
+// 		);
 	}
 }
