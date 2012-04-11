@@ -441,7 +441,7 @@ class MenuOpen extends ControlPanel
 	//从BeanConfig中读取Menu，显示
 	public function itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId)
 	{	
-		$sItem='<ul class=mo-middile-ul>';
+		$sItem='<ul style=margin-left:10px>';
 		foreach($aMenuIterator as $aItem)
 		{	
 			$sXpathOld=$sXpath;
@@ -453,16 +453,16 @@ class MenuOpen extends ControlPanel
 				$sDepth=$aItem->depth();
 				$bActive=$aItem->isActive();
 				$sLink=substr($aItem->link(),1);
-				$sItem=$sItem.'<span>'.$aItem->title().'</span>'.
+				$sItem=$sItem.'<a>'.$aItem->title().'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
 						"删除".'</a>'.
 						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.
-						"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
+				"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'<img title="向上" src="/extensions/menuediter/0.1/public/images/up.png">'.'</a>'.
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'|'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'<img title="向上" src="/extensions/menuediter/0.1/public/images/down.png">'.'</a>';
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
 			}
 			if($aItem->subMenu())
 			{
@@ -482,31 +482,30 @@ class MenuOpen extends ControlPanel
 	//从setting直接读取Menu，显示
 	public function displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId)
 	{
-		$sMenu='<ul class=mo-middile-ul>';
+		$sMenu='<ul style=margin-left:10px>';
 		foreach($arrSetting as $key=>$item)
 		{
 			$sXpathOld=$sXpath;
 			if($key=='xpath'){
 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
-			
 			if($key=='title')
 			{
 				$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 			}
-			
+			//$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 			if($key=='title')
 			{
-				$sMenu=$sMenu."<span>".$arrSetting['title'].'</span>'.
+				$sMenu=$sMenu."<a>".$arrSetting['title'].'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'<img title="向上" src="/extensions/menuediter/0.1/public/images/delete.png">'.
+						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
 						"删除".'</a>'.
-						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'<img title="向上" src="/extensions/menuediter/0.1/public/images/new.png">'.'新建'.'</a>'.'</a>'.
+						"<a href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.
 						"<a href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'<img title="向上" src="/extensions/menuediter/0.1/public/images/up.png">'.'向上'.'</a>'.
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.'|'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'<img title="向上" src="/extensions/menuediter/0.1/public/images/down.png">'.'</a>';
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>';
 			}
 			if(is_array($item))
 			{

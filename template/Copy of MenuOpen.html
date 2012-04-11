@@ -1,0 +1,94 @@
+<h2>MenuOpen</h2>
+<msgqueue/>
+<script type="text/javascript">
+	function confirmDel(){
+		if(!confirm("确认删除菜单项目吗")){
+			return false;
+		}
+	}
+	
+	function itemEdit(xPath1)
+	{
+		var xPath = xPath1;
+		var json = {=$sJsonSetting};
+		document.getElementById('title').value=json[xPath]['title'];
+		document.getElementById('depth').value=json[xPath]['depth'];
+		document.getElementById('link').value=json[xPath]['link'];
+		document.getElementById('active').value=json[xPath]['active'];
+		document.getElementById('hide_flag_edit_item').value=1;
+		document.getElementById('hide_item_controllerName').value=json['controllername'];
+		document.getElementById('hide_item_viewPath').value=json['viewpath'];
+		document.getElementById('hide_item_menuId').value=json['menuid'];
+		document.getElementById('hide_item_xpath').value=xPath1;
+		document.getElementById('itemEdit').style.display="";
+		document.getElementById('itemCreate').style.display="none";
+	}
+	
+	function itemCreate(xPath1)
+	{
+		var xPath = xPath1;
+		document.getElementById('hide_flag_create_item').value=2;
+		document.getElementById('hide_item_create_xpath').value=xPath1;
+		document.getElementById('itemCreate').style.display="";
+		document.getElementById('itemEdit').style.display="none";
+	}
+	
+</script>
+<div>
+	<div style="float:left;">
+	<form method="post">
+		控制器:<widget id="controller_name"/><br/>
+		视图路径:<widget id="viewXpath"/><br/>
+		控件ID:<widget id="menu_id"/><br/>
+		<input type="submit" value="打开" />
+	</form>
+	<br/>
+		{=$sHistory}
+	</div>
+	
+	<div style="float:left;">
+
+	{=$sMenu}
+	{=$sClear}
+
+	</div>
+	
+	<div id="itemCreate" style="display:none;float:left">
+	<h2>项目新建</h2>
+		<form method="post">
+			项目ID：<widget id="create_item_id" /><br/>
+			标题:<widget id="create_title" /><br/>
+			层级数量:<widget id="create_depth"/><br/>
+			链接:<widget id="create_link"/><br/>
+			激活:<widget id="create_active"/><br/>
+			<widget id="hide_flag_create_item"/><br/>
+			<widget id="hide_create_item_controllerName"/>
+			<widget id="hide_create_item_viewPath"/>
+			<widget id="hide_create_item_menuId"/>
+			<widget id="hide_item_create_xpath"/>
+			<input type="submit" value="保存" />
+		</form>
+	</div>
+	
+	<div id="itemEdit" style="display:none;float:left">
+	<h2>项目编辑</h2>
+		<form method="post">
+			<select name=xpathOption >
+				<foreach for="$arrXpath" key='sKeyPath' item='xpathselect'>
+					<option value="{=$sKeyPath}" >{=$xpathselect}</option>
+				</foreach>
+			</select><br/><br/>
+			标题:<widget id="title" /><br/>
+			层级数量:<widget id="depth"/><br/>
+			链接:<widget id="link"/><br/>
+			激活:<widget id="active"/><br/>
+			<widget id="hide_flag_edit_item"/>
+			<widget id="hide_item_controllerName"/>
+			<widget id="hide_item_viewPath"/>
+			<widget id="hide_item_menuId"/>
+			<widget id="hide_item_xpath"/>
+			<input type="submit" value="保存" />
+		</form>
+	</div>
+</div>
+
