@@ -489,11 +489,14 @@ class MenuOpen extends ControlPanel
 			if($key=='xpath'){
 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
-			$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 			
 			if($key=='title')
 			{
 				$sMenu=$sMenu."<li xpath=\"$sXpath\">";
+			}
+			
+			if($key=='title')
+			{
 				$sMenu=$sMenu."<span>".$arrSetting['title'].'</span>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'<img title="向上" src="/extensions/menuediter/0.1/public/images/delete.png">'.
