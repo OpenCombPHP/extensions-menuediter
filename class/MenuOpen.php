@@ -213,7 +213,7 @@ class MenuOpen extends ControlPanel
  						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
  						
- 						//if()
+ 						//判断移动的层级
  						if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
  						{
  							$skey="移动层级错误";
@@ -262,6 +262,9 @@ class MenuOpen extends ControlPanel
  					
  						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
+ 						//判断移动层级
+						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
+ 						
  						$arrToXpath=explode('/',$sXpathFrom);
  						array_pop($arrToXpath);
 
@@ -486,7 +489,11 @@ class MenuOpen extends ControlPanel
 			if($key=='xpath'){
 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
-			$sMenu=$sMenu."<li xpath=\"$sXpath\">";
+			if($key=='title')
+			{
+				$sMenu=$sMenu."<li xpath=\"$sXpath\">";
+			}
+			//$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 			if($key=='title')
 			{
 				$sMenu=$sMenu."<a>".$arrSetting['title'].'</a>'.
@@ -505,7 +512,11 @@ class MenuOpen extends ControlPanel
 				$sMenu=$sMenu.$this->displaySetting($item,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 				$sXpath=$sXpathOld;
 			}
-			$sMenu=$sMenu."</li>";
+			if($key=='title')
+			{
+				$sMenu=$sMenu."</li>";
+			}
+			//$sMenu=$sMenu."</li>";
 		}
 		$sMenu=$sMenu.'</ul>';
 		return $sMenu;
