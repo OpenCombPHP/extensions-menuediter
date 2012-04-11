@@ -213,7 +213,7 @@ class MenuOpen extends ControlPanel
  						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
  						
- 						//if()
+ 						//判断移动的层级
  						if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
  						{
  							$skey="移动层级错误";
@@ -262,6 +262,9 @@ class MenuOpen extends ControlPanel
  					
  						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
+ 						//判断移动层级
+						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
+ 						
  						$arrToXpath=explode('/',$sXpathFrom);
  						array_pop($arrToXpath);
 
@@ -487,8 +490,10 @@ class MenuOpen extends ControlPanel
 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
 			}
 			$sMenu=$sMenu."<li xpath=\"$sXpath\">";
+			
 			if($key=='title')
 			{
+				$sMenu=$sMenu."<li xpath=\"$sXpath\">";
 				$sMenu=$sMenu."<span>".$arrSetting['title'].'</span>'.
 						"<a href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'<img title="向上" src="/extensions/menuediter/0.1/public/images/delete.png">'.
@@ -505,7 +510,11 @@ class MenuOpen extends ControlPanel
 				$sMenu=$sMenu.$this->displaySetting($item,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 				$sXpath=$sXpathOld;
 			}
-			$sMenu=$sMenu."</li>";
+			if($key=='title')
+			{
+				$sMenu=$sMenu."</li>";
+			}
+			//$sMenu=$sMenu."</li>";
 		}
 		$sMenu=$sMenu.'</ul>';
 		return $sMenu;
@@ -799,7 +808,7 @@ class MenuOpen extends ControlPanel
 		$sXpath='';
 		$arrSetting=$akey->Item($sViewPath.$sMenuId);
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
-		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
+		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.
 				"<a href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
@@ -838,7 +847,7 @@ class MenuOpen extends ControlPanel
 			$this->getHistory();
 		}
 		
-		$sClear="<a class=\"mo-clear\" href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清　除'.'</a>';
+		$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
 		$this->viewMenuOpen->variables()->set('sClear',$sClear);
 	}
 	
@@ -897,7 +906,7 @@ class MenuOpen extends ControlPanel
 		$sXpath='';
 		$aMenuIterator=$aMenu->itemIterator();
 		$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
-		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
+		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.
 				"<a href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		
