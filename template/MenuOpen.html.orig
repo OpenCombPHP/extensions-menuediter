@@ -1,5 +1,9 @@
 <css src="menuediter:css/style.css" />
-<h1>菜单编辑</h1>
+<<<<<<< HEAD
+<h2>菜单编辑</h2>
+=======
+<h1>MenuOpen</h1>
+>>>>>>> d7e428fca01a6837e76b138da95b65f4f392a1f4
 <msgqueue/>
 <script type="text/javascript">
 	function confirmDel(){
