@@ -42,7 +42,7 @@ class ItemSort extends ControlPanel
 		
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		
-		if($aSetting->hasItem('/'.$sControllerName,$sViewPath.$sMenuId))
+		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.$sMenuId))
 		{
 			$i=0;
 			$arrSort=array();
@@ -51,7 +51,7 @@ class ItemSort extends ControlPanel
 			$arrSettingChild=array();
 			$arrItemSettingNew=array();
 			$sXpath='';
-			$akey=$aSetting->key('/'.$sControllerName,true);
+			$akey=$aSetting->key('/menu/'.$sControllerName,true);
 			$arrSettingOld=$akey->Item($sViewPath.$sMenuId);
 			$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);			
 
@@ -114,7 +114,7 @@ class ItemSort extends ControlPanel
 			$arrSettingChild=array();
 			$arrItemSettingNew=array();
 			$arrSettingOld=array();
-			$akey=$aSetting->key('/'.$sControllerName,true);
+			$akey=$aSetting->key('/menu/'.$sControllerName,true);
 			$aController = new $sControllerName();
 			$aView = View::findXPath($aController->mainView(),$sViewPath );
 			$aMenu=$aView->widget($sMenuId);
@@ -485,7 +485,7 @@ class ItemSort extends ControlPanel
 		$sMenuId=$sMenuIdFormal;
 		$aSetting = Extension::flyweight('menuediter')->setting();
 	
-		$akey=$aSetting->key('/'.$sControllerName,true);
+		$akey=$aSetting->key('/menu/'.$sControllerName,true);
 		$arrJson=array();
 		$arrXpath=array();
 		$sXpath='';

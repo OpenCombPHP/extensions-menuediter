@@ -21,14 +21,14 @@ class MenuEditer extends Extension
 			, 'mainMenu'
 			, array(__CLASS__,'buildControlPanelMenu')
 		) ;
-		/*
-		Menu::registerBuildHandle(
-				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
-				, 'frameView'
-				, 'mainMenu'
-				, array(__CLASS__,'buildControlPanelMenu2')
-		) ;
-		*/
+		
+// 		Menu::registerBuildHandle(
+// 				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+// 				, 'frameView'
+// 				, 'mainMenu'
+// 				, array(__CLASS__,'buildControlPanelMenu2')
+// 		) ;
+		
 		
 	}
 	
@@ -47,23 +47,27 @@ class MenuEditer extends Extension
 		$akey=$aSetting->key('/'.'org\opencomb\coresystem\mvc\controller\ControlPanelFrame',true);
 		$arrConfig=$akey->Item('frameView'.'mainMenu');
 		//var_dump($arrConfig);
-// 		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
-// 				'title'=>'菜单编辑' ,
-// 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
-// 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
-// 		);
+		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
+				'title'=>'菜单编辑' ,
+				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
+				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
+		);
 	}
 	
-// 	public function getHistory()
-// 	{
-// 		foreach($aSetting->keyIterator('/history') as $key=>$akey)
-// 		{
-			
-// 		}
-// 		foreach($arrHistory as $key=>$value)
-// 		{
-// 			$sHistory=$sHistory.$value[0];
-// 		}
-// 		$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
-// 	}
+	public function getHistory()
+	{
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		$arrHistory=array();
+		$i=0;
+		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
+		{
+			$i=$i+1;
+			foreach($akey->itemIterator() as $key1=>$item)
+			{
+				$arrHistory[$i++]=$akey->item($item,array());
+			}
+		}
+		
+		$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
+	}
 }

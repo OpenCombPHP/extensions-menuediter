@@ -13,7 +13,6 @@
 		var xPath = xPath1;
 		var json = {=$sJsonSetting};
 		document.getElementById('title').value=json[xPath]['title'];
-		document.getElementById('depth').value=json[xPath]['depth'];
 		document.getElementById('link').value=json[xPath]['link'];
 		document.getElementById('active').value=json[xPath]['active'];
 		document.getElementById('hide_flag_edit_item').value=1;
@@ -56,7 +55,6 @@
 		<form method="post">
 			<p>项目ID：<widget id="create_item_id" /></p>
 			<p>标题:<widget id="create_title" /></p>
-			<p>层级数量:<widget id="create_depth"/></p>
 			<p>链接:<widget id="create_link"/></p>
 			<p>激活:<widget id="create_active"/></p>
 			<widget id="hide_flag_create_item"/>
@@ -78,7 +76,6 @@
 			</select>
 			</p>
 			<p>标题:<widget id="title" /></p>
-			<p>层级数量:<widget id="depth"/></p>
 			<p>链接:<widget id="link"/></p>
 			<p>激活:<widget id="active"/></p>
 			<widget id="hide_flag_edit_item"/>
