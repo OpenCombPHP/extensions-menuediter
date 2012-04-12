@@ -482,24 +482,83 @@ class MenuOpen extends ControlPanel
 	}
 	
 	//从setting直接读取Menu，显示
-	public function displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId)
+// 	public function displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId,$bflag=true)
+// 	{
+// 			$sMenu='<ul class=mo-middile-ul>';
+			
+			
+// 		if($bflag)
+// 		{
+// 		}else{
+// 			$sMenu='<li>';
+// 		}
+		
+// 		foreach($arrSetting as $key=>$item)
+// 		{
+// 			$sXpathOld=$sXpath;
+// 			if($key=='xpath'){
+// 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
+// 			}
+			
+// 			//if($key=='title' or is_array($item))
+// 			//if($key=='title')
+// 			if($key=='title' or is_array($item))
+// 			{
+// 				$sMenu=$sMenu."<li xpath=$sXpath>";
+// 			}
+			
+// 			if($key=='title')
+// 			{
+// 				$sMenu=$sMenu."<span>".$arrSetting['title'].'</span>'.'<em>'.
+// 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
+// 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
+// 						"删除".'</a>'.
+// 						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.
+// 						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
+// 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
+// 						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.
+// 						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
+// 						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>'.'</em>';
+// 			}
+// 			if($key=='title')
+// 			{
+// 				$bflag=true;
+// 			}else{
+// 				$bflag=false;
+// 			}
+// 			if(is_array($item))
+// 			{
+// 				$sMenu=$sMenu.$this->displaySetting($item,$sXpath,$sControllerName,$sViewPath,$sMenuId,$bflag);
+// 				$sXpath=$sXpathOld;
+// 			}
+// 			//if($key=='title' or is_array($item))
+// 			//if($key=='title')
+// 			if($key=='title' or is_array($item))
+// 			{
+// 				$sMenu=$sMenu."</li>";
+// 			}
+// 			//$sMenu=$sMenu."</li>";
+// 		}
+// 		if($bflag)
+// 		{
+// 			$sMenu=$sMenu.'</ul>';
+// 		}else{
+// 			$sMenu=$sMenu.'</li>';
+// 		}
+// 		//$sMenu=$sMenu.'</ul>';
+// 		return $sMenu;
+// 	}
+	
+	public function displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId,$bflag=true)
 	{
 		$sMenu='<ul class=mo-middile-ul>';
 		foreach($arrSetting as $key=>$item)
 		{
-			$sXpathOld=$sXpath;
-			if($key=='xpath'){
-				$sXpath=$sXpath.$arrSetting['xpath'].'/';
-			}
-			
-			if($key=='title')
+			if(substr($key,0,5)=='item:')
 			{
-				$sMenu=$sMenu."<li xpath=\"$sXpath\">";
-			}
-			
-			if($key=='title')
-			{
-				$sMenu=$sMenu."<span>".$arrSetting['title'].'</span>'.'<em>'.
+				$sXpathOld=$sXpath;
+				$sXpath=$sXpath.$item['xpath'].'/';
+				$sMenu=$sMenu.'<li>'."<h2>"."<span>".$item['title'].'</span>'.'<em>'.
 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
 						"删除".'</a>'.
@@ -508,18 +567,18 @@ class MenuOpen extends ControlPanel
 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.
 						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>'.'</em>';
-			}
-			if(is_array($item))
-			{
-				$sMenu=$sMenu.$this->displaySetting($item,$sXpath,$sControllerName,$sViewPath,$sMenuId);
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>'.'</em>'."</h2>";
+				$sMenu1=$this->displaySetting($item,$sXpath,$sControllerName,$sViewPath,$sMenuId,$bflag);
+				if(stripos($sMenu1,"li"))
+				{
+					
+				}else{
+					$sMenu1='';
+				}
+				$sMenu=$sMenu.$sMenu1;
 				$sXpath=$sXpathOld;
-			}
-			if($key=='title')
-			{
 				$sMenu=$sMenu."</li>";
 			}
-			//$sMenu=$sMenu."</li>";
 		}
 		$sMenu=$sMenu.'</ul>';
 		return $sMenu;
@@ -772,9 +831,9 @@ class MenuOpen extends ControlPanel
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		$arrHistory=array();
 		$arrHistory[0]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.FrontFrame
-						&viewpath=frameView&menuid=mainMenu">前台</a></li></ul>');
+						&viewpath=frameView&menuid=mainMenu">前台菜单</a></li></ul>');
 		$arrHistory[1]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.UserPanelFrame
-				&viewpath=userPanelFrame&menuid=mainMenu">用户</a></li></ul>');
+				&viewpath=userPanelFrame&menuid=mainMenu">控制面板(后台)</a></li></ul>');
 		$sHistory=null;
 		$i=2;	
 		foreach($aSetting->keyIterator('/history') as $key=>$akey)

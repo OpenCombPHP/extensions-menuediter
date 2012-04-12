@@ -53,4 +53,17 @@ class MenuEditer extends Extension
 // 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
 // 		);
 	}
+	
+// 	public function getHistory()
+// 	{
+// 		foreach($aSetting->keyIterator('/history') as $key=>$akey)
+// 		{
+			
+// 		}
+// 		foreach($arrHistory as $key=>$value)
+// 		{
+// 			$sHistory=$sHistory.$value[0];
+// 		}
+// 		$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
+// 	}
 }
