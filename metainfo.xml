@@ -9,7 +9,11 @@
 	
 	<package folder="/class" namespace="org.opencomb.menuediter" />
 	
+	<publicFolder folder="/public" />
+
 	<template folder="/template" />
+	
+	<beanFolder folder="/bean" />
 	
 	<priority>9</priority>
 	

@@ -1,5 +1,9 @@
 <css src="menuediter:css/style.css" />
-<h1>菜单编辑</h1>
+<<<<<<< HEAD
+<h2>菜单编辑</h2>
+=======
+<h1>MenuOpen</h1>
+>>>>>>> d7e428fca01a6837e76b138da95b65f4f392a1f4
 <msgqueue/>
 <script type="text/javascript">
 	function confirmDel(){
@@ -14,7 +18,7 @@
 		var json = {=$sJsonSetting};
 		document.getElementById('title').value=json[xPath]['title'];
 		document.getElementById('link').value=json[xPath]['link'];
-		document.getElementById('query').value=json[xPath]['query'];
+		document.getElementById('active').value=json[xPath]['active'];
 		document.getElementById('hide_flag_edit_item').value=1;
 		document.getElementById('hide_item_controllerName').value=json['controllername'];
 		document.getElementById('hide_item_viewPath').value=json['viewpath'];
@@ -51,12 +55,12 @@
 	</div>
 	<div class="mo-right">
 	<div id="itemCreate" style="display:none;" class="mo-right-item">
-	<h2>项目新建</h2>
+	<h1>项目新建</h1>
 		<form method="post">
 			<p>项目ID：<widget id="create_item_id" /></p>
 			<p>标题:<widget id="create_title" /></p>
 			<p>链接:<widget id="create_link"/></p>
-			<p>激活:<widget id="create_query"/></p>
+			<p>激活:<widget id="create_active"/></p>
 			<widget id="hide_flag_create_item"/>
 			<widget id="hide_create_item_controllerName"/>
 			<widget id="hide_create_item_viewPath"/>
@@ -67,7 +71,7 @@
 	</div>
 	
 	<div id="itemEdit" style="display:none;" class="mo-right-item">
-	<h2>项目编辑</h2>
+	<h1>项目编辑</h1>
 		<form method="post">
 			<p><select name=xpathOption >
 				<foreach for="$arrXpath" key='sKeyPath' item='xpathselect'>
@@ -77,7 +81,7 @@
 			</p>
 			<p>标题:<widget id="title" /></p>
 			<p>链接:<widget id="link"/></p>
-			<p>激活:<widget id="query"/></p>
+			<p>激活:<widget id="active"/></p>
 			<widget id="hide_flag_edit_item"/>
 			<widget id="hide_item_controllerName"/>
 			<widget id="hide_item_viewPath"/>

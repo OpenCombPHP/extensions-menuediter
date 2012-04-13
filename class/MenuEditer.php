@@ -21,6 +21,28 @@ class MenuEditer extends Extension
 			, 'mainMenu'
 			, array(__CLASS__,'buildControlPanelMenu')
 		) ;
+		
+// 		Menu::registerBuildHandle(
+// 				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+// 				, 'frameView'
+// 				, 'mainMenu'
+// 				, array(__CLASS__,'buildControlPanelMenu3')
+// 		) ;
+		
+// 		Menu::registerBuildHandle(
+// 				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+// 				, 'frameView'
+// 				, 'mainMenu'
+// 				, array(__CLASS__,'buildControlPanelMenu2')
+// 		) ;
+		MenuEditer::getHistory();
+		
+		
+	}
+	
+	static public function buildControlPanelMenu3(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
+	{
+		$arrConfig=$arrSettigBean;
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
@@ -30,5 +52,43 @@ class MenuEditer extends Extension
 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
 				);
+	}
+	
+	static public function buildControlPanelMenu2(array & $arrConfig, $a,$b,$c)
+	{
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		$akey=$aSetting->key('/menu/'.'org\opencomb\coresystem\mvc\controller\ControlPanelFrame',true);
+		$arrConfig=$akey->Item('frameView'.'.'.'mainMenu');
+		//var_dump($arrConfig);
+// 		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
+// 				'title'=>'菜单编辑' ,
+// 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
+// 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
+// 		);
+	}
+	
+	static public function getHistory()
+	{
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
+		{
+			 $sKeyName=$akey->name();
+			 echo $sKeyName;
+			foreach($akey->itemIterator() as $key1=>$item)
+			{
+				//echo $item;
+				$arrItem=explode('.',$item);
+				//var_dump($akey->item($item,array()));
+				Menu::registerBuildHandle(
+						$sKeyName
+						, "$arrItem[0]"
+						, "$arrItem[1]"
+						, array(__CLASS__,'buildControlPanelMenu3')
+						, array($akey->item($item,array()))
+				) ;
+			}
+		}
+		
+		//$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
 	}
 }
