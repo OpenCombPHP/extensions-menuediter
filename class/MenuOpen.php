@@ -553,7 +553,7 @@ class MenuOpen extends ControlPanel
 					$ss=null;
 					foreach($arrSetting['query'] as $key=>$item)
 					{
-						$ss=$ss.$item."\n";
+						$ss=$ss.$item."\r\n";
 					}
 					$arrJson[$sXpath]=array('title'=>$arrSetting['title'],
 							'xpath'=>$arrSetting['xpath'],'link'=>$arrSetting['link'],

@@ -29,22 +29,20 @@ class MenuEditer extends Extension
 // 				, array(__CLASS__,'buildControlPanelMenu3')
 // 		) ;
 		
-		Menu::registerBuildHandle(
-				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
-				, 'frameView'
-				, 'mainMenu'
-				, array(__CLASS__,'buildControlPanelMenu2')
-		) ;
-		//MenuEditer::getHistory();
+// 		Menu::registerBuildHandle(
+// 				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+// 				, 'frameView'
+// 				, 'mainMenu'
+// 				, array(__CLASS__,'buildControlPanelMenu2')
+// 		) ;
+		MenuEditer::getHistory();
 		
 		
 	}
 	
-	static public function buildControlPanelMenu3(array & $arrConfig)
+	static public function buildControlPanelMenu3(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
 	{
-		$aSetting = Extension::flyweight('menuediter')->setting();
-		$akey=$aSetting->key('/menu/'.'org\opencomb\menuediter\TestMenuOpen',true);
-		$arrConfig=$akey->Item('testMenuOpenView'.'.'.'mainMenu');
+		$arrConfig=$arrSettigBean;
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
@@ -56,7 +54,7 @@ class MenuEditer extends Extension
 				);
 	}
 	
-	static public function buildControlPanelMenu2(array & $arrConfig)
+	static public function buildControlPanelMenu2(array & $arrConfig, $a,$b,$c)
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		$akey=$aSetting->key('/menu/'.'org\opencomb\coresystem\mvc\controller\ControlPanelFrame',true);
@@ -72,25 +70,22 @@ class MenuEditer extends Extension
 	static public function getHistory()
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
-		$arrHistory=array();
-		$i=0;
 		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
 		{
-			$i=$i+1;
-			var_dump($akey->name());
+			 $sKeyName=$akey->name();
+			 echo $sKeyName;
 			foreach($akey->itemIterator() as $key1=>$item)
 			{
+				//echo $item;
 				$arrItem=explode('.',$item);
-				Menu::registerBuildHandle(
-						$akey->name()
-						, '$arrItem[0]'
-						, '$arrItem[0]'
-						, array(__CLASS__,'buildControlPanelMenu2')
-				) ;
-			//$item->name();
 				//var_dump($akey->item($item,array()));
-				var_dump($item);
-				$arrHistory[$i++]=$akey->item($item,array());
+				Menu::registerBuildHandle(
+						$sKeyName
+						, "$arrItem[0]"
+						, "$arrItem[1]"
+						, array(__CLASS__,'buildControlPanelMenu3')
+						, array($akey->item($item,array()))
+				) ;
 			}
 		}
 		
