@@ -14,7 +14,7 @@
 		var json = {=$sJsonSetting};
 		document.getElementById('title').value=json[xPath]['title'];
 		document.getElementById('link').value=json[xPath]['link'];
-		document.getElementById('active').value=json[xPath]['active'];
+		document.getElementById('query').value=json[xPath]['query'];
 		document.getElementById('hide_flag_edit_item').value=1;
 		document.getElementById('hide_item_controllerName').value=json['controllername'];
 		document.getElementById('hide_item_viewPath').value=json['viewpath'];
@@ -56,7 +56,7 @@
 			<p>项目ID：<widget id="create_item_id" /></p>
 			<p>标题:<widget id="create_title" /></p>
 			<p>链接:<widget id="create_link"/></p>
-			<p>激活:<widget id="create_active"/></p>
+			<p>激活:<widget id="create_query"/></p>
 			<widget id="hide_flag_create_item"/>
 			<widget id="hide_create_item_controllerName"/>
 			<widget id="hide_create_item_viewPath"/>
@@ -77,7 +77,7 @@
 			</p>
 			<p>标题:<widget id="title" /></p>
 			<p>链接:<widget id="link"/></p>
-			<p>激活:<widget id="active"/></p>
+			<p>激活:<widget id="query"/></p>
 			<widget id="hide_flag_edit_item"/>
 			<widget id="hide_item_controllerName"/>
 			<widget id="hide_item_viewPath"/>

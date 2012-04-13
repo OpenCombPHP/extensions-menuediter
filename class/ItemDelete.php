@@ -41,7 +41,7 @@ class ItemDelete extends ControlPanel
 		
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		
-		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.$sMenuId))
+		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
 		{
 			$akey=$aSetting->key('/menu/'.$sControllerName,true);
 			$arrSettingOld=$akey->Item($sViewPath.$sMenuId);
@@ -71,7 +71,7 @@ class ItemDelete extends ControlPanel
 			$this->settingItemdelete($arrSettingNew, $arrToXpath);
 			$arrSettingNew['id']=$sMenuId;
 			$arrSettingNew['class']='menu';
-			$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+			$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
 		}
 		
 		$sControllerNamePage=str_replace('\\','.',$sControllerName);

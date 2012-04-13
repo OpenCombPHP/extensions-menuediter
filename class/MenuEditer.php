@@ -26,10 +26,25 @@ class MenuEditer extends Extension
 // 				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
 // 				, 'frameView'
 // 				, 'mainMenu'
-// 				, array(__CLASS__,'buildControlPanelMenu2')
+// 				, array(__CLASS__,'buildControlPanelMenu3')
 // 		) ;
 		
+		Menu::registerBuildHandle(
+				'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
+				, 'frameView'
+				, 'mainMenu'
+				, array(__CLASS__,'buildControlPanelMenu2')
+		) ;
+		//MenuEditer::getHistory();
 		
+		
+	}
+	
+	static public function buildControlPanelMenu3(array & $arrConfig)
+	{
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		$akey=$aSetting->key('/menu/'.'org\opencomb\menuediter\TestMenuOpen',true);
+		$arrConfig=$akey->Item('testMenuOpenView'.'.'.'mainMenu');
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
@@ -44,17 +59,17 @@ class MenuEditer extends Extension
 	static public function buildControlPanelMenu2(array & $arrConfig)
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
-		$akey=$aSetting->key('/'.'org\opencomb\coresystem\mvc\controller\ControlPanelFrame',true);
-		$arrConfig=$akey->Item('frameView'.'mainMenu');
+		$akey=$aSetting->key('/menu/'.'org\opencomb\coresystem\mvc\controller\ControlPanelFrame',true);
+		$arrConfig=$akey->Item('frameView'.'.'.'mainMenu');
 		//var_dump($arrConfig);
-		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
-				'title'=>'菜单编辑' ,
-				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
-				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
-		);
+// 		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
+// 				'title'=>'菜单编辑' ,
+// 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
+// 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
+// 		);
 	}
 	
-	public function getHistory()
+	static public function getHistory()
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		$arrHistory=array();
@@ -62,12 +77,23 @@ class MenuEditer extends Extension
 		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
 		{
 			$i=$i+1;
+			var_dump($akey->name());
 			foreach($akey->itemIterator() as $key1=>$item)
 			{
+				$arrItem=explode('.',$item);
+				Menu::registerBuildHandle(
+						$akey->name()
+						, '$arrItem[0]'
+						, '$arrItem[0]'
+						, array(__CLASS__,'buildControlPanelMenu2')
+				) ;
+			//$item->name();
+				//var_dump($akey->item($item,array()));
+				var_dump($item);
 				$arrHistory[$i++]=$akey->item($item,array());
 			}
 		}
 		
-		$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
+		//$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
 	}
 }

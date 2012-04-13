@@ -19,124 +19,16 @@ use org\jecat\framework\mvc\controller\Controller;
 
 class TestMenuOpen extends ControlPanel
 {
-	static $nCountTotal =0;
 	public function createBeanConfig()
 	{
 		return array(
-			'title'=> '文章内容',
-			'view:testMenuOpen'=>array(
-				'template'=>'TestMenuOpen.html',
-				'class'=>'form',
-				'widgets' => array(
-					array(
-						'id'=>'create_item_id',	
-						'class'=>'text',	
-					),	
-					array(
-						'id'=>'controller_name',
-						'class'=>'text',
-						'title'=>'控制器'		
-					),
-					array(
-							'id'=>'controller_name1',
-							'class'=>'text',
-							'title'=>'控制器'
-						),
-					array(
-						'id'=>'viewXpath',
-						'class'=>'text',
-						'title'=>'视图路径'
-					),
-					array(
-						'id'=>'widget_id',
-						'class'=>'text',
-						'title'=>'控件ID'
-					),
-					array(
-							'id'=>'create_title',
-							'class'=>'text',
-							'title'=>'控制器'
-					),
-					array(
-							'id'=>'create_depth',
-							'class'=>'text',
-							'title'=>'视图路径'
-					),
-					array(
-							'id'=>'create_link',
-							'class'=>'text',
-							'title'=>'控件ID'
-					),
-					array(
-							'id'=>'create_active',
-							'class'=>'text',
-							'title'=>'控件ID'
-					),
-						array(
-								'id'=>'hide_flag_item',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'判断提交项目编辑'
-						),
-						array(
-								'id'=>'hide_item_controllerName',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'编辑项controllerName'
-						),
-						array(
-								'id'=>'hide_item_viewPath',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'编辑项viewPath'
-						),
-						array(
-								'id'=>'hide_item_menuId',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'编辑项menuId'
-						),
-						array(
-								'id'=>'hide_item_create_xpath',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'编辑项menuId'
-						),
-					array(
-						'id'=>'testMenu',
-						'class'=>'menu',
-						'title'=>'Menu',
-						'item:A'=>array(
-								'title'=>'A',
-						),
-						'item:B'=>array(
-								'title'=>'B',
-  								'menu'=>'1',
-								'item:BB1'=>array(
- 										'title'=>'BB1',
-										'menu'=>'1',
-										'item:BBB1'=>array(
-											'title'=>'BBB1',
-										)
-  								),
-								'item:BB2'=>array(
-										'title'=>'BB1',
-										'menu'=>'1',
-										'item:BBB2'=>array(
-												'title'=>'BBB2',
-										),
-										'item:BBB22'=>array(
-												'title'=>'BBB22',
-										),
- 								),
-						),
-						'item:C'=>array(
-								'title'=>'C',		
-						),
-					),
-				),
-			),
-		);
+			'view:testMenuOpenView' => array(
+					
+					'template' => 'TestMenuOpen.html' ,
+					
+					'widget:mainMenu' => array( 'config'=>'widget/testMenuOpen' ) ,
+			) ,
+		) ;
 	}
 	
 	public function process()

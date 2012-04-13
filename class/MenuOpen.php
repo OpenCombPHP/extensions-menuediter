@@ -60,7 +60,7 @@ class MenuOpen extends ControlPanel
 						'title'=>'link',
 					),
 					array(
-						'id'=>'active',
+						'id'=>'query',
 						'class'=>'text',
 						'type'=>'multiple',
 						'title'=>'激活',
@@ -116,7 +116,7 @@ class MenuOpen extends ControlPanel
 						'title'=>'link'
 					),
 					array(
-						'id'=>'create_active',
+						'id'=>'create_query',
 						'class'=>'text',
 						'type'=>'multiple',
 						'title'=>'激活'
@@ -204,7 +204,7 @@ class MenuOpen extends ControlPanel
  				
  				$aSetting = Extension::flyweight('menuediter')->setting();
  			
- 				if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.$sMenuId))
+ 				if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
  				{		
  						$sControllerNamePage=str_replace('\\','.',$sControllerName);
  						$akey=$aSetting->key('/menu/'.$sControllerName,true);
@@ -229,7 +229,7 @@ class MenuOpen extends ControlPanel
  						
  						$arrSettingNew=array();
 
- 						$arrSettingOld=$akey->item($sViewPath.$sMenuId);
+ 						$arrSettingOld=$akey->item($sViewPath.'.'.$sMenuId);
  						$arrSettingDelete=$arrSettingOld;
  						
  						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
@@ -238,12 +238,15 @@ class MenuOpen extends ControlPanel
  						$arrSettingChild['title']=$this->viewMenuOpen->widget('title')->value();
  						//$arrSettingChild['depth']=$this->viewMenuOpen->widget('depth')->value();
  						$arrSettingChild['link']=$this->viewMenuOpen->widget('link')->value();
- 						$arrSettingChild['active']=$this->viewMenuOpen->widget('active')->value();
+ 						
+ 						$arrSettingChild['query']=$this->getQuery('query');
+ 						
+ 						//$arrSettingChild['query']=$this->viewMenuOpen->widget('query')->value();
  						$this->settingEditXpathOption($arrSettingDelete, '', $sXpathOption,$sXpathFrom, $arrSettingNew,$arrSettingChild);
- 						$akey->deleteItem($sViewPath.$sMenuId);
+ 						$akey->deleteItem($sViewPath.'.'.$sMenuId);
  						$arrSettingNew['id']=$sMenuId;
  						$arrSettingNew['class']='menu';
- 						$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+ 						$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
  						
  						//$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
  						//$this->viewMenuOpen->variables()->set('sClear',$sClear);
@@ -259,12 +262,17 @@ class MenuOpen extends ControlPanel
  						$aMenuIterator=$aMenu->itemIterator();
  						$this->itemSetting($aMenuIterator,$arrSettingOld);
  						
- 					
  						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
- 						//判断移动层级
-						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
+						//判断移动的层级
+ 						if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
+ 						{
+ 							$skey="移动层级错误";
+ 							$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 							return;
+ 						}
  						
+
  						$arrToXpath=explode('/',$sXpathFrom);
  						array_pop($arrToXpath);
 
@@ -283,11 +291,15 @@ class MenuOpen extends ControlPanel
  						$arrSettingChild['title']=$this->viewMenuOpen->widget('title')->value();
  						//$arrSettingChild['depth']=$this->viewMenuOpen->widget('depth')->value();
  						$arrSettingChild['link']=$this->viewMenuOpen->widget('link')->value();
- 						$arrSettingChild['active']=$this->viewMenuOpen->widget('active')->value();
+ 						
+ 						//$arrSettingChild['query']=$this->viewMenuOpen->widget('query')->value();
+ 						
+ 						$arrSettingChild['query']=$this->getQuery('query');
+ 						
  						$this->settingEditXpathOption($arrSettingDelete, '', $sXpathOption,$sXpathFrom, $arrSettingNew,$arrSettingChild);
  						$arrSettingNew['id']=$sMenuId;
  						$arrSettingNew['class']='menu';
- 						$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+ 						$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
  						
  						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
  						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
@@ -300,12 +312,12 @@ class MenuOpen extends ControlPanel
  				
  				$aSetting = Extension::flyweight('menuediter')->setting();
 
- 				if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.$sMenuId))
+ 				if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
  				{
  					$sControllerNamePage=str_replace('\\', '.', $sControllerName);
  					
  					$akey=$aSetting->key('/menu/'.$sControllerName,true);
- 					$arrSettingOld=$akey->Item($sViewPath.$sMenuId);
+ 					$arrSettingOld=$akey->Item($sViewPath.'.'.$sMenuId);
  					
  					$sXpath='';
 					$arrSettingNew=array();
@@ -326,13 +338,13 @@ class MenuOpen extends ControlPanel
  						'title'=>$this->viewMenuOpen->widget('create_title')->value(),
  						//'depth'=>$this->viewMenuOpen->widget('create_depth')->value(),
  						'link'=>$this->viewMenuOpen->widget('create_link')->value(),
- 						'active'=>$this->viewMenuOpen->widget('create_active')->value(),		
+ 						'query'=>$this->getQuery('create_query'),	
  					);
  					$this->createItem($arrSettingOld, $sXpath, $sXpathTo, $arrSettingNew, $arrItemChild);
- 					$akey->deleteItem($sViewPath.$sMenuId);
+ 					$akey->deleteItem($sViewPath.'.'.$sMenuId);
  					$arrSettingNew['id']=$sMenuId;
  					$arrSettingNew['class']='menu';
- 					$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+ 					$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
  					
  					$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
  					$this->viewMenuOpen->variables()->set('sClear',$sClear);
@@ -368,13 +380,13 @@ class MenuOpen extends ControlPanel
  						'title'=>$this->viewMenuOpen->widget('create_title')->value(),
  						//'depth'=>$this->viewMenuOpen->widget('create_depth')->value(),
  						'link'=>$this->viewMenuOpen->widget('create_link')->value(),
- 						'active'=>$this->viewMenuOpen->widget('create_active')->value(),		
+ 						'query'=>$this->getQuery('create_query'),	
  					);
  					$this->createItem($arrSettingOld, $sXpath, $sXpathTo, $arrSettingNew, $arrItemChild);
- 					$akey->deleteItem($sViewPath.$sMenuId);
+ 					$akey->deleteItem($sViewPath.'.'.$sMenuId);
  					$arrSettingNew['id']=$sMenuId;
  					$arrSettingNew['class']='menu';
- 					$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+ 					$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
 					$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
 					$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  				}
@@ -424,10 +436,20 @@ class MenuOpen extends ControlPanel
 		$arrI=&$arrSetting;
 		foreach($aMenuIterator as $key=>$aItem)
 		{
+			//var_dump($aItem->beanConfig()('query'));exit;
+			//$arrItem=$aItem->beanConfig();
+			//echo $arrItem['query']."</br>";exit;
 			if($aItem->title())
-			{	$aItem->title();
+			{	
+// 				echo "<pre>";
+// 				//var_dump($aItem->beanConfig());
+// 				echo "</pre>";
+				$arrItem=$aItem->beanConfig();
+			//	var_dump($arrItem['query']);echo "</br>";
+				//var_dump($arrItem['query']);echo "</br>";
+				$sQuery=isset($arrItem['query'])?$arrItem['query']:'';
 				$arrI=&$arrSetting['item:'.$key];
-				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
+				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'query'=>$sQuery);
 				$arrI=&$arrSetting;
 			}
 			if($aItem->subMenu())
@@ -451,7 +473,7 @@ class MenuOpen extends ControlPanel
 			{	
 				$sTitle=$aItem->title();
 				//$sDepth=$aItem->depth();
-				$bActive=$aItem->isActive();
+				//$bActive=$aItem->isActive();
 				$sLink=substr($aItem->link(),1);
 				$sItem=$sItem.'<span>'.$aItem->title().'</span>'.'<em>'.
 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
@@ -481,6 +503,9 @@ class MenuOpen extends ControlPanel
 	
 	public function displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId,$bflag=true)
 	{
+// 		echo "<pre>";
+// 		print_r($arrSetting);
+// 		echo "</pre>";
 		$sMenu='<ul class=mo-middile-ul>';
 		foreach($arrSetting as $key=>$item)
 		{
@@ -516,17 +541,35 @@ class MenuOpen extends ControlPanel
 	
 	//json
 	public function jsonSetting($arrSetting,$sXpath,&$arrJson){
+		echo "<pre>";
+		//print_r($arrSetting);
+		echo "</pre>";//exit;
 		foreach($arrSetting as $key=>$item)
 		{
 			$sXpathOld=$sXpath;
 			if($key=='xpath'){
 				$sXpath=$sXpath.$arrSetting['xpath'].'/';
-				$arrJson[$sXpath]=array('title'=>$arrSetting['title'],
-						'xpath'=>$arrSetting['xpath'],'link'=>$arrSetting['link'],
-						'active'=>$arrSetting['active']);
+				if(is_array($arrSetting['query'])){
+					$ss=null;
+					foreach($arrSetting['query'] as $key=>$item)
+					{
+						$ss=$ss.$item."\n";
+					}
+					$arrJson[$sXpath]=array('title'=>$arrSetting['title'],
+							'xpath'=>$arrSetting['xpath'],'link'=>$arrSetting['link'],
+							'query'=>$ss
+							);
+					//echo $ss;exit;
+				}else{
+					$arrJson[$sXpath]=array('title'=>$arrSetting['title'],
+							'xpath'=>$arrSetting['xpath'],'link'=>$arrSetting['link'],
+							'query'=>$arrSetting['query']
+							);
+				}
+
 			}
 	
-			if(is_array($arrSetting[$key]))
+			if(substr($key,0,5)=='item:')
 			{
 				$this->jsonSetting($arrSetting[$key],$sXpath,$arrJson);
 				$sXpath=$sXpathOld;
@@ -547,7 +590,7 @@ class MenuOpen extends ControlPanel
 				$arrXpath[$sXpath]=$sTitle;
 			}
 	
-			if(is_array($arrSetting[$key]))
+			if(substr($key,0,5)=='item:')
 			{
 				$i=$i+$this->xpathOption($arrSetting[$key],$sXpath,$sTitle,$i++,$arrXpath);
 				$sXpath=$sXpathOld;
@@ -572,7 +615,7 @@ class MenuOpen extends ControlPanel
 				$arrSettingNew['title']=$arrItem['title'];
 				//$arrSettingNew['depth']=$arrItem['depth'];
 				$arrSettingNew['link']=$arrItem['link'];
-				$arrSettingNew['active']=$arrItem['active'];
+				$arrSettingNew['query']=$arrItem['query'];
 			}
 			else
 			{
@@ -608,7 +651,7 @@ class MenuOpen extends ControlPanel
 				$arrItemSettingNew[$key]=$arrSetting[$key];
 			}
 	
-			if(is_array($arrSetting[$key]))
+			if(substr($key,0,5)=='item:')
 			{
 				$this->itemSettingEdit($arrSetting[$key],$sXpath,$sXpathTarget,$arrItemSettingNew[$key],$arrSettingChild);
 				$sXpath=$sXpathOld;
@@ -693,7 +736,7 @@ class MenuOpen extends ControlPanel
 			
 				}
 			
-				if(is_array($arrSetting[$key]))
+				if(substr($key,0,5)=='item:')
 				{
 					$this->settingEditXpathOption($arrSetting[$key],$sXpath,$sXpathTarget,$sXpathFirst,$arrSettingNew[$key],$arrSettingChild);
 					$sXpath=$sXpathOld;
@@ -715,7 +758,7 @@ class MenuOpen extends ControlPanel
 			if($sXpath==$sItemId){
 				$bflag=true;
 			}
-			if(is_array($arrSettingOld[$key]))
+			if(substr($key,0,5)=='item:')
 			{
 				$bflag=$this->idSearch($arrSettingOld[$key],$sXpath,$sItemId,$bflag);
 				$sXpath=$sXpathOld;
@@ -746,7 +789,7 @@ class MenuOpen extends ControlPanel
 					$arrSettingNew[$key]=$arrSetting[$key];
 				}
 	
-				if(is_array($arrSetting[$key]))
+				if(substr($key,0,5)=='item:')
 				{
 					$this->createItem($arrSetting[$key],$sXpath,$sXpathTo,$arrSettingNew[$key],$arrItemChild);
 					$sXpath=$sXpathOld;
@@ -800,7 +843,7 @@ class MenuOpen extends ControlPanel
 		$arrJson=array();
 		$arrXpath=array();
 		$sXpath='';
-		$arrSetting=$akey->Item($sViewPath.$sMenuId);
+		$arrSetting=$akey->Item($sViewPath.'.'.$sMenuId);
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
@@ -901,6 +944,9 @@ class MenuOpen extends ControlPanel
 		$sXpath='';
 		$aMenuIterator=$aMenu->itemIterator();
 		$this->itemSetting($aMenuIterator,$arrSettingOld);
+// 		echo "<pre>";
+// 			print_r($arrSettingOld);
+// 		echo "</pre>";exit;
 		$sMenu=$this->displaySetting($arrSettingOld,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		//$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
@@ -1000,6 +1046,37 @@ class MenuOpen extends ControlPanel
 		//return $bflag;
 	}
 	
+	public function getQuery($sflag)
+	{
+		if($sflag=='query')
+		{
+			$arrQuery=explode("\n",$this->viewMenuOpen->widget('query')->value());
+		}elseif($sflag=='create_query')
+		{
+			$arrQuery=explode("\n",$this->viewMenuOpen->widget('create_query')->value());
+		}
+		$arrQueryNew=array();
+		$nI=0;
+		foreach($arrQuery as $key=>$item)
+		{
+			if($item=='' or $item=="\n" or $item=="\r")
+			{
+				continue;
+			}else{
+				$arrQueryNew[$nI]=trim($item);
+				$nI++;
+			}
+		
+		}
+		if(count($arrQueryNew)==1)
+		{
+			return $arrQueryNew[0];
+		}elseif(count($arrQueryNew)==0){
+			return null;
+		}else{
+			return $arrQueryNew;
+		}
+	}
 	// 	//settings数组递归方法
 // 	public function itemSetting($arra,&$arrlist)
 // 	{
