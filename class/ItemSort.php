@@ -42,7 +42,7 @@ class ItemSort extends ControlPanel
 		
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		
-		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.$sMenuId))
+		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
 		{
 			$i=0;
 			$arrSort=array();
@@ -52,7 +52,7 @@ class ItemSort extends ControlPanel
 			$arrItemSettingNew=array();
 			$sXpath='';
 			$akey=$aSetting->key('/menu/'.$sControllerName,true);
-			$arrSettingOld=$akey->Item($sViewPath.$sMenuId);
+			$arrSettingOld=$akey->Item($sViewPath.'.'.$sMenuId);
 			$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);			
 
 			$iNubmerTo=array_search($sXpathTo, $arrXpath);
@@ -100,8 +100,8 @@ class ItemSort extends ControlPanel
 				$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
 			}
 			
-			$akey->deleteItem($sViewPath.$sMenuId);
-			$akey->setItem($sViewPath.$sMenuId,$arrItemSettingNew);
+			$akey->deleteItem($sViewPath.'.'.$sMenuId);
+			$akey->setItem($sViewPath.'.'.$sMenuId,$arrItemSettingNew);
 			$sControllerNamePage=str_replace('\\','.',$sControllerName);
 			$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 			$this->viewItemSort->createMessage(Message::success,"%s ",$skey='移动成功');
@@ -169,10 +169,10 @@ class ItemSort extends ControlPanel
 					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
 				}
 			
-				$akey->deleteItem($sViewPath.$sMenuId);
+				$akey->deleteItem($sViewPath.'.'.$sMenuId);
 				$arrItemSettingNew['id']=$sMenuId;
 				$arrItemSettingNew['class']='menu';
-				$akey->setItem($sViewPath.$sMenuId,$arrItemSettingNew);
+				$akey->setItem($sViewPath.'.'.$sMenuId,$arrItemSettingNew);
 				$sControllerNamePage=str_replace('\\','.',$sControllerName);
 				$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 				$this->viewItemSort->createMessage(Message::success,"%s ",$skey='移动成功');
@@ -191,7 +191,7 @@ class ItemSort extends ControlPanel
 				$i++;
 			}
 	
-			if(is_array($arrSetting[$key]))
+			if(substr($key,0,5)=='item:')
 			{
 				$i=$this->xpathOption($arrSetting[$key],$sXpath,$i,$arrXpath);
 				$sXpath=$sXpathOld;
@@ -239,17 +239,27 @@ class ItemSort extends ControlPanel
 		}
 	}
 	
-	public function itemSetting($aMenuIterator,&$arrSettingOld)
-	{
-		$arrI=&$arrSettingOld;
+	//将BeanConfig中的Menue转换成数组存放在setting中
+	public function itemSetting($aMenuIterator,&$arrSetting)
+	{	
+		$arrI=&$arrSetting;
 		foreach($aMenuIterator as $key=>$aItem)
-		{	
+		{
+			//var_dump($aItem->beanConfig()('query'));exit;
+			//$arrItem=$aItem->beanConfig();
+			//echo $arrItem['query']."</br>";exit;
 			if($aItem->title())
 			{	
-				$aItem->title();
-				$arrI=&$arrSettingOld['item:'.$key];
-				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
-				$arrI=&$arrSettingOld;
+// 				echo "<pre>";
+// 				//var_dump($aItem->beanConfig());
+// 				echo "</pre>";
+				$arrItem=$aItem->beanConfig();
+			//	var_dump($arrItem['query']);echo "</br>";
+				//var_dump($arrItem['query']);echo "</br>";
+				$sQuery=isset($arrItem['query'])?$arrItem['query']:'';
+				$arrI=&$arrSetting['item:'.$key];
+				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'query'=>$sQuery);
+				$arrI=&$arrSetting;
 			}
 			if($aItem->subMenu())
 			{
@@ -279,7 +289,7 @@ class ItemSort extends ControlPanel
 				$arrItemSettingNew[$key]=$arrSetting[$key];
 			}
 	
-			if(is_array($arrSetting[$key]))
+			if(substr($key,0,5)=='item:')
 			{
 				$this->itemSettingEdit($arrSetting[$key],$sXpath,$sXpathTarget,$arrItemSettingNew[$key],$arrSettingChild);
 				$sXpath=$sXpathOld;
@@ -313,7 +323,7 @@ class ItemSort extends ControlPanel
 					$arrSettingNew[$key]=$arrSetting[$key];
 				}
 	
-				if(is_array($arrSetting[$key]))
+				if(substr($key,0,5)=='item:')
 				{
 					$this->settingEditXpathOption($arrSetting[$key],$sXpath,$sXpathTarget,$sXpathFirst,$arrSettingNew[$key],$arrSettingChild);
 					$sXpath=$sXpathOld;
@@ -348,10 +358,10 @@ class ItemSort extends ControlPanel
 						{
 							$arrSettingNew['title']=$arrSetting['title'];
 						}
-						if(array_key_exists('depth',$arrSetting))
-						{
-							$arrSettingNew['depth']=$arrSetting['depth'];
-						}
+// 						if(array_key_exists('depth',$arrSetting))
+// 						{
+// 							$arrSettingNew['depth']=$arrSetting['depth'];
+// 						}
 						if(array_key_exists('link',$arrSetting))
 						{
 							$arrSettingNew['link']=$arrSetting['link'];
@@ -360,11 +370,11 @@ class ItemSort extends ControlPanel
 						{
 							$arrSettingNew['menu']=$arrSetting['menu'];
 						}
-						if(array_key_exists('active',$arrSetting))
+						if(array_key_exists('query',$arrSetting))
 						{
-							$arrSettingNew['active']=$arrSetting['active'];
+							$arrSettingNew['query']=$arrSetting['query'];
 						}
-						if(is_array($arrSetting[$key]))
+						if(substr($key,0,5)=='item:')
 						{
 							$arrSettingNew[$key]=array();
 						}
@@ -387,10 +397,10 @@ class ItemSort extends ControlPanel
 					{
 						$arrSettingNew['title']=$arrSetting['title'];
 					}
-					if(array_key_exists('depth',$arrSetting))
-					{
-						$arrSettingNew['depth']=$arrSetting['depth'];
-					}
+// 					if(array_key_exists('depth',$arrSetting))
+// 					{
+// 						$arrSettingNew['depth']=$arrSetting['depth'];
+// 					}
 					if(array_key_exists('link',$arrSetting))
 					{
 						$arrSettingNew['link']=$arrSetting['link'];
@@ -399,18 +409,18 @@ class ItemSort extends ControlPanel
 					{
 						$arrSettingNew['menu']=$arrSetting['menu'];
 					}
-					if(array_key_exists('active',$arrSetting))
+					if(array_key_exists('query',$arrSetting))
 					{
-						$arrSettingNew['active']=$arrSetting['active'];
+						$arrSettingNew['query']=$arrSetting['query'];
 					}
-					if(is_array($arrSetting[$key]))
+					if(substr($key,0,5)=='item:')
 					{
 						$arrSettingNew[$key]=array();
 					}
 					//$arrSettingNew[$key]=$arrSetting[$key];
 				}
 	
-				if(is_array($arrSetting[$key]))
+				if(substr($key,0,5)=='item:')
 				{
 					$this->settingEditXpathOption1($i,$arrSetting[$key],$arrXpathTo,$arrSettingNew[$key],$arrSettingChild);
 				}
@@ -489,7 +499,7 @@ class ItemSort extends ControlPanel
 		$arrJson=array();
 		$arrXpath=array();
 		$sXpath='';
-		$arrSetting=$akey->Item($sViewPath.$sMenuId);
+		$arrSetting=$akey->Item($sViewPath.'.'.$sMenuId);
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
 				"<a href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
@@ -519,13 +529,13 @@ class ItemSort extends ControlPanel
 				$sHistoty='<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId\">".'控制器'.$sMenuId.'</a>'.'</li>'.'</ul>';
 				$arrHistory=array($sHistoty);
 				$akey=$aSetting->key('/history/'.$sControllerName,true);
-				$akey->setItem($sViewPath.$sMenuId,$arrHistory);
+				$akey->setItem($sViewPath.'.'.$sMenuId,$arrHistory);
 			}else
 			{
 				$sHistoty='<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId\">".$aController->title().$sMenuId.'</a>'.'</li>'.'</ul>';
 				$arrHistory=array($sHistoty);
 				$akey=$aSetting->key('/history/'.$sControllerName,true);
-				$akey->setItem($sViewPath.$sMenuId,$arrHistory);
+				$akey->setItem($sViewPath.'.'.$sMenuId,$arrHistory);
 			}
 			$this->getHistory();
 		}
