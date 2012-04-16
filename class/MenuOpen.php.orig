@@ -864,10 +864,13 @@ class MenuOpen extends ControlPanel
 		$arrCreateJson['menuid']=$sMenuId;
 		
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
+<<<<<<< HEAD
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
+=======
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<p>'.'<span>'.'顶层'.'</span>'.
 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</em>'.'</p>'.'</li>'.'</ul>';
+>>>>>>> fbd9140c1aa259188d729235f2c88676baeecb40
 		$sMenu=$sTopMenu.$sMenu;
 		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
 		$arrJson['controllername']=$sControllerName;
@@ -970,10 +973,13 @@ class MenuOpen extends ControlPanel
 
 		$sMenu=$this->displaySetting($arrSettingOld,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		//$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
+<<<<<<< HEAD
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
+=======
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<p>'.'<span>'.'顶层'.'</span>'.
 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
+>>>>>>> fbd9140c1aa259188d729235f2c88676baeecb40
 		$sMenu=$sTopMenu.$sMenu;
 		
 		//将menu遍历成数组存放在settting
