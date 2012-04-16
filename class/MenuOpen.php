@@ -216,6 +216,8 @@ class MenuOpen extends ControlPanel
  						{
  							$skey="移动层级错误";
  							$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 							$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 							$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  							return;
  						}
  						
@@ -272,6 +274,8 @@ class MenuOpen extends ControlPanel
  						{
  							$skey="移动层级错误";
  							$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 							$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
+ 							$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  							return;
  						}
  						
@@ -337,6 +341,8 @@ class MenuOpen extends ControlPanel
  					{
  						$skey="项目ID重复";
  						$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  						return;
  					}
  					
@@ -379,6 +385,8 @@ class MenuOpen extends ControlPanel
  					{
  						$skey="项目ID重复";
  						$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 						$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
+ 						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  						return;
  					}
  					
@@ -423,8 +431,18 @@ class MenuOpen extends ControlPanel
  			$sControllerName=str_replace('.','\\',$sControllerNamePage);
  			$sViewPath=$this->params->get('viewpath');
  			$sMenuId=$this->params->get('menuid');
- 			$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
- 			$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+ 			$aSetting = Extension::flyweight('menuediter')->setting();
+ 			
+ 			if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
+ 			{
+ 				$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+ 			}else{
+ 				$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
+ 				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+ 			}
+ 			
+
  		}elseif($this->params->get('locationdelete')=='locationdelete'){
  			$sControllerNamePage=$this->params->get('controllername');
  			$sControllerName=str_replace('.','\\',$sControllerNamePage);
@@ -854,7 +872,6 @@ class MenuOpen extends ControlPanel
 		$this->getCreateItemCounttArray($arrSetting,'',$arrCountItem);
 		//echo "<pre>";print_r($arrCountItem);echo "</pre>";
 		$arrCreateJson=array();
-		//$arrAA=$arrCountItem[''];
 		$this->setCreateItemId($arrCountItem[''],'',$arrCreateJson);
 		$arrCreateTop=array('Top/'=>'item-'.(count($arrCountItem[''])+1));
 		$arrCreateJson=array_merge($arrCreateTop,$arrCreateJson);
@@ -864,10 +881,10 @@ class MenuOpen extends ControlPanel
 		$arrCreateJson['menuid']=$sMenuId;
 		
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
-		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
-				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
+// 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
+// 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<p>'.'<span>'.'顶层'.'</span>'.
-				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</em>'.'</p>'.'</li>'.'</ul>';
+				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</p>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
 		$arrJson['controllername']=$sControllerName;
@@ -934,6 +951,7 @@ class MenuOpen extends ControlPanel
 		{
 			$skey="无此控制器";
 			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+			$this->getHistory();
 			return;
 		}
 		else {
@@ -945,6 +963,7 @@ class MenuOpen extends ControlPanel
 		{
 			$skey="无此视图";
 			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+			$this->getHistory();
 			return;
 		}else {
 			$aView = View::findXPath($aController->mainView(),$sViewPath );
@@ -954,6 +973,7 @@ class MenuOpen extends ControlPanel
 		{
 			$skey="无此菜单";
 			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+			$this->getHistory();
 			return;
 		}else {
 			$aMenu=$aView->widget($sMenuId);
@@ -970,10 +990,10 @@ class MenuOpen extends ControlPanel
 
 		$sMenu=$this->displaySetting($arrSettingOld,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		//$sMenu=$this->itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId);
-		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
-				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
+// 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
+// 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<p>'.'<span>'.'顶层'.'</span>'.
-				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
+				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		
 		//将menu遍历成数组存放在settting
@@ -983,7 +1003,6 @@ class MenuOpen extends ControlPanel
 		$this->getCreateItemCounttArray($arrSetting,'',$arrCountItem);
 		//echo "<pre>";print_r($arrCountItem);echo "</pre>";
 		$arrCreateJson=array();
-		//$arrAA=$arrCountItem[''];
 		$this->setCreateItemId($arrCountItem[''],'',$arrCreateJson);
 		$arrCreateTop=array('Top/'=>'item-'.(count($arrCountItem[''])+1));
 		$arrCreateJson=array_merge($arrCreateTop,$arrCreateJson);

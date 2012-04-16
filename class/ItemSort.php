@@ -138,7 +138,12 @@ class ItemSort extends ControlPanel
 					}else {
 	 						$skey="只能在同级移动";
 	 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
-	 						return;
+	 						
+	 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
+	 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+	 						$this->location($sUrl,0);
+	 						
+	 						//return;
 					};
 					$arrXpathUp=explode('/',$sXpathUp);
 					array_pop($arrXpathUp);
@@ -156,7 +161,12 @@ class ItemSort extends ControlPanel
 						}else {
 	 						$skey="只能在同级移动";
 	 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
-	 						return;
+
+	 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
+	 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+	 						$this->location($sUrl,0);
+	 						
+	 						//return;
 						};		
 					$arrXpathUp=explode('/',$sXpathUp);
 					array_pop($arrXpathUp);
