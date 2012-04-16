@@ -10,10 +10,11 @@
 .mo-middle{ float:left; width:49%;margin-right:1%; border-left:1px solid #ddd;}
 .mo-middile-ul{padding-left:10px; margin-left:10px; }
 
+.mo-middile-ul li{ position:relative}
 .mo-middile-ul li p{margin-bottom:5px;}
 .mo-middile-ul li p:hover{ background:#fff;}
 .mo-middile-ul span{margin-right:10px;display:inline-block; min-width:100px; text-align:left;}
-.mo-middile-ul em{ display:inline-block; float:right}
+.mo-middile-ul em{ position:absolute; right:0; top:0;}
 .mo-middile-ul a{ font-size:12px; color:#aaa;padding:0 6px 0 20px;background:url(../images/mo-icon.gif) no-repeat}
 .mo-middile-ul a:hover{ color:#09c;border-radius:3px;background:url(../images/mo-icon.gif) no-repeat}
 .mo-middile-ul a img{margin-right:3px; margin-top:-2px;}
