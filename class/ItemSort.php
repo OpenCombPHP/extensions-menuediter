@@ -299,7 +299,7 @@ class ItemSort extends ControlPanel
 	
 	public function settingEditXpathOption($i,$arrSetting,$sXpath,$sXpathTarget,$sXpathFirst,&$arrSettingNew,$arrSettingChild)
 	{
-		if($sXpathTarget=='Top')
+		if($sXpathTarget=='Top/')
 		{
 			$arrXpathFrom=explode('/',$sXpathFirst);
 			array_pop($arrXpathFrom);
@@ -334,7 +334,7 @@ class ItemSort extends ControlPanel
 	
 	public function settingEditXpathOption1($i,$arrSetting,$arrXpathTo,&$arrSettingNew,$arrSettingChild)
 	{
-		if($arrXpathTo=='Top')
+		if($arrXpathTo=='Top/')
 		{
 			$arrXpathFrom=explode('/',$arrSettingChild['xpath']);
 			array_pop($arrXpathFrom);
@@ -502,7 +502,7 @@ class ItemSort extends ControlPanel
 		$arrSetting=$akey->Item($sViewPath.'.'.$sMenuId);
 		$sMenu=$this->displaySetting($arrSetting,$sXpath,$sControllerName,$sViewPath,$sMenuId);
 		$sTopMenu='<ul style=margin-left:10px>'.'<li>'.'<a>'.'顶层'.'</a>'.'&nbsp'.'&nbsp'.'&nbsp'.
-				"<a href=\"#\" onclick=\"javascript: itemCreate('Top')\">".'新建'.'</a>'.'</li>'.'</ul>';
+				"<a href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
 		$arrJson['controllername']=$sControllerName;
@@ -512,7 +512,7 @@ class ItemSort extends ControlPanel
 		$this->jsonSetting($arrSetting, $sXpath, $arrJson);
 		$this->viewMenuOpen->variables()->set('sJsonSetting',json_encode($arrJson));
 		$this->xpathOption($arrSetting,'','',0,$arrXpath);
-		$arrTop=array('Top'=>'顶层');
+		$arrTop=array('Top/'=>'顶层');
 		$arrXpath=array_merge($arrTop,$arrXpath);
 		$this->viewMenuOpen->variables()->set('arrXpath',$arrXpath);
 	
