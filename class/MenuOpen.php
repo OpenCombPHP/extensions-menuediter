@@ -426,6 +426,19 @@ class MenuOpen extends ControlPanel
  			$this->viewMenuOpen->widget('viewXpath')->setValue($this->params->get('viewpath'));
  			$this->viewMenuOpen->widget('menu_id')->setValue($this->params->get('menuid'));
  			$this->getHistory();
+ 			
+ 			$sControllerNamePage=$this->params->get('controllername');
+ 			$sControllerName=str_replace('.','\\',$sControllerNamePage);
+ 			$sViewPath=$this->params->get('viewpath');
+ 			$sMenuId=$this->params->get('menuid');
+ 			$aSetting = Extension::flyweight('menuediter')->setting();
+ 			if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
+ 			{
+ 				$this->readSetting($sControllerNamePage,false,null,$sViewPath,$sMenuId);
+ 			}
+ 			else {
+ 				$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
+ 			}
  		}elseif($this->params->get('locationsort')=='locationsort'){
  			$sControllerNamePage=$this->params->get('controllername');
  			$sControllerName=str_replace('.','\\',$sControllerNamePage);
@@ -592,7 +605,6 @@ class MenuOpen extends ControlPanel
 							'query'=>$arrSetting['query']
 							);
 				}
-
 			}
 	
 			if(substr($key,0,5)=='item:')
@@ -830,7 +842,7 @@ class MenuOpen extends ControlPanel
 		$arrHistory[0]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.FrontFrame
 						&viewpath=frameView&menuid=mainMenu">前台菜单</a></li></ul>');
 		$arrHistory[1]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
-				&viewpath=frameView&menuid=mainMenu">控制面板(后台)</a></li></ul>');
+				&viewpath=frameView&menuid=mainMenu">控制面板菜单(后台)</a></li></ul>');
 		$sHistory=null;
 		$i=2;	
 		foreach($aSetting->keyIterator('/history') as $key=>$akey)
