@@ -37,8 +37,8 @@ class MenuEditerClear extends ControlPanel
 		$sMenuId=$this->params->get('menuid');
 		
 		$aSetting = Extension::flyweight('menuediter')->setting();
-		$akey=$aSetting->key('/'.$sControllerName,true);
-		$akey->deleteItem($sViewPath.$sMenuId);
+		$akey=$aSetting->key('/menu/'.$sControllerName,true);
+		$akey->deleteItem($sViewPath.'.'.$sMenuId);
 	}
 	
 	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)

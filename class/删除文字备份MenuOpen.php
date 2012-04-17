@@ -515,13 +515,14 @@ class MenuOpen extends ControlPanel
 				$sLink=substr($aItem->link(),1);
 				$sItem=$sItem.'<span>'.$aItem->title().'</span>'.'<em>'.
 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'</a>'.
-						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.'</a>'.
-						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'</a>'.
+						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
+						"删除".'</a>'.
+						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.
+						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.
 						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.'</em>';
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>'.'</em>';
 			}
 			if($aItem->subMenu())
 			{
@@ -553,13 +554,14 @@ class MenuOpen extends ControlPanel
 				$sXpath=$sXpath.$item['xpath'].'/';
 				$sMenu=$sMenu.'<li>'."<p>"."<span>".$item['title'].'</span>'.'<em>'.
 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'</a>'.
-						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.'</a>'.
-						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'</a>'.
+						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".
+						"删除".'</a>'.
+						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'新建'.'</a>'.'</a>'.
+						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'编辑'.'</a>'.
 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向上'.'</a>'.
 						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.'</em>'."</p>";
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'向下'.'</a>'.'</em>'."</p>";
 				$sMenu1=$this->displaySetting($item,$sXpath,$sControllerName,$sViewPath,$sMenuId,$bflag);
 				if(stripos($sMenu1,"li"))
 				{
@@ -894,7 +896,7 @@ class MenuOpen extends ControlPanel
 // 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
 // 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<p>'.'<span>'.'顶层'.'</span>'.
-				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'</a>'.'</em>'.'</p>'.'</li>'.'</ul>';
+				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</p>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
 		$arrJson['controllername']=$sControllerName;
@@ -1004,7 +1006,7 @@ class MenuOpen extends ControlPanel
 // 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<span>'.'顶层'.'</span>'.
 // 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sTopMenu='<ul class=mo-middile-ul>'.'<li>'.'<p>'.'<span>'.'顶层'.'</span>'.
-				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'</a>'.'</em>'.'</li>'.'</ul>';
+				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'新建'.'</a>'.'</em>'.'</li>'.'</ul>';
 		$sMenu=$sTopMenu.$sMenu;
 		
 		//将menu遍历成数组存放在settting
