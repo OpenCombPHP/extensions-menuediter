@@ -20,7 +20,6 @@ use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 
 class MenuOpen extends ControlPanel
 {
-	static $nCountTotal =0;
 	public function createBeanConfig()
 	{
 		return array(
@@ -35,7 +34,7 @@ class MenuOpen extends ControlPanel
 						'title'=>'控制器'		
 					),
 					array(
-						'id'=>'viewXpath',
+						'id'=>'view_Xpath',
 						'class'=>'text',
 						'title'=>'视图路径'
 					),
@@ -45,7 +44,7 @@ class MenuOpen extends ControlPanel
 						'title'=>'控件ID'
 					),
 					array(
-						'id'=>'title',
+						'id'=>'edit_title',
 						'class'=>'text',
 						'title'=>'Item标题'
 					),
@@ -55,15 +54,15 @@ class MenuOpen extends ControlPanel
 // 						'title'=>'层级'
 // 					),
 					array(
-						'id'=>'link',
+						'id'=>'edit_link',
 						'class'=>'text',
-						'title'=>'link',
+						'title'=>'edit_link',
 					),
 					array(
-						'id'=>'query',
+						'id'=>'edit_query',
 						'class'=>'text',
 						'type'=>'multiple',
-						'title'=>'激活',
+						'title'=>'选中条件',
 					),
 					array(
 						'id'=>'hide_flag_edit_item',
@@ -151,40 +150,6 @@ class MenuOpen extends ControlPanel
 								'type'=>'hidden',
 								'title'=>'判断提交项目编辑'
 						),
-					array(
-						'id'=>'testMenu',
-						'class'=>'menu',
-						'title'=>'sddsd',
-						'item:testSub2'=>array(
-								'title'=>'testSub2',
-						),
-						'item:testSub1'=>array(
-								'title'=>'testSub1',
-  								'menu'=>'1',
-								'tearoff'=>1,
-								'showDepths'=>5,
-								'item:testSub11'=>array(
- 										'title'=>'testSub11',
-										'menu'=>'1',
-										'item:testSub111'=>array(
-											'title'=>'testSub111',
-										)
-  								),
-								'item:testSub12'=>array(
-										'title'=>'testSub12',
-										'menu'=>'1',
-										'item:testSub121'=>array(
-											'title'=>'testSub121',		
-										),
-										'item:testSub122'=>array(
-											'title'=>'testSub122',
-										)
-								),
-						),
-						'item:testSub3'=>array(
-							'title'=>'testSub3',		
-						),
-					)
 				),
 			),
 		);
@@ -194,14 +159,12 @@ class MenuOpen extends ControlPanel
 	{	
  		if($this->viewMenuOpen->isSubmit($this->params))
  		{	
- 			
- 				$this->viewMenuOpen->loadWidgets($this->params);
+ 			$this->viewMenuOpen->loadWidgets($this->params);
  			if($this->viewMenuOpen->widget('hide_flag_edit_item')->value()==1)
  			{
  				$sControllerName=$this->viewMenuOpen->widget('hide_item_controllerName')->value();
  				$sViewPath=$this->viewMenuOpen->widget('hide_item_viewPath')->value();
  				$sMenuId=$this->viewMenuOpen->widget('hide_item_menuId')->value();
- 				
  				$aSetting = Extension::flyweight('menuediter')->setting();
  			
  				if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
@@ -237,11 +200,11 @@ class MenuOpen extends ControlPanel
  						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
 
  						$this->itemSettingEdit($arrSettingOld, '', $sXpathFrom, $arrItemSettingMiddle,$arrSettingChild);
- 						$arrSettingChild['title']=$this->viewMenuOpen->widget('title')->value();
+ 						$arrSettingChild['title']=$this->viewMenuOpen->widget('edit_title')->value();
 
- 						$arrSettingChild['link']=$this->viewMenuOpen->widget('link')->value();
+ 						$arrSettingChild['link']=$this->viewMenuOpen->widget('edit_link')->value();
  						
- 						$arrSettingChild['query']=$this->getQuery('query');
+ 						$arrSettingChild['query']=$this->getQuery('edit_query');
  						
  						if($sXpathFrom==$sXpathOption)
  						{
@@ -293,9 +256,9 @@ class MenuOpen extends ControlPanel
  						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
 
  						$this->itemSettingEdit($arrSettingOld, '', $sXpathFrom, $arrItemSettingMiddle,$arrSettingChild);
- 						$arrSettingChild['title']=$this->viewMenuOpen->widget('title')->value();
- 						$arrSettingChild['link']=$this->viewMenuOpen->widget('link')->value();	
- 						$arrSettingChild['query']=$this->getQuery('query');
+ 						$arrSettingChild['title']=$this->viewMenuOpen->widget('edit_title')->value();
+ 						$arrSettingChild['link']=$this->viewMenuOpen->widget('edit_link')->value();	
+ 						$arrSettingChild['query']=$this->getQuery('edit_query');
  						
  						if($sXpathFrom==$sXpathOption)
  						{
@@ -329,7 +292,6 @@ class MenuOpen extends ControlPanel
  					
  					$sXpath='';
 					$arrSettingNew=array();
-					//echo str_replace('item-','',$this->viewMenuOpen->widget('create_item_id')->value());
  					$sItemId='item:'.str_replace('item-','',$this->viewMenuOpen->widget('create_item_id')->value());
  					echo $sItemId;
  					$sXpathTo=$this->viewMenuOpen->widget('hide_item_create_xpath')->value();
@@ -408,7 +370,7 @@ class MenuOpen extends ControlPanel
  			}else {
  				$sControllerNamePage=$this->viewMenuOpen->widget('controller_name')->value();
  				$sControllerName=str_replace('.','\\',$sControllerNamePage);
- 				$sViewPath=$this->viewMenuOpen->widget('viewXpath')->value();
+ 				$sViewPath=$this->viewMenuOpen->widget('view_Xpath')->value();
  				$sMenuId=$this->viewMenuOpen->widget('menu_id')->value();
  				$aSetting = Extension::flyweight('menuediter')->setting();
  				
@@ -423,7 +385,7 @@ class MenuOpen extends ControlPanel
  			}
  		}elseif($this->params->get('history')=='history'){
  			$this->viewMenuOpen->widget('controller_name')->setValue($this->params->get('controllername'));
- 			$this->viewMenuOpen->widget('viewXpath')->setValue($this->params->get('viewpath'));
+ 			$this->viewMenuOpen->widget('view_Xpath')->setValue($this->params->get('viewpath'));
  			$this->viewMenuOpen->widget('menu_id')->setValue($this->params->get('menuid'));
  			$this->getHistory();
  			
@@ -841,8 +803,13 @@ class MenuOpen extends ControlPanel
 						&viewpath=frameView&menuid=mainMenu">前台菜单</a></li></ul>');
 		$arrHistory[1]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
 				&viewpath=frameView&menuid=mainMenu">控制面板菜单(后台)</a></li></ul>');
+		$arrHistory[2]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
+				&viewpath=frameView&menuid=mainMenu">用户面板菜单</a></li></ul>');
+		$arrHistory[3]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
+				&viewpath=frameView&menuid=mainMenu">开发菜单</a></li></ul>');
+		$arrHistory[4]=array('<p>最近打开的菜单</p>');
 		$sHistory=null;
-		$i=2;	
+		$i=5;	
 		foreach($aSetting->keyIterator('/history') as $key=>$akey)
 		{
 			$i=$i+1;
@@ -908,10 +875,7 @@ class MenuOpen extends ControlPanel
 		$arrTop=array('Top/'=>'顶层');
 		$arrXpath=array_merge($arrTop,$arrXpath);
 		$this->viewMenuOpen->variables()->set('arrXpath',$arrXpath);
-		
-// 		$this->viewMenuOpen->widget('hide_create_item_controllerName')->setValue($sControllerName);
-// 		$this->viewMenuOpen->widget('hide_create_item_viewPath')->setValue($sViewPath);
-// 		$this->viewMenuOpen->widget('hide_create_item_menuId')->setValue($sMenuId);
+	
 		$aController = new $sControllerName();
 		if($sControllerNamePage=='org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage=='org.opencomb.coresystem.mvc.controller.ControlPanelFrame')
 		{
@@ -940,8 +904,6 @@ class MenuOpen extends ControlPanel
 	//从Beanconfig中读取menu
 	public function readBeanConfig($sControllerNamePageFormal=null,$bFlag=true,$sControllerNameFormal,$sViewPathFormal,$sMenuIdFormal)
 	{
-		//$sControllerNamePage=$this->viewMenuOpen->widget('controller_name')->value();
-		//$sControllerName=str_replace('.','\\',$sControllerNamePage);
 		$sControllerNamePage=$sControllerNamePageFormal;
 		if($bFlag)
 		{
@@ -1065,7 +1027,7 @@ class MenuOpen extends ControlPanel
 	
 	public function setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId){
 		$this->viewMenuOpen->widget('controller_name')->setValue($sControllerNamePage);
-		$this->viewMenuOpen->widget('viewXpath')->setValue($sViewPath);
+		$this->viewMenuOpen->widget('view_Xpath')->setValue($sViewPath);
 		$this->viewMenuOpen->widget('menu_id')->setValue($sMenuId);
 	}
 	
@@ -1128,9 +1090,9 @@ class MenuOpen extends ControlPanel
 	
 	public function getQuery($sflag)
 	{
-		if($sflag=='query')
+		if($sflag=='edit_query')
 		{
-			$arrQuery=explode("\n",str_replace('\r','',$this->viewMenuOpen->widget('query')->value()));
+			$arrQuery=explode("\n",str_replace('\r','',$this->viewMenuOpen->widget('edit_query')->value()));
 		}elseif($sflag=='create_query')
 		{
 			$arrQuery=explode("\n",$this->viewMenuOpen->widget('create_query')->value());

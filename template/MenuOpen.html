@@ -12,9 +12,9 @@
 	{
 		var xPath = xPath1;
 		var json = {=$sJsonSetting};
-		document.getElementById('title').value=json[xPath]['title'];
-		document.getElementById('link').value=json[xPath]['link'];
-		document.getElementById('query').value=json[xPath]['query'];
+		document.getElementById('edit_title').value=json[xPath]['title'];
+		document.getElementById('edit_link').value=json[xPath]['link'];
+		document.getElementById('edit_query').value=json[xPath]['query'];
 		document.getElementById('hide_flag_edit_item').value=1;
 		document.getElementById('hide_item_controllerName').value=json['controllername'];
 		document.getElementById('hide_item_viewPath').value=json['viewpath'];
@@ -28,9 +28,9 @@
 	{
 		var xPath = xPath1;
 		var json = {=$CreateJson};
+		document.getElementById('create_item_id').value=json[xPath];
 		document.getElementById('hide_flag_create_item').value=2;
 		document.getElementById('hide_item_create_xpath').value=xPath1;
-		document.getElementById('create_item_id').value=json[xPath];
 		document.getElementById('hide_create_item_controllerName').value=json['controllername'];
 		document.getElementById('hide_create_item_viewPath').value=json['viewpath'];
 		document.getElementById('hide_create_item_menuId').value=json['menuid'];
@@ -43,15 +43,15 @@
 	<div class="mo-left">
 	<form method="post">
 		<p>控制器类名： <widget id="controller_name" attr.style="width:210px"/></p>
-		<p>视图路径：<widget id="viewXpath"/></p>
-		<p>菜单ID： <widget id="menu_id"/></p>
+		<p>视图路径：<widget id="view_Xpath" attr.style="width:100px"/></p>
+		<p>菜单ID： <widget id="menu_id" attr.style="width:100px"/></p>
 		<p><input type="submit" class="coresystem-form-button" value="打开菜单" /></p>
 	</form>
 	<div class="mo-history">{=$sHistory}</div>
 	</div>
 	
 	<div class="mo-middle">
-	{=$sMenu}
+	{=$sMenu}c=org.opencomb.coresystem.user.AdminUsers
 	{=$sClear}
 	</div>
 	<div class="mo-right">
@@ -61,7 +61,10 @@
 			<p>项目ID：<widget id="create_item_id" /></p>
 			<p>标题:<widget id="create_title" /></p>
 			<p>链接:<widget id="create_link"/></p>
-			<p>激活:<widget id="create_query"/></p>
+			<p>说明：选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记.
+				选中条件可以是多个值，每个值之间用换行间隔区分
+			</p>
+			<p>选中条件:<widget id="create_query" attr.style="width:210px;height:150px"/></p>
 			<widget id="hide_flag_create_item"/>
 			<widget id="hide_create_item_controllerName"/>
 			<widget id="hide_create_item_viewPath"/>
@@ -80,12 +83,12 @@
 				</foreach>
 			</select>
 			</p>
-			<p>标题:<widget id="title" /></p>
-			<p>链接:<widget id="link"/></p>
+			<p>标题:<widget id="edit_title" /></p>
+			<p>链接:<widget id="edit_link" attr.style="width:260px"/></p>
 			<p>说明：选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记.
 				选中条件可以是多个值，每个值之间用换行间隔区分
 			</p>
-			<p>选中条件:<widget id="query"/></p>
+			<p>选中条件:<widget id="edit_query" attr.style="width:210px;height:150px"/></p>
 			<widget id="hide_flag_edit_item"/>
 			<widget id="hide_item_controllerName"/>
 			<widget id="hide_item_viewPath"/>
