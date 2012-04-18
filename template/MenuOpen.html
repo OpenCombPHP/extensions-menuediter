@@ -43,10 +43,15 @@
 <div>
 	<div class="mo-left">
 	<form method="post">
-		<p>控制器类名： <widget id="controller_name" attr.style="width:100%"/></p>
-		<p>视图路径：<widget id="view_Xpath" attr.style="width:45%"/></p>
-		<p>菜单ID： <widget id="menu_id" attr.style="width:45%"/></p>
-		<p><input type="submit" class="coresystem-form-button" value="打开菜单" /></p>
+		<table>
+		<tbody>
+		<tr><th colspan="2">控制器类名：</th></tr>
+		<tr><td colspan="2"><widget id="controller_name" attr.style="width:100%"/></td></tr>
+		<tr><th>视图路径：</th><td><widget id="view_Xpath"/></td></tr>
+		<tr><th>菜单ID：</th><td><widget id="menu_id"/></td></tr>
+		<tr><th colspan="2"><input type="submit" class="coresystem-form-button" value="打开菜单" /></th></tr>
+		</tbody>
+		</table>
 	</form>
 	<div class="mo-history">{=$sHistory}</div>
 	</div>
@@ -59,43 +64,51 @@
 	<div id="itemCreate" style="display:none;" class="mo-right-item">
 	<h2>菜单项新建</h2>
 		<form method="post">
-			<p>项目ID：<widget id="create_item_id" /></p>
-			<p>标题:<widget id="create_title" /></p>
-			<p>链接:<widget id="create_link"/></p>
-			<p>说明：选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记.
-				选中条件可以是多个值，每个值之间用换行间隔区分
-			</p>
-			<p>选中条件:<widget id="create_query" attr.style="width:70%;height:100px"/></p>
+			<table>
+			<tbody>
+			<tr><th width="66px">项目ID：</th><td><widget id="create_item_id" /></td></tr>
+			<tr><th>标题：</th><td><widget id="create_title" /></td></tr>
+			<tr><th>链接：</th><td><widget id="create_link"/></td></tr>
+			
+			<tr class="intro"><th>说明：</th><td>选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记。<br />
+				选中条件可以是多个值，每个值之间用换行间隔区分。
+			</td></tr>
+			<tr class="intro"><th>选中条件：</th><td><widget id="create_query" attr.style="width:70%;height:100px"/>
 			<widget id="hide_flag_create_item"/>
 			<widget id="hide_create_item_controllerName"/>
 			<widget id="hide_create_item_viewPath"/>
 			<widget id="hide_create_item_menuId"/>
-			<widget id="hide_item_create_xpath"/>
-			<input type="submit" class="coresystem-form-button" value="保　存" />
+			<widget id="hide_item_create_xpath"/></td></tr>
+			<tr><th colspan="2"><input type="submit" class="coresystem-form-button" value="保　存" /></th></tr>
+			</tbody>
+			</table>
 		</form>
 	</div>
 	
 	<div id="itemEdit" style="display:none;" class="mo-right-item">
 	<h2>菜单项编辑</h2>
 		<form method="post">
-			<p><select name=xpathOption >
+			<table>
+			<tbody>
+			<tr><td colspan="2"><select name=xpathOption >
 				<foreach for="$arrXpath" key='sKeyPath' item='xpathselect'>
 					<option value="{=$sKeyPath}" >{=$xpathselect}</option>
 				</foreach>
-			</select>
-			</p>
-			<p>标题:<widget id="edit_title" /></p>
-			<p>链接:<widget id="edit_link" attr.style="width:80%"/></p>
-			<p>说明：选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记.
-				选中条件可以是多个值，每个值之间用换行间隔区分
-			</p>
-			<p>选中条件:<widget id="edit_query" attr.style="width:70%;height:100px"/></p>
+			</select></td></tr>
+			<tr><th width="66px">标题：</th><td><widget id="edit_title" /></td></tr>
+			<tr><th>链接：</th><td><widget id="edit_link" attr.style="width:80%"/></td></tr>
+			<tr class="intro"><th>说明：</th><td>选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记。<br />
+				选中条件可以是多个值，每个值之间用换行间隔区分。
+			</td></tr>
+			<tr class="intro"><th>选中条件：</th><td><widget id="edit_query" attr.style="width:70%;height:100px"/>
 			<widget id="hide_flag_edit_item"/>
 			<widget id="hide_item_controllerName"/>
 			<widget id="hide_item_viewPath"/>
 			<widget id="hide_item_menuId"/>
-			<widget id="hide_item_xpath"/>
-			<input type="submit" class="coresystem-form-button" value="保　存" />
+			<widget id="hide_item_xpath"/></td></tr>
+			<tr><th colspan="2"><input type="submit" class="coresystem-form-button" value="保　存" /></th></tr>
+			</tbody>
+			</table>
 		</form>
 	</div>
 	</div>
