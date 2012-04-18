@@ -2,6 +2,7 @@
 <h1>菜单编辑</h1>
 <msgqueue/>
 <script type="text/javascript">
+	
 	function confirmDel(){
 		if(!confirm("确认删除菜单项目吗")){
 			return false;
@@ -51,7 +52,7 @@
 	</div>
 	
 	<div class="mo-middle">
-	{=$sMenu}c=org.opencomb.coresystem.user.AdminUsers
+	{=$sMenu}
 	{=$sClear}
 	</div>
 	<div class="mo-right">
@@ -64,7 +65,7 @@
 			<p>说明：选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记.
 				选中条件可以是多个值，每个值之间用换行间隔区分
 			</p>
-			<p>选中条件:<widget id="create_query" attr.style="width:70%;height:15%"/></p>
+			<p>选中条件:<widget id="create_query" attr.style="width:70%;height:100px"/></p>
 			<widget id="hide_flag_create_item"/>
 			<widget id="hide_create_item_controllerName"/>
 			<widget id="hide_create_item_viewPath"/>
@@ -88,7 +89,7 @@
 			<p>说明：选中条件的值如果和当前浏览器中的url值相符，则此菜单项将会被一个亮度条标记.
 				选中条件可以是多个值，每个值之间用换行间隔区分
 			</p>
-			<p>选中条件:<widget id="edit_query" attr.style="width:70%;height:15%"/></p>
+			<p>选中条件:<widget id="edit_query" attr.style="width:70%;height:100px"/></p>
 			<widget id="hide_flag_edit_item"/>
 			<widget id="hide_item_controllerName"/>
 			<widget id="hide_item_viewPath"/>

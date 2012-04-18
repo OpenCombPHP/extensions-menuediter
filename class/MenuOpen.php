@@ -126,30 +126,30 @@ class MenuOpen extends ControlPanel
 						'type'=>'hidden',
 						'title'=>'编辑项menuId'
 					),
-						array(
-								'id'=>'hide_create_item_controllerName',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'编辑项controllerName'
-						),
-						array(
-								'id'=>'hide_create_item_viewPath',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'编辑项viewPath'
-						),
-						array(
-								'id'=>'hide_create_item_menuId',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'编辑项menuId'
-						),
-						array(
-								'id'=>'hide_flag_create_item',
-								'class'=>'text',
-								'type'=>'hidden',
-								'title'=>'判断提交项目编辑'
-						),
+					array(
+						'id'=>'hide_create_item_controllerName',
+						'class'=>'text',
+						'type'=>'hidden',
+						'title'=>'编辑项controllerName'
+					),
+					array(
+						'id'=>'hide_create_item_viewPath',
+						'class'=>'text',
+						'type'=>'hidden',
+						'title'=>'编辑项viewPath'
+					),
+					array(
+						'id'=>'hide_create_item_menuId',
+						'class'=>'text',
+						'type'=>'hidden',
+						'title'=>'编辑项menuId'
+					),
+					array(
+						'id'=>'hide_flag_create_item',
+						'class'=>'text',
+						'type'=>'hidden',
+						'title'=>'判断提交项目编辑'
+					),
 				),
 			),
 		);
@@ -293,10 +293,10 @@ class MenuOpen extends ControlPanel
  					$sXpath='';
 					$arrSettingNew=array();
  					$sItemId='item:'.str_replace('item-','',$this->viewMenuOpen->widget('create_item_id')->value());
- 					echo $sItemId;
+ 					//echo $sItemId;
  					$sXpathTo=$this->viewMenuOpen->widget('hide_item_create_xpath')->value();
  					$sItemId=$sXpathTo.$sItemId.'/';
- 					echo $sItemId;
+ 					//echo $sItemId;
  					$bflag=false;
  					
  					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
@@ -515,8 +515,8 @@ class MenuOpen extends ControlPanel
 				$sXpath=$sXpath.$item['xpath'].'/';
 				$sMenu=$sMenu.'<li>'."<p>"."<span>".$item['title'].'</span>'.'<em>'.
 						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'</a>'.
-						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.'</a>'.
+						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'/>".'</a>'.
+						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.
 						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'</a>'.
 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.
@@ -539,10 +539,8 @@ class MenuOpen extends ControlPanel
 	}
 	
 	//json
-	public function jsonSetting($arrSetting,$sXpath,&$arrJson){
-		echo "<pre>";
-		//print_r($arrSetting);
-		echo "</pre>";//exit;
+	public function jsonSetting($arrSetting,$sXpath,&$arrJson)
+	{
 		foreach($arrSetting as $key=>$item)
 		{
 			$sXpathOld=$sXpath;
@@ -796,7 +794,7 @@ class MenuOpen extends ControlPanel
 	
 	//获得打开过的菜单记录
 	public function getHistory()
-	{
+	{	
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		$arrHistory=array();
 		$arrHistory[0]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.FrontFrame
