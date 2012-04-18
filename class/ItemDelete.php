@@ -44,13 +44,13 @@ class ItemDelete extends ControlPanel
 		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
 		{
 			$akey=$aSetting->key('/menu/'.$sControllerName,true);
-			$arrSettingOld=$akey->Item($sViewPath.$sMenuId);
+			$arrSettingOld=$akey->Item($sViewPath.'.'.$sMenuId);
 			$arrSettingNew=$arrSettingOld;
 			$this->settingItemdelete($arrSettingNew, $arrToXpath);
-			$akey->deleteItem($sViewPath.$sMenuId);
+			$akey->deleteItem($sViewPath.'.'.$sMenuId);
 			$arrSettingNew['id']=$sMenuId;
 			$arrSettingNew['class']='menu';
-			$akey->setItem($sViewPath.$sMenuId,$arrSettingNew);
+			$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
 		}
 		else{
 			$arrSettingOld=array();
@@ -101,17 +101,26 @@ class ItemDelete extends ControlPanel
 		}
 	}
 	
-	public function itemSetting($aMenuIterator,&$arrSettingOld)
-	{
-		$arrI=&$arrSettingOld;
+	public function itemSetting($aMenuIterator,&$arrSetting)
+	{	
+		$arrI=&$arrSetting;
 		foreach($aMenuIterator as $key=>$aItem)
-		{	
+		{
+			//var_dump($aItem->beanConfig()('query'));exit;
+			//$arrItem=$aItem->beanConfig();
+			//echo $arrItem['query']."</br>";exit;
 			if($aItem->title())
 			{	
-				$aItem->title();
-				$arrI=&$arrSettingOld['item:'.$key];
-				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'depth'=>$aItem->depth(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'active'=>$aItem->isActive());
-				$arrI=&$arrSettingOld;
+// 				echo "<pre>";
+// 				//var_dump($aItem->beanConfig());
+// 				echo "</pre>";
+				$arrItem=$aItem->beanConfig();
+			//	var_dump($arrItem['query']);echo "</br>";
+				//var_dump($arrItem['query']);echo "</br>";
+				$sQuery=isset($arrItem['query'])?$arrItem['query']:'';
+				$arrI=&$arrSetting['item:'.$key];
+				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'query'=>$sQuery);
+				$arrI=&$arrSetting;
 			}
 			if($aItem->subMenu())
 			{

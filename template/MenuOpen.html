@@ -22,6 +22,7 @@
 		document.getElementById('hide_item_menuId').value=json['menuid'];
 		document.getElementById('hide_item_xpath').value=xPath1;
 		document.getElementById('itemEdit').style.display="";
+		document.getElementById('xO').value=xPath1;
 		document.getElementById('itemCreate').style.display="none";
 	}
 	
@@ -77,10 +78,10 @@
 	
 	<div id="itemEdit" style="display:none;" class="mo-right-item">
 	<h2>菜单项编辑</h2>
-		<form method="post">
-			<p><select name=xpathOption >
+		<form name="dd" method="post">
+			<p><select name=xpathOption id="xO">
 				<foreach for="$arrXpath" key='sKeyPath' item='xpathselect'>
-					<option value="{=$sKeyPath}" >{=$xpathselect}</option>
+					<option value="{=$sKeyPath}">{=$xpathselect}</option>
 				</foreach>
 			</select>
 			</p>

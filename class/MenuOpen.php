@@ -514,14 +514,15 @@ class MenuOpen extends ControlPanel
 				$sXpathOld=$sXpath;
 				$sXpath=$sXpath.$item['xpath'].'/';
 				$sMenu=$sMenu.'<li>'."<p>"."<span>".$item['title'].'</span>'.'<em>'.
-						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'/>".'</a>'.
-						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.
-						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'</a>'.
+						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
+						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.
 						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
 						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.
-						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.'</em>'."</p>";
+						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'</a>'.
+						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.
+						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
+						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'/>".'</a>'.
+						'</em>'."</p>";
 				$sMenu1=$this->displaySetting($item,$sXpath,$sControllerName,$sViewPath,$sMenuId,$bflag);
 				if(stripos($sMenu1,"li"))
 				{
