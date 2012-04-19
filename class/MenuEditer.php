@@ -37,24 +37,15 @@ class MenuEditer extends Extension
 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
 				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
 				);
-	}
-	
-// 	static public function buildControlPanelMenu2(array & $arrConfig, $a,$b,$c)
-// 	{
-// 		$aSetting = Extension::flyweight('menuediter')->setting();
-// 		$akey=$aSetting->key('/menu/'.'org\opencomb\coresystem\mvc\controller\ControlPanelFrame',true);
-// 		$arrConfig=$akey->Item('frameView'.'.'.'mainMenu');
-// 	}
+	}	
 	
 	static public function getHistory()
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
 		{
-			//var_dump($akey);
 			foreach($akey->itemIterator() as $key1=>$item)
 			{	
-				//var_dump($item);
 				$arrItem=explode('.',$item);
 				Menu::registerBuildHandle(
 						$akey->name()

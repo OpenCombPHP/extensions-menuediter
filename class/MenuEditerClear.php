@@ -23,7 +23,7 @@ class MenuEditerClear extends ControlPanel
 	{
 		return array(
 			'title'=> '文章内容',
-			'view:itemDelete'=>array(
+			'view:menuDelete'=>array(
 				'template'=>'MenuEditerClear.html',
 				'class'=>'form',
 			),
@@ -39,6 +39,8 @@ class MenuEditerClear extends ControlPanel
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		$akey=$aSetting->key('/menu/'.$sControllerName,true);
 		$akey->deleteItem($sViewPath.'.'.$sMenuId);
+		$skey="清楚菜单成功";
+		$this->viewMenuDelete->createMessage(Message::success,"%s ",$skey);
 	}
 	
 	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)
