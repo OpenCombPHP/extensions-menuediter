@@ -7,7 +7,7 @@ use org\jecat\framework\message\Message;
 use org\jecat\framework\lang\oop\ClassLoader;
 use org\jecat\framework\mvc\view\widget\menu\Menu;
 use org\jecat\framework\mvc\view\View;
-use org\jecat\framework\mvc\controller\IController;
+use org\jecat\framework\mvc\controller\Controller;
 use org\jecat\framework\lang\aop\AOP;
 use org\opencomb\platform\ext\Extension;
 use org\jecat\framework\bean\BeanFactory;
@@ -879,7 +879,7 @@ class MenuOpen extends ControlPanel
 		$arrJson=array();
 		$arrXpath=array();
 		// 检查 控制器类 是否有效
-		if( !class_exists($sControllerName) or !new $sControllerName() instanceof IController)
+		if( !class_exists($sControllerName) or !new $sControllerName() instanceof Controller)
 		{
 			$skey="无此控制器";
 			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
