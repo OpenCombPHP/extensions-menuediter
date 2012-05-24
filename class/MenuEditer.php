@@ -21,7 +21,7 @@ class MenuEditer extends Extension
 			, 'mainMenu'
 			, array(__CLASS__,'buildControlPanelMenu')
 		) ;
-		//MenuEditer::getHistory();
+		MenuEditer::getHistory();
 	}
 	
 	static public function buildControlPanelMenu3(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
@@ -43,7 +43,7 @@ class MenuEditer extends Extension
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
-		{
+		{	
 			foreach($akey->itemIterator() as $key1=>$item)
 			{	
 				$arrItem=explode('.',$item);
