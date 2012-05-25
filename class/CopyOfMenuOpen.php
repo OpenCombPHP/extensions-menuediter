@@ -257,7 +257,6 @@ class MenuOpen extends ControlPanel
 
  						
  						
- 						//$this->settingItemdelete(0,$arrSettingOld, '', $arrToXpath, $arrSettingDelete);
  						$this->settingItemdelete($arrSettingDelete, $arrToXpath);
 
  						$this->itemSettingEdit($arrSettingOld, '', $sXpathFrom, $arrItemSettingMiddle,$arrSettingChild);

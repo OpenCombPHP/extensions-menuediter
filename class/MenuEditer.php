@@ -27,7 +27,6 @@ class MenuEditer extends Extension
 	static public function buildControlPanelMenu3(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
 	{
 		$arrConfig=$arrSettigBean;
-		//var_dump($arrConfig);
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)

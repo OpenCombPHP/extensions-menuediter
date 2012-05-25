@@ -15,7 +15,6 @@ use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
 use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
-use org\jecat\framework\mvc\controller\Controller;
 
 class MenuEditerClear extends ControlPanel
 {
