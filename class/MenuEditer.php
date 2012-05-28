@@ -34,8 +34,14 @@ class MenuEditer extends Extension
 		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
 				'title'=>'菜单编辑' ,
 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
-				'query' => 'c=org.opencomb.menuediter.MenuOpen' ,
-				);
+				'query' => array(
+						'c=org.opencomb.menuediter.MenuOpen'
+					   ,'c=org.opencomb.menuediter.ItemDelete'
+					   ,'c=org.opencomb.menuediter.ItemSort'
+	  				   ,'c=org.opencomb.menuediter.MenuEditerClear'
+						
+				)
+		);
 	}	
 	
 	static public function getHistory()
