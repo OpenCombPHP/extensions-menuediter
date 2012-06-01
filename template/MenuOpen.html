@@ -58,8 +58,12 @@
 	</div>
 	
 	<div class="mo-middle">
-	{=$sMenu}
-	{=$sClear}
+	<if"$sMenu">
+		{=$sMenu}
+		{=$sClear}
+	</if>
+	
+	
 	</div>
 	<div class="mo-right">
 	<div id="itemCreate" style="display:none;" class="mo-right-item">
@@ -93,11 +97,13 @@
 			<tbody>
 			<tr>
 				<td colspan="2">
-					<select name=xpathOption id="xO">
-						<foreach for="$arrXpath" key='sKeyPath' item='xpathselect'>
-							<option value="{=$sKeyPath}">{=$xpathselect}</option>
-						</foreach>
-					</select>
+					<if "{=$arrXpath}">
+						<select name=xpathOption id="xO">
+							<foreach for="$arrXpath" key='sKeyPath' item='xpathselect'>
+								<option value="{=$sKeyPath}">{=$xpathselect}</option>
+							</foreach>
+						</select>
+					</if>
 				</td>
 			</tr>
 			<tr><th width="66px">标题：</th><td><widget id="edit_title" /></td></tr>
