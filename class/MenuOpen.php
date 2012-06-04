@@ -166,18 +166,22 @@ class MenuOpen extends ControlPanel
  				$sEditLink =  trim($this->viewMenuOpen->widget('edit_link')->value());
  				$arrQueryNew = $this->getQuery('edit_query');
  				
- 				if(empty($sEditTitle) || empty($sEditLink) || empty($arrQueryNew) || $sEditTitle==='' || $sEditLink==='' || count($arrQueryNew)==0)
- 				{
- 					$skey="内容不能为空";
- 					$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
- 					return;
- 				}
+ 
  				
  				$sControllerName=$this->viewMenuOpen->widget('hide_item_controllerName')->value();
  				$sViewPath=$this->viewMenuOpen->widget('hide_item_viewPath')->value();
  				$sMenuId=$this->viewMenuOpen->widget('hide_item_menuId')->value();
  				$aSetting = Extension::flyweight('menuediter')->setting();
  			
+ 				if(empty($sEditTitle) || empty($sEditLink) || empty($arrQueryNew) || $sEditTitle==='' || $sEditLink==='' || count($arrQueryNew)==0)
+ 				{
+ 					$skey="内容不能为空";
+ 					$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 					$this->readSetting(null,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+ 					$this->setMenuOpen(null,$sViewPath,$sMenuId);
+ 					return;
+ 				}
+ 				
  				if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
  				{		
  						$sControllerNamePage=str_replace('\\','.',$sControllerName);
@@ -229,9 +233,9 @@ class MenuOpen extends ControlPanel
  						$arrSettingNew['id']=$sMenuId;
  						$arrSettingNew['class']='menu';
  						$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
- 						
  						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
  						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+ 						
  				}else {
  						$akey=$aSetting->key('/menu/'.$sControllerName,true);
  						$sControllerNamePage=str_replace('\\','.',$sControllerName);
@@ -317,7 +321,6 @@ class MenuOpen extends ControlPanel
  					}
  					
  					$bflag=false;
- 					//echo $sItemId;exit;
  					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
  					{
  						$skey="项目ID重复";
@@ -809,10 +812,13 @@ class MenuOpen extends ControlPanel
 						&viewpath=frameView&menuid=mainMenu">前台菜单</a></li></ul>');
 		$arrHistory[1]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
 				&viewpath=frameView&menuid=mainMenu">控制面板菜单(后台)</a></li></ul>');
+		//暂时隐藏用户面板菜单和开发菜单
+		/*
 		$arrHistory[2]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
 				&viewpath=frameView&menuid=mainMenu">用户面板菜单</a></li></ul>');
 		$arrHistory[3]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
 				&viewpath=frameView&menuid=mainMenu">开发菜单</a></li></ul>');
+		*/
 		$arrHistory[4]=array('<p>最近打开的菜单</p>');
 		$sHistory=null;
 		$i=5;	
@@ -833,7 +839,7 @@ class MenuOpen extends ControlPanel
 	
 	//从setting中读取已有的menu
 	public function readSetting($sControllerNamePageFormal=null,$bFlag=true,$sControllerNameFormal,$sViewPathFormal,$sMenuIdFormal)
-	{	
+	{	 
 		$sControllerNamePage=$sControllerNamePageFormal;
 		if($bFlag)
 		{

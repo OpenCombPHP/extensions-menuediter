@@ -259,17 +259,9 @@ class ItemSort extends ControlPanel
 		$arrI=&$arrSetting;
 		foreach($aMenuIterator as $key=>$aItem)
 		{
-			//var_dump($aItem->beanConfig()('query'));exit;
-			//$arrItem=$aItem->beanConfig();
-			//echo $arrItem['query']."</br>";exit;
 			if($aItem->title())
 			{	
-// 				echo "<pre>";
-// 				//var_dump($aItem->beanConfig());
-// 				echo "</pre>";
 				$arrItem=$aItem->beanConfig();
-			//	var_dump($arrItem['query']);echo "</br>";
-				//var_dump($arrItem['query']);echo "</br>";
 				$sQuery=isset($arrItem['query'])?$arrItem['query']:'';
 				$arrI=&$arrSetting['item:'.$key];
 				$arrI=array('xpath'=>'item:'.$aItem->id(),'title'=>$aItem->title(),'link'=>$aItem->link(),'menu'=>$aItem->subMenu()?1:0,'query'=>$sQuery);

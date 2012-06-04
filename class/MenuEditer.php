@@ -24,7 +24,7 @@ class MenuEditer extends Extension
 		MenuEditer::getHistory();
 	}
 	
-	static public function buildControlPanelMenu3(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
+	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
 	{
 		$arrConfig=$arrSettigBean;
 	}
@@ -56,7 +56,7 @@ class MenuEditer extends Extension
 						$akey->name()
 						, "$arrItem[0]"
 						, "$arrItem[1]"
-						, array(__CLASS__,'buildControlPanelMenu3')
+						, array(__CLASS__,'buildNewControlPanelMenu')
 						, array($akey->item($item,array()))
 				) ;
 			}
