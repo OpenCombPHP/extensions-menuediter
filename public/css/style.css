@@ -1,7 +1,7 @@
 /*Menu open*/
 .mo-left{ float:left; width:29%;}
 .mo-left p{margin-bottom:10px;}
-.mo-left .coresystem-form-button,.mo-right .coresystem-form-button{margin-top:0;}
+.mo-left .coresystem-form-button,.mo-right .coresystem-form-button{margin-top:0; float:right;}
 
 .mo-left table,.mo-right table{ width:100%;color:#666; font-size:13px;border:0px solid #e4e4e4;  margin:0 0 10px;}
 .mo-left th,.mo-right th{ font-weight:normal; color:#666;height:auto;padding:0; background:none;}
@@ -47,7 +47,7 @@ a.mo-down{ background-position:0 -182px}
 a:hover.mo-down{ background-position:0 -82px;}
 
 
-a.mo-clear{ display:block; text-align:center;width: 85px;height: 28px; line-height: 28px;overflow: hidden;background: url(../images/form-btn.jpg) no-repeat scroll 0 0;color:#666;font-size: 14px;margin:10px;}
+a.mo-clear{ float:right; display:block; text-align:center;width: 85px;height: 28px; line-height: 28px;overflow: hidden;background: url(../images/form-btn.jpg) no-repeat scroll 0 0;color:#666;font-size: 14px;margin:10px;}
 a:hover.mo-clear{ background-position:-85px 0; text-decoration:none; color:#fff;}
 
 .mo-right{ float: left; width:34%;border-left:1px solid #ddd}

@@ -13,8 +13,6 @@
 
 	<template folder="/template" />
 	
-	<beanFolder folder="/bean" />
-	
 	<priority>9</priority>
 	
 </Extension>
