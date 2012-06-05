@@ -21,7 +21,7 @@ class MenuEditer extends Extension
 			, 'mainMenu'
 			, array(__CLASS__,'buildControlPanelMenu')
 		) ;
-		//MenuEditer::getNewMenu();
+		MenuEditer::getNewMenu();
 	}
 	
 	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
