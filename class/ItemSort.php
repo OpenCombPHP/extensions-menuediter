@@ -59,9 +59,21 @@ class ItemSort extends ControlPanel
 			
 			if($sItem_go=='up')
 			{
-
-				if($this->getUpKey($iNubmerTo, $sXpathTo, $arrXpath)){
-					$sXpathUp=$this->getUpKey($iNubmerTo, $sXpathTo, $arrXpath);
+				$iNubmerCons = 0;
+				if(count(explode('/',$sXpathTo))>2)
+				{	
+					$arrTemp = explode('/',$sXpathTo);
+					$sTemp = "";
+					for($i=0;$i<count($arrTemp)-2;$i++)
+					{
+						$sTemp = $sTemp.$arrTemp[$i].'/';
+					}
+					$iNubmerCons = array_search($sTemp, $arrXpath);
+				}
+				
+				if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath))
+				{
+					$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 				}else {
  						$skey="只能在同级移动";
  						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
@@ -82,8 +94,27 @@ class ItemSort extends ControlPanel
 				$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
 				
 			}elseif($sItem_go=='down'){
-					if($this->getDownKey($iNubmerTo, $sXpathTo, $arrXpath)){
-						$sXpathUp=$this->getDownKey($iNubmerTo, $sXpathTo, $arrXpath);
+				
+				if(count(explode('/',$sXpathTo))>2)
+				{
+					$arrTemp = explode('/',$sXpathTo);
+					$sTemp = "";
+					for($i=0;$i<count($arrTemp)-2;$i++)
+					{
+						$sTemp = $sTemp.$arrTemp[$i].'/';
+					}
+				}
+				
+				$iNubmerCons = 0;
+				for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
+				{	
+					if(stristr($arrXpath[$i],$sTemp))
+					{	
+						$iNubmerCons++;
+					}
+				}
+					if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+						$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else {
  						$skey="只能在同级移动";
  						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
@@ -137,8 +168,21 @@ class ItemSort extends ControlPanel
 			
 				if($sItem_go=='up')
 				{
-					if($this->getUpKey($iNubmerTo, $sXpathTo, $arrXpath)){
-						$sXpathUp=$this->getUpKey($iNubmerTo, $sXpathTo, $arrXpath);
+					$iNubmerCons = 0;
+					if(count(explode('/',$sXpathTo))>2)
+					{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-2;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+						$iNubmerCons = array_search($sTemp, $arrXpath);
+					}
+					
+					
+					if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+						$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else {
 	 						$skey="只能在同级移动";
 	 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
@@ -160,8 +204,30 @@ class ItemSort extends ControlPanel
 					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
 					
 				}elseif($sItem_go=='down'){
-						if($this->getDownKey($iNubmerTo, $sXpathTo, $arrXpath)){
-							$sXpathUp=$this->getDownKey($iNubmerTo, $sXpathTo, $arrXpath);
+					
+					if(count(explode('/',$sXpathTo))>2)
+					{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-2;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+					}
+					
+					$iNubmerCons = 0;
+					for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
+					{
+						if(stristr($arrXpath[$i],$sTemp))
+						{
+							$iNubmerCons++;
+						}
+					}
+					
+					
+					
+						if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+							$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 						}else {
 	 						$skey="只能在同级移动";
 	 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
@@ -436,27 +502,25 @@ class ItemSort extends ControlPanel
 		}
 	}
 	
-	public function getUpKey($iNubmerTo,$sXpathTo,$arrXpath){
-		for($i=$iNubmerTo-1;$i>=0;$i--)
+	public function getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo,$arrXpath)
+	{
+		for($i=$iNubmerTo-1;$i>=$iNubmerCons;$i--)
 		{
 			if(count(explode('/',$sXpathTo))!=count(explode('/',$arrXpath[$i])))
 			{
 				continue;
 			}else {
-				return array_key_exists($i, $arrXpath)?$arrXpath[$i]:false;
+				return array_key_exists($i, $arrXpath) ? $arrXpath[$i] : false;
 			}
 		}
-		
-		return array_key_exists($i, $arrXpath)?$arrXpath[$i]:false;
-
 	}
 	
-	public function getDownKey($iNubmerTo,$sXpathTo,$arrXpath)
-	{
-		for($i=$iNubmerTo+1;$i<=count($arrXpath);$i++)
-		{
+	public function getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo,$arrXpath)
+	{	
+		for($i=$iNubmerTo+1; $i<=$iNubmerTo+$iNubmerCons; $i++)
+		{	
 			if(array_key_exists($i, $arrXpath))
-			{
+			{	
 				if(count(explode('/',$sXpathTo))!=count(explode('/',$arrXpath[$i])))
 				{
 					continue;
@@ -467,9 +531,7 @@ class ItemSort extends ControlPanel
 			else {
 				return array_key_exists($i, $arrXpath)?$arrXpath[$i]:false;
 			}
-
 		}
-		return array_key_exists($i, $arrXpath)?$arrXpath[$i]:false;
 	}
 	
 	public function insertArr(&$arrInsert,&$arrne)
