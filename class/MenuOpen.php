@@ -860,6 +860,10 @@ class MenuOpen extends ControlPanel
 		$arrSetting=$akey->Item($sViewPath.'.'.$sMenuId);
 		$this->getCreateItemCounttArray($arrSetting,'',$arrCountItem);
 		$arrCreateJson=array();
+		if(count($arrCountItem)==0)
+		{
+			$arrCountItem[''] = array();
+		}
 		$this->setCreateItemId($arrCountItem[''],'',$arrCreateJson);
 		$arrCreateTop=array('Top/'=>'item-'.(count($arrCountItem[''])+1));
 		$arrCreateJson=array_merge($arrCreateTop,$arrCreateJson);
@@ -1129,10 +1133,10 @@ class MenuOpen extends ControlPanel
 			$sXpathOld=$sXpath;
 			if($key=='xpath'){
 				$sXpath=$sXpath.$arrSetting['xpath'].'/'; 
-				$arrCountItem[$sXpath]=array();
+				$arrCountItem[$sXpath]=array(); 
 			}
 			if(substr($key,0,5)=='item:')
-			{
+			{	
 				$this->getCreateItemCounttArray($arrSetting[$key],$sXpath,$arrCountItem[$sXpath]);
 				$sXpathOld=$sXpath;
 			}
