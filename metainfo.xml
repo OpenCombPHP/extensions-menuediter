@@ -5,6 +5,10 @@
 	<version>0.1</version>
 	<title>菜单管理</title>
 	
+	<description>
+能够在控制面板中编辑所有网页上的的菜单控件
+	</description>
+	
 	<class>org.opencomb.menuediter.MenuEditer</class>
 	
 	<package folder="/class" namespace="org.opencomb.menuediter" />
@@ -14,5 +18,7 @@
 	<template folder="/template" />
 	
 	<priority>9</priority>
+	
+	<require type="extension" item="coresystem"><![CDATA[ >=0.1 ]]></require>
 	
 </Extension>
