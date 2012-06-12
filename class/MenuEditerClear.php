@@ -40,6 +40,7 @@ class MenuEditerClear extends ControlPanel
 		$akey->deleteItem($sViewPath.'.'.$sMenuId);
 		$skey="清楚菜单成功";
 		$this->viewMenuDelete->createMessage(Message::success,"%s ",$skey);
+		$this->location('?c=org.opencomb.menuediter.MenuOpen');
 	}
 	
 	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)

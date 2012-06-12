@@ -173,7 +173,7 @@ class MenuOpen extends ControlPanel
  				$sViewPath = $this->viewMenuOpen->widget('hide_item_viewPath')->value();
  				$sMenuId = $this->viewMenuOpen->widget('hide_item_menuId')->value();
  				$aSetting = Extension::flyweight('menuediter')->setting();
- 			
+ 				//echo $sEditTitle;exit;
  				if(empty($sEditTitle) ||  $sEditTitle==='')
  				{
  					$skey="请输入标题";
@@ -306,9 +306,10 @@ class MenuOpen extends ControlPanel
  				$sViewPath=$this->viewMenuOpen->widget('hide_create_item_viewPath')->value();
  				$sMenuId=$this->viewMenuOpen->widget('hide_create_item_menuId')->value();
  				$sCreateTitle = $this->viewMenuOpen->widget('create_title')->value();
+ 				$sCreateItem = $this->viewMenuOpen->widget('create_item_id')->value();
+ 				$aSetting = Extension::flyweight('menuediter')->setting();
  				
- 				
- 				if(empty($sCreateTitle) ||  $sCreateTitle==='')
+ 				if(empty($sCreateTitle) ||  $sCreateTitle==='' || empty($sCreateItem) || $sCreateItem==='')
  				{	
  					$skey="请输入标题";
  					$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
@@ -324,7 +325,7 @@ class MenuOpen extends ControlPanel
  				}
  				
  				
- 				$aSetting = Extension::flyweight('menuediter')->setting();
+ 				
 
  				if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
  				{
