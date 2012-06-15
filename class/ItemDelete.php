@@ -18,16 +18,12 @@ use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 
 class ItemDelete extends ControlPanel
 {
-	public function createBeanConfig()
-	{
-		return array(
-			'title'=> '文章内容',
-			'view:itemDelete'=>array(
-				'template'=>'ItemDelete.html',
-				'class'=>'form',
-			),
-		);
-	}
+	protected $arrConfig =  array(
+					'title'=> '文章内容',
+					'view'=> array(
+							'template'=>'ItemDelete.html',
+					)
+				);
 	
 	public function process()
 	{	
@@ -75,7 +71,7 @@ class ItemDelete extends ControlPanel
 		
 		$sControllerNamePage=str_replace('\\','.',$sControllerName);
 		$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationdelete=locationdelete&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-		$this->viewItemDelete->createMessage(Message::success,"%s ",$skey='删除成功');
+		$this->view->createMessage(Message::success,"%s ",$skey='删除成功');
 		$this->location($sUrl,0);
 		
 	}

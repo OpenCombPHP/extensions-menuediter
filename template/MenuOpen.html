@@ -46,7 +46,7 @@
 </script>
 <div>
 	<div class="mo-left">
-	<form method="post">
+	<form method="post" name="formOpenItem">
 		<table>
 		<tbody>
 		<tr><th colspan="2">控制器类名：</th></tr>
@@ -71,7 +71,7 @@
 	<div class="mo-right">
 	<div id="itemCreate" style="display:none;" class="mo-right-item">
 	<h2>菜单项新建</h2>
-		<form method="post">
+		<form method="post" name="formCreateItem">
 			<table>
 			<tbody>
 			<tr><th width="66px">项目ID：</th><td><widget id="create_item_id" /></td></tr>
@@ -83,8 +83,8 @@
 			</td></tr>
 			<tr class="intro"><th>选中条件：</th><td><widget id="create_query" attr.style="width:70%;height:100px"/>
 			<widget id="hide_flag_create_item"/>
-			<widget id="hide_create_item_controllerName"/>
-			<widget id="hide_create_item_viewPath"/>
+			<widget  id="hide_create_item_controllerName"/>
+			<widget  id="hide_create_item_viewPath"/>
 			<widget id="hide_create_item_menuId"/>
 			<widget id="hide_item_create_xpath"/></td></tr>
 			<tr><th colspan="2"><input type="submit" class="coresystem-form-button" value="保　存" /></th></tr>
@@ -95,7 +95,7 @@
 	
 	<div id="itemEdit" style="display:none;" class="mo-right-item">
 	<h2>菜单项编辑</h2>
-		<form method="post">
+		<form method="post" name="formEditItem">
 			<table>
 			<tbody>
 			<tr>

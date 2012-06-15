@@ -18,16 +18,12 @@ use org\jecat\framework\mvc\controller\Controller;
 
 class ItemSort extends ControlPanel
 {
-	public function createBeanConfig()
-	{
-		return array(
+	protected $arrConfig = array(
 			'title'=> '文章内容',
-			'view:itemSort'=>array(
-				'template'=>'ItemSort.html',
-				'class'=>'form',
-			),
-		);
-	}
+			'view' => array(
+					'template'=>'ItemSort.html',
+			)
+	);
 	
 	public function process()
 	{	
@@ -76,7 +72,7 @@ class ItemSort extends ControlPanel
 					$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 				}else {
  						$skey="只能在同级移动";
- 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
+ 						$this->view->createMessage(Message::error,"%s ",$skey);
  						$sControllerNamePage=str_replace('\\','.',$sControllerName);
  						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
  						$this->location($sUrl,0);
@@ -95,6 +91,7 @@ class ItemSort extends ControlPanel
 				
 			}elseif($sItem_go=='down'){
 				
+				$iNubmerCons = 0;
 				if(count(explode('/',$sXpathTo))>2)
 				{
 					$arrTemp = explode('/',$sXpathTo);
@@ -103,26 +100,39 @@ class ItemSort extends ControlPanel
 					{
 						$sTemp = $sTemp.$arrTemp[$i].'/';
 					}
-				}
-				
-				$iNubmerCons = 0;
-				for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
-				{	
-					if(stristr($arrXpath[$i],$sTemp))
-					{	
-						$iNubmerCons++;
+					for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
+					{
+						if(stristr($arrXpath[$i],$sTemp))
+						{
+							$iNubmerCons++;
+						}
+					}
+					
+				}else{
+					$arrTemp = explode('/',$sXpathTo);
+					$sTemp = "";
+					for($i=0;$i<count($arrTemp)-1;$i++)
+					{
+						$sTemp = $sTemp.$arrTemp[$i].'/';
+					}
+					for($i=$iNubmerTo; $i<count($arrXpath); $i++)
+					{
+						if(stristr($arrXpath[$i],$sTemp))
+						{
+							$iNubmerCons++;
+						}
 					}
 				}
-					if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+				if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
 						$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
-					}else {
- 						$skey="只能在同级移动";
- 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
- 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
- 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
- 						$this->location($sUrl,0);
- 						return;
-					};		
+				}else {
+ 					$skey="只能在同级移动";
+ 					$this->view->createMessage(Message::error,"%s ",$skey);
+ 					$sControllerNamePage=str_replace('\\','.',$sControllerName);
+ 					$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+ 					$this->location($sUrl,0);
+ 					return;
+				};		
 				$arrXpathUp=explode('/',$sXpathUp);
 				array_pop($arrXpathUp);
 				$arrXpathTo=explode('/',$sXpathTo);
@@ -140,7 +150,7 @@ class ItemSort extends ControlPanel
 			$akey->setItem($sViewPath.'.'.$sMenuId,$arrItemSettingNew);
 			$sControllerNamePage=str_replace('\\','.',$sControllerName);
 			$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-			$this->viewItemSort->createMessage(Message::success,"%s ",$skey='移动成功');
+			$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
 			$this->location($sUrl,0);
 		}else{
 			$i=0;
@@ -185,7 +195,7 @@ class ItemSort extends ControlPanel
 						$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else {
 	 						$skey="只能在同级移动";
-	 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
+	 						$this->view->createMessage(Message::error,"%s ",$skey);
 	 						
 	 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
 	 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
@@ -204,7 +214,7 @@ class ItemSort extends ControlPanel
 					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
 					
 				}elseif($sItem_go=='down'){
-					
+					$iNubmerCons = 0;
 					if(count(explode('/',$sXpathTo))>2)
 					{
 						$arrTemp = explode('/',$sXpathTo);
@@ -213,31 +223,42 @@ class ItemSort extends ControlPanel
 						{
 							$sTemp = $sTemp.$arrTemp[$i].'/';
 						}
-					}
-					
-					$iNubmerCons = 0;
-					for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
-					{
-						if(stristr($arrXpath[$i],$sTemp))
+						for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
 						{
-							$iNubmerCons++;
+							if(stristr($arrXpath[$i],$sTemp))
+							{
+								$iNubmerCons++;
+							}
+						}
+						
+					}else{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-1;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+						for($i=$iNubmerTo; $i<count($arrXpath); $i++)
+						{
+							if(stristr($arrXpath[$i],$sTemp))
+							{
+								$iNubmerCons++;
+							}
 						}
 					}
 					
-					
-					
-						if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
-							$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
-						}else {
-	 						$skey="只能在同级移动";
-	 						$this->viewItemSort->createMessage(Message::error,"%s ",$skey);
+					if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+						$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+					}else {
+ 						$skey="只能在同级移动";
+ 						$this->view->createMessage(Message::error,"%s ",$skey);
 
-	 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
-	 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-	 						$this->location($sUrl,0);
-	 						
-	 						//return;
-						};		
+ 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
+ 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+ 						$this->location($sUrl,0);
+ 						
+ 						//return;
+					};		
 					$arrXpathUp=explode('/',$sXpathUp);
 					array_pop($arrXpathUp);
 					$arrXpathTo=explode('/',$sXpathTo);
@@ -255,7 +276,7 @@ class ItemSort extends ControlPanel
 				$akey->setItem($sViewPath.'.'.$sMenuId,$arrItemSettingNew);
 				$sControllerNamePage=str_replace('\\','.',$sControllerName);
 				$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-				$this->viewItemSort->createMessage(Message::success,"%s ",$skey='移动成功');
+				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
 				$this->location($sUrl,0);
 		}	
 	}
@@ -517,20 +538,30 @@ class ItemSort extends ControlPanel
 	
 	public function getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo,$arrXpath)
 	{	
+		$s = true;
 		for($i=$iNubmerTo+1; $i<=$iNubmerTo+$iNubmerCons; $i++)
-		{	
+		{	 
 			if(array_key_exists($i, $arrXpath))
 			{	
+
 				if(count(explode('/',$sXpathTo))!=count(explode('/',$arrXpath[$i])))
 				{
+					$s = false;
 					continue;
 				}else {
+					$s = true;
 					return array_key_exists($i, $arrXpath)?$arrXpath[$i]:false;
 				}
+
 			}
 			else {
 				return array_key_exists($i, $arrXpath)?$arrXpath[$i]:false;
 			}
+		}
+		
+		if(!$s)
+		{
+			return false;
 		}
 	}
 	

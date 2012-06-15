@@ -18,16 +18,12 @@ use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 
 class MenuEditerClear extends ControlPanel
 {
-	public function createBeanConfig()
-	{
-		return array(
-			'title'=> '文章内容',
-			'view:menuDelete'=>array(
-				'template'=>'MenuEditerClear.html',
-				'class'=>'form',
-			),
-		);
-	}
+	protected $arrConfig = array(
+					'title'=> '文章内容',
+					'view' => array(
+						'template'=>'MenuEditerClear.html',
+					)
+				);
 	
 	public function process()
 	{	
@@ -39,8 +35,8 @@ class MenuEditerClear extends ControlPanel
 		$akey=$aSetting->key('/menu/'.$sControllerName,true);
 		$akey->deleteItem($sViewPath.'.'.$sMenuId);
 		$skey="清楚菜单成功";
-		$this->viewMenuDelete->createMessage(Message::success,"%s ",$skey);
-		$this->location('?c=org.opencomb.menuediter.MenuOpen');
+		$this->view->createMessage(Message::success,"%s ",$skey);//exit;
+		$this->location('?c=org.opencomb.menuediter.MenuOpen',1);
 	}
 	
 	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)
