@@ -24,7 +24,7 @@ class MenuOpen extends ControlPanel
 	{
 		return array(
 			'title'=> '文章内容',
-			'view:menuOpen'=>array(
+			'view'=>array(
 				'template'=>'MenuOpen.html',
 				'class'=>'form',
 				'widgets' => array(
@@ -157,27 +157,27 @@ class MenuOpen extends ControlPanel
 	
 	public function process()
 	{	
- 		if($this->viewMenuOpen->isSubmit($this->params))
+ 		if($this->view->isSubmit($this->params))
  		{	
- 			$this->viewMenuOpen->loadWidgets($this->params);
- 			if($this->viewMenuOpen->widget('hide_flag_edit_item')->value()==1)
+ 			$this->view->loadWidgets($this->params);
+ 			if($this->view->widget('hide_flag_edit_item')->value()==1)
  			{
- 				$sEditTitle = trim($this->viewMenuOpen->widget('edit_title')->value());
- 				$sEditLink =  trim($this->viewMenuOpen->widget('edit_link')->value());
+ 				$sEditTitle = trim($this->view->widget('edit_title')->value());
+ 				$sEditLink =  trim($this->view->widget('edit_link')->value());
  				$arrQueryNew = $this->getQuery('edit_query');
  				
  
  				
- 				$sControllerName = $this->viewMenuOpen->widget('hide_item_controllerName')->value();
+ 				$sControllerName = $this->view->widget('hide_item_controllerName')->value();
  				$sControllerNamePage = str_replace('\\','.',$sControllerName);
- 				$sViewPath = $this->viewMenuOpen->widget('hide_item_viewPath')->value();
- 				$sMenuId = $this->viewMenuOpen->widget('hide_item_menuId')->value();
+ 				$sViewPath = $this->view->widget('hide_item_viewPath')->value();
+ 				$sMenuId = $this->view->widget('hide_item_menuId')->value();
  				$aSetting = Extension::flyweight('menuediter')->setting();
  				//echo $sEditTitle;exit;
  				if(empty($sEditTitle) ||  $sEditTitle==='')
  				{
  					$skey="请输入标题";
- 					$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 					$this->view->createMessage(Message::error,"%s ",$skey);
  					if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
  					{
  						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
@@ -193,14 +193,14 @@ class MenuOpen extends ControlPanel
  				{		
  						$sControllerNamePage=str_replace('\\','.',$sControllerName);
  						$akey=$aSetting->key('/menu/'.$sControllerName,true);
- 						$sXpathFrom=$this->viewMenuOpen->widget('hide_item_xpath')->value();
+ 						$sXpathFrom=$this->view->widget('hide_item_xpath')->value();
  						$sXpathOption=$this->params->get('xpathOption');
  						
  						//判断移动的层级
  						if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
  						{
  							$skey="移动层级错误";
- 							$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 							$this->view->createMessage(Message::error,"%s ",$skey);
  							$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
  							$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  							return;
@@ -223,9 +223,9 @@ class MenuOpen extends ControlPanel
 
  						$this->itemSettingEdit($arrSettingOld, '', $sXpathFrom, $arrItemSettingMiddle,$arrSettingChild);
  						
- 						$arrSettingChild['title']=$this->viewMenuOpen->widget('edit_title')->value();
+ 						$arrSettingChild['title']=$this->view->widget('edit_title')->value();
 
- 						$arrSettingChild['link']=$this->viewMenuOpen->widget('edit_link')->value();
+ 						$arrSettingChild['link']=$this->view->widget('edit_link')->value();
  						
  						$arrSettingChild['query']=$this->getQuery('edit_query');
  						
@@ -253,13 +253,13 @@ class MenuOpen extends ControlPanel
  						$aMenuIterator = $aMenu->itemIterator();
  						$this->itemSetting($aMenuIterator,$arrSettingOld);
  						
- 						$sXpathFrom = $this->viewMenuOpen->widget('hide_item_xpath')->value();
+ 						$sXpathFrom = $this->view->widget('hide_item_xpath')->value();
  						$sXpathOption = $this->params->get('xpathOption');
 						//判断移动的层级
  						if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
  						{
  							$skey="移动层级错误";
- 							$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 							$this->view->createMessage(Message::error,"%s ",$skey);
  							$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
  							$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  							return;
@@ -280,8 +280,8 @@ class MenuOpen extends ControlPanel
 
  						$this->itemSettingEdit($arrSettingOld, '', $sXpathFrom, $arrItemSettingMiddle,$arrSettingChild);
  						
- 						$arrSettingChild['title']=$this->viewMenuOpen->widget('edit_title')->value();
- 						$arrSettingChild['link']=$this->viewMenuOpen->widget('edit_link')->value();	
+ 						$arrSettingChild['title']=$this->view->widget('edit_title')->value();
+ 						$arrSettingChild['link']=$this->view->widget('edit_link')->value();	
  						$arrSettingChild['query']=$this->getQuery('edit_query');
  						
  						if($sXpathFrom==$sXpathOption)
@@ -299,20 +299,20 @@ class MenuOpen extends ControlPanel
  						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
  						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  				}
- 			}elseif($this->viewMenuOpen->widget('hide_flag_create_item')->value()==2){
+ 			}elseif($this->view->widget('hide_flag_create_item')->value()==2){
  				
- 				$sControllerName= $this->viewMenuOpen->widget('hide_create_item_controllerName')->value();
+ 				$sControllerName= $this->view->widget('hide_create_item_controllerName')->value();
  				$sControllerNamePage = str_replace('\\','.',$sControllerName);
- 				$sViewPath=$this->viewMenuOpen->widget('hide_create_item_viewPath')->value();
- 				$sMenuId=$this->viewMenuOpen->widget('hide_create_item_menuId')->value();
- 				$sCreateTitle = $this->viewMenuOpen->widget('create_title')->value();
- 				$sCreateItem = $this->viewMenuOpen->widget('create_item_id')->value();
+ 				$sViewPath=$this->view->widget('hide_create_item_viewPath')->value();
+ 				$sMenuId=$this->view->widget('hide_create_item_menuId')->value();
+ 				$sCreateTitle = $this->view->widget('create_title')->value();
+ 				$sCreateItem = $this->view->widget('create_item_id')->value();
  				$aSetting = Extension::flyweight('menuediter')->setting();
  				
  				if(empty($sCreateTitle) ||  $sCreateTitle==='' || empty($sCreateItem) || $sCreateItem==='')
  				{	
  					$skey="请输入标题";
- 					$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 					$this->view->createMessage(Message::error,"%s ",$skey);
  					if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
  					{
  						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
@@ -336,9 +336,9 @@ class MenuOpen extends ControlPanel
  					
  					$sXpath='';
 					$arrSettingNew=array();
- 					$sItemId='item:'.str_replace('item-','',$this->viewMenuOpen->widget('create_item_id')->value());
+ 					$sItemId='item:'.str_replace('item-','',$this->view->widget('create_item_id')->value());
  			
- 					$sXpathTo=$this->viewMenuOpen->widget('hide_item_create_xpath')->value();
+ 					$sXpathTo=$this->view->widget('hide_item_create_xpath')->value();
 
  					if($sXpathTo!=='Top/')
  					{	
@@ -351,17 +351,17 @@ class MenuOpen extends ControlPanel
  					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
  					{
  						$skey="项目ID重复";
- 						$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 						$this->view->createMessage(Message::error,"%s ",$skey);
  						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
  						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  						return;
  					}
  					
  					$arrItemChild=array(
- 						'xpath'=>'item:'.str_replace('item-','',$this->viewMenuOpen->widget('create_item_id')->value()),
- 						'title'=>$this->viewMenuOpen->widget('create_title')->value(),
- 						//'depth'=>$this->viewMenuOpen->widget('create_depth')->value(),
- 						'link'=>$this->viewMenuOpen->widget('create_link')->value(),
+ 						'xpath'=>'item:'.str_replace('item-','',$this->view->widget('create_item_id')->value()),
+ 						'title'=>$this->view->widget('create_title')->value(),
+ 						//'depth'=>$this->view->widget('create_depth')->value(),
+ 						'link'=>$this->view->widget('create_link')->value(),
  						'query'=>$this->getQuery('create_query'),	
  					);
  					$this->createItem($arrSettingOld, $sXpath, $sXpathTo, $arrSettingNew, $arrItemChild);
@@ -371,7 +371,7 @@ class MenuOpen extends ControlPanel
  					$akey->setItem($sViewPath.'.'.$sMenuId,$arrSettingNew);
  					
  					$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
- 					$this->viewMenuOpen->variables()->set('sClear',$sClear);
+ 					$this->view->variables()->set('sClear',$sClear);
  					
  					$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
  					$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
@@ -379,8 +379,8 @@ class MenuOpen extends ControlPanel
  					$sControllerNamePage=str_replace('\\', '.', $sControllerName);
  					
  					$akey=$aSetting->key('/menu/'.$sControllerName,true);
- 					$sItemId='item:'.str_replace('item-','',$this->viewMenuOpen->widget('create_item_id')->value());
- 					$sXpathTo=$this->viewMenuOpen->widget('hide_item_create_xpath')->value();
+ 					$sItemId='item:'.str_replace('item-','',$this->view->widget('create_item_id')->value());
+ 					$sXpathTo=$this->view->widget('hide_item_create_xpath')->value();
  					$arrSettingOld=array();
  					$aController = new $sControllerName();
  					$aView = View::findXPath($aController->mainView(),$sViewPath );
@@ -402,17 +402,17 @@ class MenuOpen extends ControlPanel
  					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
  					{
  						$skey="项目ID重复";
- 						$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+ 						$this->view->createMessage(Message::error,"%s ",$skey);
  						$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
  						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  						return;
  					}
  					
  					$arrItemChild=array(
- 						'xpath'=>'item:'.str_replace('item-','',$this->viewMenuOpen->widget('create_item_id')->value()),
- 						'title'=>$this->viewMenuOpen->widget('create_title')->value(),
- 						//'depth'=>$this->viewMenuOpen->widget('create_depth')->value(),
- 						'link'=>$this->viewMenuOpen->widget('create_link')->value(),
+ 						'xpath'=>'item:'.str_replace('item-','',$this->view->widget('create_item_id')->value()),
+ 						'title'=>$this->view->widget('create_title')->value(),
+ 						//'depth'=>$this->view->widget('create_depth')->value(),
+ 						'link'=>$this->view->widget('create_link')->value(),
  						'query'=>$this->getQuery('create_query'),	
  					);
  					$this->createItem($arrSettingOld, $sXpath, $sXpathTo, $arrSettingNew, $arrItemChild);
@@ -424,10 +424,10 @@ class MenuOpen extends ControlPanel
 					$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
  				}
  			}else {
- 				$sControllerNamePage=$this->viewMenuOpen->widget('controller_name')->value();
+ 				$sControllerNamePage=$this->view->widget('controller_name')->value();
  				$sControllerName=str_replace('.','\\',$sControllerNamePage);
- 				$sViewPath=$this->viewMenuOpen->widget('view_Xpath')->value();
- 				$sMenuId=$this->viewMenuOpen->widget('menu_id')->value();
+ 				$sViewPath=$this->view->widget('view_Xpath')->value();
+ 				$sMenuId=$this->view->widget('menu_id')->value();
  				$aSetting = Extension::flyweight('menuediter')->setting();
  				
  				
@@ -440,9 +440,9 @@ class MenuOpen extends ControlPanel
  				}
  			}
  		}elseif($this->params->get('history')=='history'){
- 			$this->viewMenuOpen->widget('controller_name')->setValue($this->params->get('controllername'));
- 			$this->viewMenuOpen->widget('view_Xpath')->setValue($this->params->get('viewpath'));
- 			$this->viewMenuOpen->widget('menu_id')->setValue($this->params->get('menuid'));
+ 			$this->view->widget('controller_name')->setValue($this->params->get('controllername'));
+ 			$this->view->widget('view_Xpath')->setValue($this->params->get('viewpath'));
+ 			$this->view->widget('menu_id')->setValue($this->params->get('menuid'));
  			$this->getHistory();
  			
  			$sControllerNamePage=$this->params->get('controllername');
@@ -861,7 +861,7 @@ class MenuOpen extends ControlPanel
 		{
 			$sHistory=$sHistory.$value[0];
 		}
-		$this->viewMenuOpen->variables()->set('sHistory',$sHistory);
+		$this->view->variables()->set('sHistory',$sHistory);
 	}
 	
 	//从setting中读取已有的menu
@@ -902,18 +902,18 @@ class MenuOpen extends ControlPanel
 		$sTopMenu = '<ul class=mo-middile-ul>'.'<li>'.'<p>'.'<span>'.'顶层'.'</span>'.
 				"<em><a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('Top/')\">".'</a>'.'</em>'.'</p>'.'</li>'.'</ul>';
 		$sMenu = $sTopMenu.$sMenu;
-		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
+		$this->view->variables()->set('sMenu',$sMenu);
 		$arrJson['controllername'] = $sControllerName;
 		$arrJson['viewpath'] = $sViewPath;
 		$arrJson['menuid'] = $sMenuId;
 		
 		$this->jsonSetting($arrSetting, $sXpath, $arrJson);
-		$this->viewMenuOpen->variables()->set('sJsonSetting',json_encode($arrJson));
-		$this->viewMenuOpen->variables()->set('CreateJson',json_encode($arrCreateJson));
+		$this->view->variables()->set('sJsonSetting',json_encode($arrJson));
+		$this->view->variables()->set('CreateJson',json_encode($arrCreateJson));
 		$this->xpathOption($arrSetting,'','',0,$arrXpath);
 		$arrTop = array('Top/'=>'顶层');
 		$arrXpath = array_merge($arrTop,$arrXpath);
-		$this->viewMenuOpen->variables()->set('arrXpath',$arrXpath);
+		$this->view->variables()->set('arrXpath',$arrXpath);
 	
 		$aController = new $sControllerName();
 		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.ControlPanelFrame')
@@ -937,7 +937,7 @@ class MenuOpen extends ControlPanel
 		}
 		
 		$sClear = "<a class=\"mo-clear\" href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
-		$this->viewMenuOpen->variables()->set('sClear',$sClear);
+		$this->view->variables()->set('sClear',$sClear);
 	}
 	
 	//从Beanconfig中读取menu
@@ -961,7 +961,7 @@ class MenuOpen extends ControlPanel
 		if( !class_exists($sControllerName) or !new $sControllerName() instanceof Controller)
 		{
 			$skey = "无此控制器";
-			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+			$this->view->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}
@@ -973,7 +973,7 @@ class MenuOpen extends ControlPanel
 		if( !$aView = View::findXPath($aController->mainView(),$sViewPath))
 		{
 			$skey = "无此视图";
-			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+			$this->view->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}else {
@@ -983,7 +983,7 @@ class MenuOpen extends ControlPanel
 		if( !$aMenu = $aView->widget($sMenuId) or !$aMenu instanceof Menu)
 		{
 			$skey = "无此菜单";
-			$this->viewMenuOpen->createMessage(Message::error,"%s ",$skey);
+			$this->view->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}else {
@@ -1028,14 +1028,14 @@ class MenuOpen extends ControlPanel
 		$arrTop = array('Top/'=>'顶层');
 		$arrXpath = array_merge($arrTop,$arrXpath);
 		
-		$this->viewMenuOpen->variables()->set('sMenu',$sMenu);
-		$this->viewMenuOpen->variables()->set('sJsonSetting',json_encode($arrJson));
-		$this->viewMenuOpen->variables()->set('CreateJson',json_encode($arrCreateJson));
-		$this->viewMenuOpen->variables()->set('arrXpath',$arrXpath);
+		$this->view->variables()->set('sMenu',$sMenu);
+		$this->view->variables()->set('sJsonSetting',json_encode($arrJson));
+		$this->view->variables()->set('CreateJson',json_encode($arrCreateJson));
+		$this->view->variables()->set('arrXpath',$arrXpath);
 		
-		$this->viewMenuOpen->widget('hide_create_item_controllerName')->setValue($sControllerName);
-		$this->viewMenuOpen->widget('hide_create_item_viewPath')->setValue($sViewPath);
-		$this->viewMenuOpen->widget('hide_create_item_menuId')->setValue($sMenuId);
+		$this->view->widget('hide_create_item_controllerName')->setValue($sControllerName);
+		$this->view->widget('hide_create_item_viewPath')->setValue($sViewPath);
+		$this->view->widget('hide_create_item_menuId')->setValue($sMenuId);
 		
 		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage=='org.opencomb.coresystem.mvc.controller.ControlPanelFrame')
 		{
@@ -1059,9 +1059,9 @@ class MenuOpen extends ControlPanel
 	}
 	
 	public function setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId){
-		$this->viewMenuOpen->widget('controller_name')->setValue($sControllerNamePage);
-		$this->viewMenuOpen->widget('view_Xpath')->setValue($sViewPath);
-		$this->viewMenuOpen->widget('menu_id')->setValue($sMenuId);
+		$this->view->widget('controller_name')->setValue($sControllerNamePage);
+		$this->view->widget('view_Xpath')->setValue($sViewPath);
+		$this->view->widget('menu_id')->setValue($sMenuId);
 	}
 	
 	//判断编辑Item时，移动层级
@@ -1125,10 +1125,10 @@ class MenuOpen extends ControlPanel
 	{
 		if($sflag=='edit_query')
 		{
-			$arrQuery=explode("\n",str_replace('\r','',$this->viewMenuOpen->widget('edit_query')->value()));
+			$arrQuery=explode("\n",str_replace('\r','',$this->view->widget('edit_query')->value()));
 		}elseif($sflag=='create_query')
 		{
-			$arrQuery=explode("\n",$this->viewMenuOpen->widget('create_query')->value());
+			$arrQuery=explode("\n",$this->view->widget('create_query')->value());
 		}
 		$arrQueryNew=array();
 		$nI=0;
