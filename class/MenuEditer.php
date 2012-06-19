@@ -9,19 +9,16 @@ use org\opencomb\frameworktest\aspect;
 use org\opencomb\platform\system\PlatformSerializer;
 use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
+use org\opencomb\coresystem\mvc\controller\ControlPanel ;
 
 class MenuEditer extends Extension
 {
 	public function load()
 	{
 		// 注册菜单build事件的处理函数
-		Menu::registerBuildHandle(
-			'org\\opencomb\\coresystem\\mvc\\controller\\ControlPanelFrame'
-			, 'frameView'
-			, 'mainMenu'
-			, array(__CLASS__,'buildControlPanelMenu')
-		) ;
-		MenuEditer::getNewMenu();
+		ControlPanel::registerMenuHandler( array(__CLASS__,'buildControlPanelMenu') ) ;
+		//MenuEditer::getNewMenu();
+		MenuEditer::getNewMenuTest();
 	}
 	
 	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
@@ -30,7 +27,7 @@ class MenuEditer extends Extension
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
-	{
+	{	
 		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
 				'title'=>'菜单编辑' ,
 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
@@ -43,6 +40,25 @@ class MenuEditer extends Extension
 				)
 		);
 	}	
+	
+	static public function getNewMenuTest()
+	{
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
+		{	
+			foreach($akey->itemIterator() as $key1=>$item)
+			{	
+				$arrItem=explode('.',$item);
+				Menu::registerBuildHandle(
+						$akey->name()
+						, "$arrItem[0]"
+						, "$arrItem[1]"
+						, array(__CLASS__,'buildNewControlPanelMenu')
+						, array($akey->item($item,array()))
+				) ;
+			}
+		}
+	}
 	
 	static public function getNewMenu()
 	{

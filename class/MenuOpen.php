@@ -152,7 +152,11 @@ class MenuOpen extends ControlPanel
 				);
 	
 	public function formOpenItem()
-	{
+	{	
+// 		$s = 'org\opencomb\coresystem\mvc\controller\ControlPanel';
+// 		$aController = new $s(); 
+// 		var_dump($aController->view()->viewByName('frameview')->widget('mainMenu'));exit;
+		
 		$this->view->loadWidgets($this->params);
 		$sControllerNamePage = $this->view->widget('controller_name')->value();
 		$sControllerName = str_replace('.','\\',$sControllerNamePage);
@@ -184,7 +188,7 @@ class MenuOpen extends ControlPanel
 			$sViewPath = $this->view->widget('hide_item_viewPath')->value();
 			$sMenuId = $this->view->widget('hide_item_menuId')->value();
 			$aSetting = Extension::flyweight('menuediter')->setting();
-			//echo $sEditTitle;exit;
+			
 			if(empty($sEditTitle) ||  $sEditTitle==='')
 			{
 				$skey="请输入标题";
@@ -441,7 +445,7 @@ class MenuOpen extends ControlPanel
 	}
 	
 	public function process()
-	{	
+	{					
 		if($this->params->get('history')=='history'){
  			$this->view->widget('controller_name')->setValue($this->params->get('controllername'));
  			$this->view->widget('view_Xpath')->setValue($this->params->get('viewpath'));
@@ -943,7 +947,7 @@ class MenuOpen extends ControlPanel
 	
 	//从Beanconfig中读取menu
 	public function readBeanConfig($sControllerNamePageFormal=null,$bFlag=true,$sControllerNameFormal,$sViewPathFormal,$sMenuIdFormal)
-	{
+	{	
 		$sControllerNamePage = $sControllerNamePageFormal;
 		if($bFlag)
 		{
@@ -972,7 +976,7 @@ class MenuOpen extends ControlPanel
 		
 		// 检查视图
 		if( !$aView = $aController->view()->viewByName($sViewPath))
-		{exit;
+		{
 			$skey = "无此视图";
 			$this->view->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
@@ -1037,7 +1041,6 @@ class MenuOpen extends ControlPanel
 		$this->view->widget('hide_create_item_controllerName')->setValue($sControllerName);
 		$this->view->widget('hide_create_item_viewPath')->setValue($sViewPath);
 		$this->view->widget('hide_create_item_menuId')->setValue($sMenuId);
-		
 		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage=='org.opencomb.coresystem.mvc.controller.ControlPanelFrame')
 		{
 			$this->getHistory();
