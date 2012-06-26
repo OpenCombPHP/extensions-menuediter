@@ -16,11 +16,10 @@ use org\opencomb\platform\system\PlatformSerializer;
 use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel;
-use org\opencomb\coresystem\mvc\controller\ControlPanelFrame;
 
 class MenuOpen extends ControlPanel
 {
-	protected  $arrConfig = array(
+	protected $arrConfig = array(
 					'title'=> '文章内容',
 					'view' => array(
 						'template'=>'MenuOpen.html',
@@ -28,18 +27,28 @@ class MenuOpen extends ControlPanel
 							array(
 								'id'=>'controller_name',
 								'class'=>'text',
-								'title'=>'控制器'		
+								'title'=>'定义控制器'		
 							),
 							array(
 								'id'=>'view_Xpath',
 								'class'=>'text',
-								'title'=>'视图路径'
+								'title'=>'定义视图路径'
 							),
 							array(
 								'id'=>'menu_id',
 								'class'=>'text',
-								'title'=>'控件ID'
+								'title'=>'定义控件ID'
 							),
+							array(
+								'id' => 'de_controller_name',
+								'class' => 'text',
+								'title' => '实例控制器'		
+							),
+							array(
+									'id' => 'de_view_Xpath',
+									'class' => 'text',
+									'title' => '实例视图'
+							),	
 							array(
 								'id'=>'edit_title',
 								'class'=>'text',
@@ -151,19 +160,73 @@ class MenuOpen extends ControlPanel
 					)
 				);
 	
+	public function process()
+	{	
+		$this->doActions() ;
+		if($this->params->get('history')=='history'){
+			$this->view->widget('controller_name')->setValue($this->params->get('controllername'));
+			$this->view->widget('view_Xpath')->setValue($this->params->get('viewpath'));
+			$this->view->widget('menu_id')->setValue($this->params->get('menuid'));
+			$this->getHistory();
+	
+			$sControllerNamePage=$this->params->get('controllername');
+			$sControllerName=str_replace('.','\\',$sControllerNamePage);
+			$sViewPath=$this->params->get('viewpath');
+			$sMenuId=$this->params->get('menuid');
+			$aSetting = Extension::flyweight('menuediter')->setting();
+			if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
+			{
+				$this->readSetting($sControllerNamePage,false,null,$sViewPath,$sMenuId);
+			}
+			else {
+				$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
+			}
+		}elseif($this->params->get('locationsort')=='locationsort'){
+			$sControllerNamePage=$this->params->get('controllername');
+			$sControllerName=str_replace('.','\\',$sControllerNamePage);
+			$sViewPath=$this->params->get('viewpath');
+			$sMenuId=$this->params->get('menuid');
+			$aSetting = Extension::flyweight('menuediter')->setting();
+	
+			if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
+			{
+				$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+			}else{
+				$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
+				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+			}
+		}elseif($this->params->get('locationdelete')=='locationdelete'){
+			$sControllerNamePage=$this->params->get('controllername');
+			$sControllerName=str_replace('.','\\',$sControllerNamePage);
+			$sViewPath=$this->params->get('viewpath');
+			$sMenuId=$this->params->get('menuid');
+			$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
+			$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
+		}else {
+			$this->getHistory();
+		}
+	}
+	
 	public function formOpenItem()
 	{	
-// 		$s = 'org\opencomb\coresystem\mvc\controller\ControlPanel';
-// 		$aController = new $s(); 
-// 		var_dump($aController->view()->viewByName('frameview')->widget('mainMenu'));exit;
-		
 		$this->view->loadWidgets($this->params);
-		$sControllerNamePage = $this->view->widget('controller_name')->value();
-		$sControllerName = str_replace('.','\\',$sControllerNamePage);
-		$sViewPath = $this->view->widget('view_Xpath')->value();
+		
+		$sDeControllerNamePage = $this->view->widget('de_controller_name')->value();
+		
+		if(empty($sDeControllerNamePage))
+		{
+			$sControllerNamePage = $this->view->widget('controller_name')->value();
+			$sControllerName = str_replace('.','\\',$sControllerNamePage);
+			$sViewPath = $this->view->widget('view_Xpath')->value();
+		}else{
+			$sControllerNamePage = $this->view->widget('de_controller_name')->value();
+			$sControllerName = str_replace('.','\\',$sControllerNamePage);
+			$sViewPath = $this->view->widget('de_view_Xpath')->value();
+		}
+		
 		$sMenuId = $this->view->widget('menu_id')->value();
 		$aSetting = Extension::flyweight('menuediter')->setting();
-		
 		
 		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
 		{
@@ -280,7 +343,6 @@ class MenuOpen extends ControlPanel
 					return;
 				}
 		
-		
 				$arrToXpath = explode('/',$sXpathFrom);
 				array_pop($arrToXpath);
 		
@@ -289,7 +351,6 @@ class MenuOpen extends ControlPanel
 				$arrItemSettingMiddle = array();
 				$arrSettingNew = array();
 				$arrSettingDelete = $arrSettingOld;
-		
 		
 				$this->settingItemdelete($arrSettingDelete, $arrToXpath);
 		
@@ -442,53 +503,6 @@ class MenuOpen extends ControlPanel
 				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
 			}
 		}
-	}
-	
-	public function process()
-	{					
-		if($this->params->get('history')=='history'){
- 			$this->view->widget('controller_name')->setValue($this->params->get('controllername'));
- 			$this->view->widget('view_Xpath')->setValue($this->params->get('viewpath'));
- 			$this->view->widget('menu_id')->setValue($this->params->get('menuid'));
- 			$this->getHistory();
- 			
- 			$sControllerNamePage=$this->params->get('controllername');
- 			$sControllerName=str_replace('.','\\',$sControllerNamePage);
- 			$sViewPath=$this->params->get('viewpath');
- 			$sMenuId=$this->params->get('menuid');
- 			$aSetting = Extension::flyweight('menuediter')->setting();
- 			if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
- 			{
- 				$this->readSetting($sControllerNamePage,false,null,$sViewPath,$sMenuId);
- 			}
- 			else {
- 				$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
- 			}
- 		}elseif($this->params->get('locationsort')=='locationsort'){
- 			$sControllerNamePage=$this->params->get('controllername');
- 			$sControllerName=str_replace('.','\\',$sControllerNamePage);
- 			$sViewPath=$this->params->get('viewpath');
- 			$sMenuId=$this->params->get('menuid');
- 			$aSetting = Extension::flyweight('menuediter')->setting();
- 			
- 			if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
- 			{
- 				$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
- 				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
- 			}else{
- 				$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
- 				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
- 			}
- 		}elseif($this->params->get('locationdelete')=='locationdelete'){
- 			$sControllerNamePage=$this->params->get('controllername');
- 			$sControllerName=str_replace('.','\\',$sControllerNamePage);
- 			$sViewPath=$this->params->get('viewpath');
- 			$sMenuId=$this->params->get('menuid');
- 			$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
- 			$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
- 		}else {
-			$this->getHistory();
- 		}
 	}
 	
 	//将BeanConfig中的Menue转换成数组存放在setting中
@@ -758,7 +772,7 @@ class MenuOpen extends ControlPanel
 		}	
 	}
 	
-	public function settingEditXpathOption2(&$arrSettingOld,$sXpath,$sXpathTarget,$arrItem)
+	public function settingEditXpathOption2(&$arrSettingOld,$aController,$sXpath,$sXpathTarget,$arrItem)
 	{
 		foreach($arrSettingOld as $key=>$item)
 		{
@@ -842,7 +856,7 @@ class MenuOpen extends ControlPanel
 		$arrHistory=array();
 		$arrHistory[0]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.FrontFrame
 						&viewpath=frameView&menuid=mainMenu">前台菜单</a></li></ul>');
-		$arrHistory[1]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanelFrame
+		$arrHistory[1]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.ControlPanel
 				&viewpath=frameView&menuid=mainMenu">控制面板菜单(后台)</a></li></ul>');
 		//暂时隐藏用户面板菜单和开发菜单
 		/*
@@ -921,7 +935,7 @@ class MenuOpen extends ControlPanel
 		$this->view->variables()->set('arrXpath',$arrXpath);
 	
 		$aController = new $sControllerName();
-		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.ControlPanelFrame')
+		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.ControlPanel')
 		{
 			$this->getHistory();
 		}else {
@@ -1041,7 +1055,7 @@ class MenuOpen extends ControlPanel
 		$this->view->widget('hide_create_item_controllerName')->setValue($sControllerName);
 		$this->view->widget('hide_create_item_viewPath')->setValue($sViewPath);
 		$this->view->widget('hide_create_item_menuId')->setValue($sMenuId);
-		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage=='org.opencomb.coresystem.mvc.controller.ControlPanelFrame')
+		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage=='org.opencomb.coresystem.mvc.controller.ControlPanel')
 		{
 			$this->getHistory();
 		}else {

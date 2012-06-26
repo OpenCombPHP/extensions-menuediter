@@ -18,7 +18,7 @@ class MenuEditer extends Extension
 		// 注册菜单build事件的处理函数
 		ControlPanel::registerMenuHandler( array(__CLASS__,'buildControlPanelMenu') ) ;
 		//MenuEditer::getNewMenu();
-		MenuEditer::getNewMenuTest();
+		//MenuEditer::getNewMenuTest();
 	}
 	
 	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
@@ -42,17 +42,25 @@ class MenuEditer extends Extension
 	}	
 	
 	static public function getNewMenuTest()
-	{
-		$aSetting = Extension::flyweight('menuediter')->setting();
+	{	
+		$aSetting = Extension::flyweight('menuediter')->setting();//var_dump($aSetting);exit;
 		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
 		{	
 			foreach($akey->itemIterator() as $key1=>$item)
 			{	
-				$arrItem=explode('.',$item);
+				//$arrItem=explode('.',$item);
+// 				ControlPanel::registerMenuHandler( array(__CLASS__,'buildNewControlPanelMenu') ) ;
+// 				Menu::registerBuildHandle(
+// 						$akey->name()
+// 						, "$arrItem[0]"
+// 						, "$arrItem[1]"
+// 						, array(__CLASS__,'buildNewControlPanelMenu')
+// 						, array($akey->item($item,array()))
+// 				) ;
 				Menu::registerBuildHandle(
-						$akey->name()
-						, "$arrItem[0]"
-						, "$arrItem[1]"
+						'org\\jecat\\framework\\mvc\\controller\\WebpageFrame'
+						, 'org.jecat.framework.mvc.controller.WebpageFrame'
+						, 'mainMenu'
 						, array(__CLASS__,'buildNewControlPanelMenu')
 						, array($akey->item($item,array()))
 				) ;
