@@ -27,16 +27,30 @@ class MenuEditerClear extends ControlPanel
 	
 	public function process()
 	{	
-		$sControllerName=$this->params->get('controllername');
-		$sViewPath=$this->params->get('viewpath');
-		$sMenuId=$this->params->get('menuid');
+		$sTempPath = $this->params->get('temppath');
+		$sMenuId = $this->params->get('menuid');
 		
-		$aSetting = Extension::flyweight('menuediter')->setting();
-		$akey=$aSetting->key('/menu/'.$sControllerName,true);
-		$akey->deleteItem($sViewPath.'.'.$sMenuId);
-		$skey="清楚菜单成功";
-		$this->view->createMessage(Message::success,"%s ",$skey);//exit;
-		$this->location('?c=org.opencomb.menuediter.MenuOpen',1);
+		if($sTempPath)
+		{						
+			$aSetting = Extension::flyweight('menuediter')->setting();
+			$akey = $aSetting->key('/menu',true);;
+			$akey->deleteItem($sTempPath.'-'.$sMenuId);
+			$skey = "清楚菜单成功";
+			$this->view->createMessage(Message::success,"%s ",$skey);
+			$this->location('?c=org.opencomb.menuediter.MenuOpen',1);
+			
+		}else{
+			$sControllerName = $this->params->get('controllername');
+			$sViewPath = $this->params->get('viewpath');
+			
+			$aSetting = Extension::flyweight('menuediter')->setting();
+			$akey = $aSetting->key('/menu',true);
+			$akey->deleteItem($sControllerName.'-'.$sViewPath.'.'.$sMenuId);
+			$skey = "清楚菜单成功";
+			$this->view->createMessage(Message::success,"%s ",$skey);
+			$this->location('?c=org.opencomb.menuediter.MenuOpen',1);
+		}
+
 	}
 	
 	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)

@@ -292,14 +292,13 @@ class MenuOpen extends ControlPanel
 		$sMenuId = $this->view->widget('menu_id')->value();
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		
-		
 		if(empty($sDeControllerNamePage))
 		{
 			$sTempPath = $this->view->widget('temp_Xpath')->value();
 			
 			if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
 			{
-				$this->readSettingTemp($sControllerNamePage,false,null,$sTempPath,$sMenuId);
+				$this->readSettingTemp($sTempPath,$sMenuId);
 			}
 			else {
 				$this->readBeanConfigTemp($sTempPath,$sMenuId);
@@ -842,25 +841,25 @@ class MenuOpen extends ControlPanel
 	//从BeanConfig中读取Menu，显示
 	public function itemMerge($aMenuIterator,$sXpath,$sControllerName,$sViewPath,$sMenuId)
 	{	
-		$sItem='<ul class=mo-middile-ul>';
+		$sItem = '<ul class=mo-middile-ul>';
 		foreach($aMenuIterator as $aItem)
 		{	
 			$sXpathOld=$sXpath;
 			$sXpath=$sXpath.'item:'.$aItem->id().'/';
-			$sItem=$sItem."<li xpath=\"$sXpath\">";
+			$sItem = $sItem."<li xpath=\"$sXpath\">";
 			if($aItem->title())
 			{	
-				$sTitle=$aItem->title();
-				$sLink=substr($aItem->link(),1);
-				$sItem=$sItem.'<span>'.$aItem->title().'</span>'.'<em>'.
-						"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'</a>'.
-						"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.'</a>'.
-						"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'</a>'.
-						"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.
-						"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
-						&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.'</em>';
+				$sTitle = $aItem->title();
+				$sLink = substr($aItem->link(),1);
+				$sItem = $sItem.'<span>'.$aItem->title().'</span>'.'<em>'.
+							"<a class=\"mo-del\" href=\"?c=org.opencomb.menuediter.ItemDelete&xpath=$sXpath&controllername=$sControllerName
+							&viewpath=$sViewPath&menuid=$sMenuId\" onclick='javascript: return confirmDel()'>".'</a>'.
+							"<a class=\"mo-new\" href=\"#\" onclick=\"javascript: itemCreate('$sXpath')\">".'</a>'.'</a>'.
+							"<a class=\"mo-edit\" href=\"#\" onclick=\"javascript: itemEdit('$sXpath')\">".'</a>'.
+							"<a class=\"mo-up\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=up&xpath=$sXpath&controllername=$sControllerName
+							&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.
+							"<a class=\"mo-down\" href=\"?c=org.opencomb.menuediter.ItemSort&item_go=down&xpath=$sXpath&controllername=$sControllerName
+							&viewpath=$sViewPath&menuid=$sMenuId\">".'</a>'.'</em>';
 			}
 			if($aItem->subMenu())
 			{
@@ -1351,28 +1350,28 @@ class MenuOpen extends ControlPanel
 		$this->view->variables()->set('sMenu',$sMenu);
 		$this->view->variables()->set('arrXpath',$arrXpath);
 	
-		$aView = new View($sTempPathFormal);
-		$aController = $aView->controller();
-		$sControllerNamePage = $aController->name();
-		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.ControlPanel')
-		{
-			$this->getHistory();
-		}else {
-			if($aController->title() == null)
-			{
-				$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId\">".'控制器'.$sMenuId.'</a>'.'</li>'.'</ul>';
-				$arrHistory = array($sHistoty);
-				$akey = $aSetting->key('/history',true);
-				$akey->setItem($sViewPath.'-'.$sMenuId,$arrHistory);
-			}else
-			{
-				$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId\">".$aController->title().$sMenuId.'</a>'.'</li>'.'</ul>';
-				$arrHistory = array($sHistoty);
-				$akey = $aSetting->key('/history',true);
-				$akey->setItem($sViewPath.'-'.$sMenuId,$arrHistory);
-			}
-			$this->getHistory();
-		}
+// 		$aView = new View($sTempPathFormal);
+// 		$aController = $aView->controller();
+// 		$sControllerNamePage = $aController->name();
+// 		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.ControlPanel')
+// 		{
+// 			$this->getHistory();
+// 		}else {
+// 			if($aController->title() == null)
+// 			{
+// 				$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId\">".'控制器'.$sMenuId.'</a>'.'</li>'.'</ul>';
+// 				$arrHistory = array($sHistoty);
+// 				$akey = $aSetting->key('/history',true);
+// 				$akey->setItem($sViewPath.'-'.$sMenuId,$arrHistory);
+// 			}else
+// 			{
+// 				$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId\">".$aController->title().$sMenuId.'</a>'.'</li>'.'</ul>';
+// 				$arrHistory = array($sHistoty);
+// 				$akey = $aSetting->key('/history',true);
+// 				$akey->setItem($sViewPath.'-'.$sMenuId,$arrHistory);
+// 			}
+// 			$this->getHistory();
+// 		}
 	
 		$sClear = "<a class=\"mo-clear\" href=\"?c=org.opencomb.menuediter.MenuEditerClear&temppath=$sTempPath&menuid=$sMenuId\">".'清除'.'</a>';
 		$this->view->variables()->set('sClear',$sClear);
