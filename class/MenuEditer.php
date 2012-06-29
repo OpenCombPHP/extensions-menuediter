@@ -1,6 +1,7 @@
 <?php
 namespace org\opencomb\menuediter;
 
+use org\jecat\framework\util\EventManager;
 use org\opencomb\platform\mvc\view\widget\Menu;
 use org\jecat\framework\lang\aop\AOP;
 use org\opencomb\platform\ext\Extension;
@@ -57,6 +58,9 @@ class MenuEditer extends Extension
 // 						, array(__CLASS__,'buildNewControlPanelMenu')
 // 						, array($akey->item($item,array()))
 // 				) ;
+				EventManager::singleton()->registerEventHandle(
+												
+				);
 				Menu::registerBuildHandle(
 						'org\\jecat\\framework\\mvc\\controller\\WebpageFrame'
 						, 'org.jecat.framework.mvc.controller.WebpageFrame'
