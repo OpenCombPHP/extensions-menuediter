@@ -11,6 +11,7 @@ use org\opencomb\platform\system\PlatformSerializer;
 use org\jecat\framework\ui\xhtml\weave\Patch;
 use org\jecat\framework\ui\xhtml\weave\WeaveManager;
 use org\opencomb\coresystem\mvc\controller\ControlPanel ;
+use org\jecat\framework\mvc\view\widget\Widget ;
 
 class MenuEditer extends Extension
 {
@@ -24,51 +25,37 @@ class MenuEditer extends Extension
 	
 	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
 	{
-		$arrConfig=$arrSettigBean;
+		$arrConfig = $arrSettigBean;//var_dump($arrSettigBean);exit;
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
 	{	
-		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
+		$arrConfig['item']['system']['item']['platform-manage']['item']['menuediter'] = array(
 				'title'=>'菜单编辑' ,
-				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
+				'id' => 'menuediter' ,
+				'controller' => 'org.opencomb.menuediter.MenuOpen',
 				'query' => array(
 						'c=org.opencomb.menuediter.MenuOpen'
 					   ,'c=org.opencomb.menuediter.ItemDelete'
 					   ,'c=org.opencomb.menuediter.ItemSort'
-	  				   ,'c=org.opencomb.menuediter.MenuEditerClear'
-						
+	  				   ,'c=org.opencomb.menuediter.MenuEditerClear'	
 				)
 		);
 	}	
 	
 	static public function getNewMenuTest()
 	{	
-		$aSetting = Extension::flyweight('menuediter')->setting();//var_dump($aSetting);exit;
-		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
+		$aSetting = Extension::flyweight('menuediter')->setting();
+		$aKey = $aSetting->key('/menu');
+		foreach($aKey->itemIterator() as $key=>$akey)
 		{	
-			foreach($akey->itemIterator() as $key1=>$item)
-			{	
-				//$arrItem=explode('.',$item);
-// 				ControlPanel::registerMenuHandler( array(__CLASS__,'buildNewControlPanelMenu') ) ;
-// 				Menu::registerBuildHandle(
-// 						$akey->name()
-// 						, "$arrItem[0]"
-// 						, "$arrItem[1]"
-// 						, array(__CLASS__,'buildNewControlPanelMenu')
-// 						, array($akey->item($item,array()))
-// 				) ;
-				EventManager::singleton()->registerEventHandle(
-												
-				);
-				Menu::registerBuildHandle(
-						'org\\jecat\\framework\\mvc\\controller\\WebpageFrame'
-						, 'org.jecat.framework.mvc.controller.WebpageFrame'
-						, 'mainMenu'
-						, array(__CLASS__,'buildNewControlPanelMenu')
-						, array($akey->item($item,array()))
-				) ;
-			}
+			EventManager::singleton()->registerEventHandle(
+				'org\jecat\framework\mvc\view\widget\Widget'
+			    ,Widget::beforeBuildBean
+				,array(__CLASS__,'buildNewControlPanelMenu')
+				,array($aKey->item($akey,array()))
+				,$akey				
+			);
 		}
 	}
 	
