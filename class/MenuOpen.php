@@ -46,11 +46,11 @@ class MenuOpen extends ControlPanel
 								'class'=>'text',
 								'title'=>'Item标题'
 							),
-// 						array(
-// 							'id'=>'depth',
-// 							'class'=>'text',
-// 							'title'=>'层级'
-// 						),
+	// 						array(
+	// 							'id'=>'depth',
+	// 							'class'=>'text',
+	// 							'title'=>'层级'
+	// 						),
 							array(
 								'id'=>'edit_link',
 								'class'=>'text',
@@ -168,47 +168,6 @@ class MenuOpen extends ControlPanel
 	
 	public function process()
 	{
-		//echo $this->view()->controller()->title();exit;
-		//$this->itemSetting($this->view()->widget('testMenu')->itemIterator(),$arrSetting);exit;//var_dump($arrSetting);exit;
-//  		$sContruller = 'org\opencomb\coresystem\mvc\controller\ControlPanel';
-//  		$aController = new $sContruller();
-//  		$aController->frame();
-//  		var_dump($aController);exit;
-//  		$aView = $aController->view()->findXPath($aController->view(),'/org.jecat.framework.mvc.controller.WebpageFrame/frameView');//var_dump($aView);exit;//
-//  		//var_dump($aView);exit;
-//  		$aCon = $aView->controller();var_dump( $aView->controller());exit;
-//  		 echo $aView->template();exit;
-// // 		$aView = new View('coresystem:ControlPanelFrame.html');
-// // 		//echo "<pre>";var_dump($aView->widget('mainMenu'));//echo "</pre>";exit;
-// // // 		if(0&3)
-// // // 		{
-// // // 			echo "dui";
-// // // 		}//exit;
-// // //  		foreach($this->view()->widget('testMenu')->itemIterator() as $key)
-// // // 	 	{
-// // // 	 			//echo "<pre>";var_dump($key) ;echo "<pre/>";
-// // // 	 	}
-// // 	 	$arrSetting = array();
-// // 	 	$arrCountItem = array();
-// // 	 	$this->itemSetting($aView->widget('mainMenu')->itemIterator(),$arrSetting);
-// // 	 	$this->getCreateItemCounttArray($arrSetting,'',$arrCountItem);
-// // 	 	//exit;
-// // 	 	echo "dd";var_dump($arrSetting);
-// // 	 	exit;
-// // 		echo "<pre>";var_dump($this->view()->widget('testMenu'));echo "<pre/>";exit;
-// // 		$s1 = 'org\jecat\framework\mvc\controller\WebpageFrame';
-// // 		//$aController = new $s1(); //var_dump($aController);exit;
-// 			$s = 'org\opencomb\coresystem\mvc\controller\ControlPanel';
-//  		$aController = new $s(); //var_dump($aController);exit;
-		
-//  		$aView = $aController->view()->findXPath($aController->view(),'/org.jecat.framework.mvc.controller.WebpageFrame/frameView');
-// //  		foreach($aView->widget('mainMenu')->itemIterator() as $key)
-// //  		{
-// //  			var_dump($key) ;
-// //  		}exit;
-//  		echo "<pre>";var_dump($aController);echo "<pre/>";exit;
-// // 		exit;
-// 		echo "<pre>";var_dump($this->view()->widget('mainMenu'));echo "<pre/>";exit;
 		$this->doActions() ;
 		if($this->params->get('history') == 'history'){
 			$this->view->widget('menu_id')->setValue($this->params->get('menuid'));
