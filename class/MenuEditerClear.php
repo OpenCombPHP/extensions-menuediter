@@ -78,7 +78,7 @@ class MenuEditerClear extends ControlPanel
 		$arrI=&$arrSettingOld;
 		foreach($aMenuIterator as $key=>$aItem)
 		{	
-			if($aItem->title())
+			if($aItem->id())
 			{	
 				$aItem->title();
 				$arrI=&$arrSettingOld['item:'.$key];

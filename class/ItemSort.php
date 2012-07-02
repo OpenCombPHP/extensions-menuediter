@@ -1,4 +1,13 @@
 <?php
+/*
+ * 功能:菜单项目在本层上的向上向下的移动
+ * 参数:
+ * 		sXpathTo 被移动的菜单项目路径
+ * 		arrXpath 移动的选项下拉列表数组
+ * 		arrSettingChild 被移动的菜单项目
+ * 		
+ * 
+ */
 namespace org\opencomb\menuediter;
 use org\jecat\framework\lang\Object;
 use org\jecat\framework\message\Message;
@@ -27,160 +36,38 @@ class ItemSort extends ControlPanel
 	
 	public function process()
 	{	
-		$sItem_go=$this->params->get('item_go');
-		$sXpathTo=$this->params->get('xpath');
-		$arrToXpath=explode('/',$sXpathTo);
+		$sItem_go = $this->params->get('item_go');
+		$sXpathTo = $this->params->get('xpath');
+		$arrToXpath = explode('/',$sXpathTo);
 		array_pop($arrToXpath);
-		$sControllerName=$this->params->get('controllername');
-		$sViewPath=$this->params->get('viewpath');
-		$sMenuId=$this->params->get('menuid');
-		
 		$aSetting = Extension::flyweight('menuediter')->setting();
-		
-		if($aSetting->hasItem('/menu/'.$sControllerName,$sViewPath.'.'.$sMenuId))
+		$sMenuId = $this->params->get('menuid');
+		if($this->params->get('decontrollername'))
 		{
-			$i=0;
-			$arrSort=array();
-			$arrXpath=array();
-			$arrSettingMiddle=array();
-			$arrSettingChild=array();
-			$arrItemSettingNew=array();
-			$sXpath='';
-			$akey=$aSetting->key('/menu/'.$sControllerName,true);
-			$arrSettingOld=$akey->Item($sViewPath.'.'.$sMenuId);
-			$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);			
+			$sControllerName = $this->params->get('decontrollername');
+			$sViewPath = $this->params->get('viewpath');
 
-			$iNubmerTo=array_search($sXpathTo, $arrXpath);
-			$sXpathUp='';
-			
-			if($sItem_go=='up')
+			if($aSetting->hasItem('/menu',$sControllerName.'-'.$sViewPath.'-'.$sMenuId))
 			{
-				$iNubmerCons = 0;
-				if(count(explode('/',$sXpathTo))>2)
-				{	
-					$arrTemp = explode('/',$sXpathTo);
-					$sTemp = "";
-					for($i=0;$i<count($arrTemp)-2;$i++)
-					{
-						$sTemp = $sTemp.$arrTemp[$i].'/';
-					}
-					$iNubmerCons = array_search($sTemp, $arrXpath);
-				}
+				$i = 0;
+				$arrSort = array();
+				$arrXpath = array();
+				$arrSettingMiddle = array();
+				$arrSettingChild = array();
+				$arrItemSettingNew = array();
+				$sXpath = '';
+				$akey = $aSetting->key('/menu',true);
+				$arrSettingOld = $akey->Item($sControllerName.'-'.$sViewPath.'-'.$sMenuId);
+				$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);			
+	
+				$iNubmerTo = array_search($sXpathTo, $arrXpath);
+				$sXpathUp = '';
 				
-				if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath))
-				{
-					$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
-				}else {
- 						$skey="只能在同级移动";
- 						$this->view->createMessage(Message::error,"%s ",$skey);
- 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
- 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
- 						$this->location($sUrl,0);
- 						return;
-				};
-
-				$arrXpathUp=explode('/',$sXpathUp);
-				array_pop($arrXpathUp);
-				$arrXpathTo=explode('/',$sXpathTo);
-				array_pop($arrXpathTo);
-				
-				$arrSettingNew=$arrSettingOld;
-				$this->settingItemdelete($arrSettingNew, $arrXpathUp);
-				$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
-				$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
-				
-			}elseif($sItem_go=='down'){
-				
-				$iNubmerCons = 0;
-				if(count(explode('/',$sXpathTo))>2)
-				{
-					$arrTemp = explode('/',$sXpathTo);
-					$sTemp = "";
-					for($i=0;$i<count($arrTemp)-2;$i++)
-					{
-						$sTemp = $sTemp.$arrTemp[$i].'/';
-					}
-					for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
-					{
-						if(stristr($arrXpath[$i],$sTemp))
-						{
-							$iNubmerCons++;
-						}
-					}
-					
-				}else{
-					$arrTemp = explode('/',$sXpathTo);
-					$sTemp = "";
-					for($i=0;$i<count($arrTemp)-1;$i++)
-					{
-						$sTemp = $sTemp.$arrTemp[$i].'/';
-					}
-					for($i=$iNubmerTo; $i<count($arrXpath); $i++)
-					{
-						if(stristr($arrXpath[$i],$sTemp))
-						{
-							$iNubmerCons++;
-						}
-					}
-				}
-				if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
-						$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
-				}else {
- 					$skey="只能在同级移动";
- 					$this->view->createMessage(Message::error,"%s ",$skey);
- 					$sControllerNamePage=str_replace('\\','.',$sControllerName);
- 					$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
- 					$this->location($sUrl,0);
- 					return;
-				};		
-				$arrXpathUp=explode('/',$sXpathUp);
-				array_pop($arrXpathUp);
-				$arrXpathTo=explode('/',$sXpathTo);
-				array_pop($arrXpathTo);
-				
-				$arrSettingNew=$arrSettingOld;
-				$this->settingItemdelete($arrSettingNew, $arrXpathTo);
-				$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
-				$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
-			}
-			
-			$akey->deleteItem($sViewPath.'.'.$sMenuId);
-			$arrItemSettingNew['id']=$sMenuId;
-			$arrItemSettingNew['class']='menu';
-			$akey->setItem($sViewPath.'.'.$sMenuId,$arrItemSettingNew);
-			$sControllerNamePage=str_replace('\\','.',$sControllerName);
-			$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-			$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
-			$this->location($sUrl,0);
-		}else{
-			$i=0;
-			$arrXpath=array();
-			$arrSettingMiddle=array();
-			$arrSettingChild=array();
-			$arrItemSettingNew=array();
-			$arrSettingOld=array();
-			$akey=$aSetting->key('/menu/'.$sControllerName,true);
-			$aController = new $sControllerName();
-			$aView = View::findXPath($aController->mainView(),$sViewPath );
-			$aMenu=$aView->widget($sMenuId);
-			//将menu组成字符串在页面显示
-			$arrJson=array();
-			$arrSetting=array();
-			$sXpath='';
-			$aMenuIterator=$aMenu->itemIterator();
-		
-			//将menu遍历成数组存放在settting
-			$this->itemSetting($aMenuIterator,$arrSettingOld);
-			$arrSettingNew=$arrSettingOld;
-			
-			$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);
-			$iNubmerTo=array_search($sXpathTo, $arrXpath);
-			
-				if($sItem_go=='up')
+				if($sItem_go == 'up')
 				{
 					$iNubmerCons = 0;
 					if(count(explode('/',$sXpathTo))>2)
-					{
+					{	
 						$arrTemp = explode('/',$sXpathTo);
 						$sTemp = "";
 						for($i=0;$i<count($arrTemp)-2;$i++)
@@ -190,31 +77,34 @@ class ItemSort extends ControlPanel
 						$iNubmerCons = array_search($sTemp, $arrXpath);
 					}
 					
-					
-					if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
-						$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
-					}else {
-	 						$skey="只能在同级移动";
-	 						$this->view->createMessage(Message::error,"%s ",$skey);
-	 						
-	 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
-	 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-	 						$this->location($sUrl,0);
-	 						
-	 						//return;
+					//得到向下移动目标的路径
+					if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath))
+					{
+						$sXpathUp = $this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+					}else{
+ 						$skey = "只能在同级移动";
+ 						$this->view->createMessage(Message::error,"%s ",$skey);
+ 						$sControllerNamePage = str_replace('\\','.',$sControllerName);
+ 						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+ 						$this->location($sUrl,0);
+ 						return;
 					};
-					$arrXpathUp=explode('/',$sXpathUp);
+	
+					$arrXpathUp = explode('/',$sXpathUp);
 					array_pop($arrXpathUp);
-					$arrXpathTo=explode('/',$sXpathTo);
+					$arrXpathTo = explode('/',$sXpathTo);
 					array_pop($arrXpathTo);
 					
-					$arrSettingNew=$arrSettingOld;
+					$arrSettingNew = $arrSettingOld;
+					//原菜单中删除被移动的菜单项目
 					$this->settingItemdelete($arrSettingNew, $arrXpathUp);
+					//编辑被移动的菜单项目
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
+					//编辑新菜单，并将被移动的菜单项目插入菜单中
 					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
-					
 				}elseif($sItem_go=='down'){
 					$iNubmerCons = 0;
+					//判断移动范围
 					if(count(explode('/',$sXpathTo))>2)
 					{
 						$arrTemp = explode('/',$sXpathTo);
@@ -230,7 +120,6 @@ class ItemSort extends ControlPanel
 								$iNubmerCons++;
 							}
 						}
-						
 					}else{
 						$arrTemp = explode('/',$sXpathTo);
 						$sTemp = "";
@@ -247,37 +136,392 @@ class ItemSort extends ControlPanel
 						}
 					}
 					
+					//得到向上移动目标的路径
 					if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
-						$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
-					}else {
- 						$skey="只能在同级移动";
- 						$this->view->createMessage(Message::error,"%s ",$skey);
-
- 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
- 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
- 						$this->location($sUrl,0);
- 						
- 						//return;
-					};		
-					$arrXpathUp=explode('/',$sXpathUp);
+							$sXpathUp = $this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+					}else{
+	 					$skey = "只能在同级移动";
+	 					$this->view->createMessage(Message::error,"%s ",$skey);
+	 					$sControllerNamePage = str_replace('\\','.',$sControllerName);
+	 					$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+	 					$this->location($sUrl,0);
+	 					return;
+					};
+							
+					$arrXpathUp = explode('/',$sXpathUp);
+					//删除数组的最后一个元素
 					array_pop($arrXpathUp);
-					$arrXpathTo=explode('/',$sXpathTo);
+					$arrXpathTo = explode('/',$sXpathTo);
 					array_pop($arrXpathTo);
 					
-					$arrSettingNew=$arrSettingOld;
+					$arrSettingNew = $arrSettingOld;
 					$this->settingItemdelete($arrSettingNew, $arrXpathTo);
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
 					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
 				}
-			
+				
 				$akey->deleteItem($sViewPath.'.'.$sMenuId);
-				$arrItemSettingNew['id']=$sMenuId;
-				$arrItemSettingNew['class']='menu';
+				$arrItemSettingNew['id'] = $sMenuId;
+				$arrItemSettingNew['class'] = 'menu';
 				$akey->setItem($sViewPath.'.'.$sMenuId,$arrItemSettingNew);
 				$sControllerNamePage=str_replace('\\','.',$sControllerName);
-				$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+				$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
 				$this->location($sUrl,0);
+			}else{
+				$i=0;
+				$arrXpath = array();
+				$arrSettingMiddle = array();
+				$arrSettingChild = array();
+				$arrItemSettingNew = array();
+				$arrSettingOld = array();
+				$akey = $aSetting->key('/menu/'.$sControllerName,true);
+				$aController = new $sControllerName();
+				$aView = View::findXPath($aController->mainView(),$sViewPath );
+				$aMenu = $aView->widget($sMenuId);
+				//将menu组成字符串在页面显示
+				$arrJson = array();
+				$arrSetting = array();
+				$sXpath='';
+				$aMenuIterator = $aMenu->itemIterator();
+			
+				//将menu遍历成数组存放在settting
+				$this->itemSetting($aMenuIterator,$arrSettingOld);
+				$arrSettingNew = $arrSettingOld;
+				
+				$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);
+				$iNubmerTo = array_search($sXpathTo, $arrXpath);
+				
+					if($sItem_go == 'up')
+					{
+						$iNubmerCons = 0;
+						if(count(explode('/',$sXpathTo))>2)
+						{
+							$arrTemp = explode('/',$sXpathTo);
+							$sTemp = "";
+							for($i=0;$i<count($arrTemp)-2;$i++)
+							{
+								$sTemp = $sTemp.$arrTemp[$i].'/';
+							}
+							$iNubmerCons = array_search($sTemp, $arrXpath);
+						}
+						
+						
+						if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+							$sXpathUp = $this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+						}else {
+		 						$skey = "只能在同级移动";
+		 						$this->view->createMessage(Message::error,"%s ",$skey);
+		 						
+		 						$sControllerNamePage = str_replace('\\','.',$sControllerName);
+		 						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+		 						$this->location($sUrl,0);
+		 						
+		 						//return;
+						};
+						
+						$arrXpathUp=explode('/',$sXpathUp);
+						array_pop($arrXpathUp);
+						$arrXpathTo=explode('/',$sXpathTo);
+						array_pop($arrXpathTo);
+						
+						$arrSettingNew=$arrSettingOld;
+						$this->settingItemdelete($arrSettingNew, $arrXpathUp);
+						$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
+					}elseif($sItem_go=='down'){
+						$iNubmerCons = 0;
+						if(count(explode('/',$sXpathTo))>2)
+						{
+							$arrTemp = explode('/',$sXpathTo);
+							$sTemp = "";
+							for($i=0;$i<count($arrTemp)-2;$i++)
+							{
+								$sTemp = $sTemp.$arrTemp[$i].'/';
+							}
+							for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
+							{
+								if(stristr($arrXpath[$i],$sTemp))
+								{
+									$iNubmerCons++;
+								}
+							}
+							
+						}else{
+							$arrTemp = explode('/',$sXpathTo);
+							$sTemp = "";
+							for($i=0;$i<count($arrTemp)-1;$i++)
+							{
+								$sTemp = $sTemp.$arrTemp[$i].'/';
+							}
+							for($i=$iNubmerTo; $i<count($arrXpath); $i++)
+							{
+								if(stristr($arrXpath[$i],$sTemp))
+								{
+									$iNubmerCons++;
+								}
+							}
+						}
+						
+						if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+							$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+						}else {
+	 						$skey="只能在同级移动";
+	 						$this->view->createMessage(Message::error,"%s ",$skey);
+	
+	 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
+	 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+	 						$this->location($sUrl,0);
+	 						
+	 						//return;
+						};		
+						$arrXpathUp=explode('/',$sXpathUp);
+						array_pop($arrXpathUp);
+						$arrXpathTo=explode('/',$sXpathTo);
+						array_pop($arrXpathTo);
+						
+						$arrSettingNew=$arrSettingOld;
+						$this->settingItemdelete($arrSettingNew, $arrXpathTo);
+						$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
+					}
+				
+					$akey->deleteItem($sViewPath.'.'.$sMenuId);
+					$arrItemSettingNew['id']=$sMenuId;
+					$arrItemSettingNew['class']='menu';
+					$akey->setItem($sViewPath.'.'.$sMenuId,$arrItemSettingNew);
+					$sControllerNamePage=str_replace('\\','.',$sControllerName);
+					$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+					$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
+					$this->location($sUrl,0);
+			}
+		}else{
+			$sTempPath = $this->params->get('temppath');
+			if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
+			{
+				$i=0;
+				$arrSort = array();
+				$arrXpath = array();
+				$arrSettingMiddle = array();
+				$arrSettingChild = array();
+				$arrItemSettingNew = array();
+				$sXpath = '';
+				$akey = $aSetting->key('/menu',true);
+				$arrSettingOld = $akey->Item($sTempPath.'-'.$sMenuId);
+				$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);
+			
+				$iNubmerTo = array_search($sXpathTo, $arrXpath);
+				$sXpathUp = '';
+			
+				if($sItem_go == 'up')
+				{
+					$iNubmerCons = 0;
+					if(count(explode('/',$sXpathTo))>2)
+					{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-2;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+						$iNubmerCons = array_search($sTemp, $arrXpath);
+					}
+					if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath))
+					{
+						$sXpathUp = $this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+					}else {
+						$skey = "只能在同级移动";
+						$this->view->createMessage(Message::error,"%s ",$skey);
+						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
+						$this->location($sUrl,0);
+						return;
+					};
+					$arrXpathUp = explode('/',$sXpathUp);
+					array_pop($arrXpathUp);
+					$arrXpathTo = explode('/',$sXpathTo);
+					array_pop($arrXpathTo);
+		
+					$arrSettingNew = $arrSettingOld;
+					$this->settingItemdelete($arrSettingNew, $arrXpathUp);
+					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
+					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
+				}elseif($sItem_go=='down'){
+			
+					$iNubmerCons = 0;
+					if(count(explode('/',$sXpathTo))>2)
+					{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-2;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+						for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
+						{
+							if(stristr($arrXpath[$i],$sTemp))
+							{
+								$iNubmerCons++;
+							}
+						}
+					}else{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-1;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+						for($i=$iNubmerTo; $i<count($arrXpath); $i++)
+						{
+							if(stristr($arrXpath[$i],$sTemp))
+							{
+								$iNubmerCons++;
+							}
+						}
+					}
+					if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+						$sXpathUp = $this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+					}else {
+						$skey = "只能在同级移动";
+						$this->view->createMessage(Message::error,"%s ",$skey);
+						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
+						$this->location($sUrl,0);
+						return;
+					};
+					$arrXpathUp = explode('/',$sXpathUp);
+					array_pop($arrXpathUp);
+					$arrXpathTo = explode('/',$sXpathTo);
+					array_pop($arrXpathTo);
+		
+					$arrSettingNew = $arrSettingOld;
+					$this->settingItemdelete($arrSettingNew, $arrXpathTo);
+					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
+					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);
+				}
+				$akey->deleteItem($sTempPath.'-'.$sMenuId);
+				$arrItemSettingNew['id'] = $sMenuId;
+				$arrItemSettingNew['class'] = 'menu';
+				$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
+				$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
+				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
+				$this->location($sUrl,0);
+			}else{
+				$i = 0;
+				$arrXpath = array();
+				$arrSettingMiddle = array();
+				$arrSettingChild = array();
+				$arrItemSettingNew = array();
+				$arrSettingOld = array();
+				$akey = $aSetting->key('/menu',true);
+				$aView = new View($sTempPath);
+				$aMenu = $aView->widget($sMenuId);
+				//将menu组成字符串在页面显示
+				$arrJson = array();
+				$arrSetting = array();
+				$sXpath = '';
+	
+				//将menu遍历成数组存放在settting
+				$this->itemSetting($aMenu->itemIterator(),$arrSettingOld);
+				$arrSettingNew = $arrSettingOld;
+	
+				$this->xpathOption($arrSettingOld,$sXpath,$i,$arrXpath);
+				$iNubmerTo = array_search($sXpathTo, $arrXpath);
+	
+				if($sItem_go == 'up')
+				{
+				$iNubmerCons = 0;
+				if(count(explode('/',$sXpathTo))>2)
+				{
+					$arrTemp = explode('/',$sXpathTo);
+					$sTemp = "";
+					for($i=0;$i<count($arrTemp)-2;$i++)
+					{
+					$sTemp = $sTemp.$arrTemp[$i].'/';
+					}
+					$iNubmerCons = array_search($sTemp, $arrXpath);
+					}
+	
+	
+					if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+							$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+					}else {
+					$skey="只能在同级移动";
+					$this->view->createMessage(Message::error,"%s ",$skey);
+					$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
+					$this->location($sUrl,0);
+					//return;
+				};
+				$arrXpathUp = explode('/',$sXpathUp);
+				array_pop($arrXpathUp);
+				$arrXpathTo = explode('/',$sXpathTo);
+				array_pop($arrXpathTo);
+	
+				$arrSettingNew = $arrSettingOld;
+				$this->settingItemdelete($arrSettingNew, $arrXpathUp);
+				$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
+				$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
+				}elseif($sItem_go == 'down'){
+					$iNubmerCons = 0;
+					if(count(explode('/',$sXpathTo))>2)
+					{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-2;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+						for($i=$iNubmerTo+1; $i<count($arrXpath); $i++)
+						{
+							if(stristr($arrXpath[$i],$sTemp))
+							{
+								$iNubmerCons++;
+							}
+						}
+					}else{
+						$arrTemp = explode('/',$sXpathTo);
+						$sTemp = "";
+						for($i=0;$i<count($arrTemp)-1;$i++)
+						{
+							$sTemp = $sTemp.$arrTemp[$i].'/';
+						}
+						for($i=$iNubmerTo; $i<count($arrXpath); $i++)
+						{
+							if(stristr($arrXpath[$i],$sTemp))
+							{
+								$iNubmerCons++;
+							}
+						}
+					}
+	
+					if($this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath)){
+						$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
+					}else {
+						$skey="只能在同级移动";
+						$this->view->createMessage(Message::error,"%s ",$skey);
+			
+						$sControllerNamePage=str_replace('\\','.',$sControllerName);
+						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
+						$this->location($sUrl,0);
+		
+					//return;
+					};
+					$arrXpathUp=explode('/',$sXpathUp);
+							array_pop($arrXpathUp);
+							$arrXpathTo=explode('/',$sXpathTo);
+							array_pop($arrXpathTo);
+	
+							$arrSettingNew=$arrSettingOld;
+							$this->settingItemdelete($arrSettingNew, $arrXpathTo);
+							$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
+							$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);
+				}
+				$akey->deleteItem($sTempPath.'-'.$sMenuId);
+				$arrItemSettingNew['id']=$sMenuId;
+				$arrItemSettingNew['class']='menu';
+				$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
+				$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
+				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
+				$this->location($sUrl,0);
+			}	
 		}	
 	}
 	
@@ -346,7 +590,7 @@ class ItemSort extends ControlPanel
 		$arrI=&$arrSetting;
 		foreach($aMenuIterator as $key=>$aItem)
 		{
-			if($aItem->title())
+			if($aItem->id())
 			{	
 				$arrItem=$aItem->beanConfig();
 				$sQuery=isset($arrItem['query'])?$arrItem['query']:'';
@@ -427,19 +671,19 @@ class ItemSort extends ControlPanel
 	
 	public function settingEditXpathOption1($i,$arrSetting,$arrXpathTo,&$arrSettingNew,$arrSettingChild)
 	{
-		if($arrXpathTo=='Top/')
+		if($arrXpathTo == 'Top/')
 		{
-			$arrXpathFrom=explode('/',$arrSettingChild['xpath']);
+			$arrXpathFrom = explode('/',$arrSettingChild['xpath']);
 			array_pop($arrXpathFrom);
 			$arrSettingNew=array_merge(array($arrXpathFrom[count($arrXpathFrom)-1]=>$arrSettingChild),$arrSetting);
 		}
 		else{
 			foreach($arrSetting as $key=>$item)
 			{	
-				if($key==$arrXpathTo[$i]){
-					if($i==count($arrXpathTo)-1){
-						$arrSettingNew[$key]=$arrSetting[$key];
-						$arrSettingNew[$arrSettingChild['xpath']]=$arrSettingChild;						
+				if($key == $arrXpathTo[$i]){
+					if($i == count($arrXpathTo)-1){
+						$arrSettingNew[$key] = $arrSetting[$key];
+						$arrSettingNew[$arrSettingChild['xpath']] = $arrSettingChild;						
 						$i=0;
 					}
 					else {
@@ -473,12 +717,10 @@ class ItemSort extends ControlPanel
 						}
 						//$arrSettingNew[$key]=$arrSetting[$key];
 					}
-					
 					if(count($arrXpathTo)>1)
 					{
 						$i++;
 					}
-					
 				}
 				else
 				{	
@@ -517,8 +759,6 @@ class ItemSort extends ControlPanel
 				{
 					$this->settingEditXpathOption1($i,$arrSetting[$key],$arrXpathTo,$arrSettingNew[$key],$arrSettingChild);
 				}
-				
-				
 			}
 		}
 	}
