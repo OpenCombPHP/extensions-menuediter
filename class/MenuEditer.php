@@ -20,7 +20,7 @@ class MenuEditer extends Extension
 		// 注册菜单build事件的处理函数
 		ControlPanel::registerMenuHandler( array(__CLASS__,'buildControlPanelMenu') ) ;
 		//MenuEditer::getNewMenu();
-		//MenuEditer::getNewMenuTest();
+		MenuEditer::getNewMenuTest();
 	}
 	
 	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)

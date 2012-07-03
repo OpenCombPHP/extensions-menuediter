@@ -117,7 +117,7 @@ class ItemDelete extends ControlPanel
 	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)
 	{
 		foreach($arrSettingNew as $key=>&$item)
-		{	echo $key;
+		{	
 			for($i=0;$i<count($arrXpathTarget);$i++)
 			{
 				if($key == $arrXpathTarget[$i])
