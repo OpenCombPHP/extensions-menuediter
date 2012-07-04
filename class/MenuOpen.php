@@ -276,7 +276,7 @@ class MenuOpen extends ControlPanel
 			$aController = new $sControllerName();
 			$aController->frame();
 			$sViewPath = $this->view->widget('de_view_Xpath')->value();
-			$aView = $aController->view()->findXPath($aController->view(),$sViewPath);var_dump($aController);exit;
+			$aView = $aController->view()->findXPath($aController->view(),$sViewPath);
 			$sTempPath = $aView->template();
 			
 			if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
@@ -540,7 +540,7 @@ class MenuOpen extends ControlPanel
 					$arrSettingNew['class'] = 'menu';
 					$akey->setItem($sTempPath.'-'.$sMenuId,$arrSettingNew);
 					
-					$this->readBeanConfig($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);echo $sMenuId;exit;
+					$this->readBeanConfig($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
 					$this->setMenuOpen($sControllerNamePage,$sViewPath,null,$sMenuId);
 				}
 			}
