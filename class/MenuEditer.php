@@ -19,8 +19,7 @@ class MenuEditer extends Extension
 	{
 		// 注册菜单build事件的处理函数
 		ControlPanel::registerMenuHandler( array(__CLASS__,'buildControlPanelMenu') ) ;
-		//MenuEditer::getNewMenu();
-		MenuEditer::getNewMenuTest();
+		MenuEditer::getNewMenu();
 	}
 	
 	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
@@ -43,7 +42,7 @@ class MenuEditer extends Extension
 		);
 	}	
 	
-	static public function getNewMenuTest()
+	static public function getNewMenu()
 	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		if( $aKey = $aSetting->key('/menu') )
@@ -61,22 +60,22 @@ class MenuEditer extends Extension
 		}
 	}
 	
-	static public function getNewMenu()
-	{
-		$aSetting = Extension::flyweight('menuediter')->setting();
-		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
-		{	
-			foreach($akey->itemIterator() as $key1=>$item)
-			{	
-				$arrItem=explode('.',$item);
-				Menu::registerBuildHandle(
-						$akey->name()
-						, "$arrItem[0]"
-						, "$arrItem[1]"
-						, array(__CLASS__,'buildNewControlPanelMenu')
-						, array($akey->item($item,array()))
-				) ;
-			}
-		}
-	}
+// 	static public function getNewMenu()
+// 	{
+// 		$aSetting = Extension::flyweight('menuediter')->setting();
+// 		foreach($aSetting->keyIterator('/menu') as $key=>$akey)
+// 		{	
+// 			foreach($akey->itemIterator() as $key1=>$item)
+// 			{	
+// 				$arrItem=explode('.',$item);
+// 				Menu::registerBuildHandle(
+// 						$akey->name()
+// 						, "$arrItem[0]"
+// 						, "$arrItem[1]"
+// 						, array(__CLASS__,'buildNewControlPanelMenu')
+// 						, array($akey->item($item,array()))
+// 				) ;
+// 			}
+// 		}
+// 	}
 }

@@ -182,10 +182,7 @@ class MenuOpen extends ControlPanel
 				$sControllerNamePage = $this->params->get('controllername');
 				$sControllerName = str_replace('.','\\',$sControllerNamePage);
 				$sViewPath = $this->params->get('viewpath');
-				$aController = new $sControllerNamePage();
-				$aController->frame();
-				$aView = $aController->view()->findXPath($aController->view(),$sViewPath);
-				$sTempPath = $aView->template();
+				$sTempPath = $this->getTempPath($sControllerName,$sViewPath,$sMenuId);
 				
 				if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
 				{
@@ -213,11 +210,7 @@ class MenuOpen extends ControlPanel
 				$sControllerNamePage=$this->params->get('controllername');
 				$sControllerName=str_replace('.','\\',$sControllerNamePage);
 				$sViewPath=$this->params->get('viewpath');
-				
-				$aController = new $sControllerNamePage();
-				$aController->frame();
-				$aView = $aController->view()->findXPath($aController->view(),$sViewPath);
-				$sTempPath = $aView->template();
+				$sTempPath = $this->getTempPath($sControllerName,$sViewPath,$sMenuId);
 				
 				if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
 				{
@@ -245,11 +238,7 @@ class MenuOpen extends ControlPanel
 				$sControllerNamePage = $this->params->get('controllername');
 				$sControllerName = str_replace('.','\\',$sControllerNamePage);
 				$sViewPath = $this->params->get('viewpath');
-				
-				$aController = new $sControllerNamePage();
-				$aController->frame();
-				$aView = $aController->view()->findXPath($aController->view(),$sViewPath);
-				$sTempPath = $aView->template();
+				$sTempPath = $this->getTempPath($sControllerName,$sViewPath,$sMenuId);
 				
 				$this->readSettingTemp($sTempPath,$sMenuId);
 				$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
@@ -287,7 +276,7 @@ class MenuOpen extends ControlPanel
 			$aController = new $sControllerName();
 			$aController->frame();
 			$sViewPath = $this->view->widget('de_view_Xpath')->value();
-			$aView = $aController->view()->findXPath($aController->view(),$sViewPath);
+			$aView = $aController->view()->findXPath($aController->view(),$sViewPath);var_dump($aController);exit;
 			$sTempPath = $aView->template();
 			
 			if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
@@ -1182,8 +1171,7 @@ class MenuOpen extends ControlPanel
 	{	
 		$aSetting = Extension::flyweight('menuediter')->setting();
 		$arrHistory=array();
-		$arrHistory[0]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&controllername=org.opencomb.coresystem.mvc.controller.FrontFrame
-						&viewpath=frameView&menuid=mainMenu">前台菜单</a></li></ul>');
+		$arrHistory[0]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&temppath=coresystem:FrontFrame.html&menuid=mainMenu">前台菜单</a></li></ul>');
 		$arrHistory[1]=array('<ul><li><a href="?c=org.opencomb.menuediter.MenuOpen&history=history&temppath=coresystem:ControlPanelFrame.html&menuid=mainMenu">控制面板菜单(后台)</a></li></ul>');
 		//暂时隐藏用户面板菜单和开发菜单
 		/*
@@ -1336,11 +1324,10 @@ class MenuOpen extends ControlPanel
 // 		$aController = $aView->controller();
 // 		$sControllerNamePage = $aController->name();
 		
-		if($sTempPath == 'coresystem:ControlPanelFrame.html')
+		if($sTempPath == 'coresystem:ControlPanelFrame.html' or $sTempPath== 'coresystem:FrontFrame.html')
 		{
 			$this->getHistory();
 		}else {
-
 			$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&temppath=$sTempPath&menuid=$sMenuId\">".'模板'.$sTempPath.'菜单'.$sMenuId.'</a>'.'</li>'.'</ul>';
 			$arrHistory = array($sHistoty);
 			$akey = $aSetting->key('/history',true);
@@ -1441,8 +1428,8 @@ class MenuOpen extends ControlPanel
 		$this->view->widget('hide_create_item_viewPath')->setValue($sViewPath);
 		$this->view->widget('hide_create_item_tempPath')->setValue($sTempPath);
 		$this->view->widget('hide_create_item_menuId')->setValue($sMenuId);
-		if($sControllerNamePage == 'coresystem:ControlPanelFrame.html' or $sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.ControlPanel' or
-			$sTempPath == 'coresystem:ControlPanelFrame.html' or $sTempPath=''
+		if($sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.FrontFrame' or $sControllerNamePage == 'org.opencomb.coresystem.mvc.controller.ControlPanel' or
+			$sTempPath == 'coresystem:ControlPanelFrame.html' or $sTempPath='coresystem:FrontFrame.html'
 			)
 		{
 			$this->getHistory();
@@ -1527,16 +1514,16 @@ class MenuOpen extends ControlPanel
 		$this->view->widget('hide_create_item_tempPath')->setValue($sTempPath);
 		$this->view->widget('hide_create_item_menuId')->setValue($sMenuId);
 		
-		if($sTempPath == 'coresystem:ControlPanelFrame.html')
-		{
-			$this->getHistory();
-		}else{
-			$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&temppath=$sTempPath&menuid=$sMenuId\">".'模板'.$sTempPath.'菜单'.$sMenuId.'</a>'.'</li>'.'</ul>';
-			$arrHistory = array($sHistoty);
-			$akey = $aSetting->key('/history',true);
-			$akey->setItem($sTempPath.'.'.$sMenuId,$arrHistory);
-		}
-		$this->getHistory();
+// 		if($sTempPath == 'coresystem:ControlPanelFrame.html')
+// 		{
+// 			$this->getHistory();
+// 		}else{
+// 			$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&temppath=$sTempPath&menuid=$sMenuId\">".'模板'.$sTempPath.'菜单'.$sMenuId.'</a>'.'</li>'.'</ul>';
+// 			$arrHistory = array($sHistoty);
+// 			$akey = $aSetting->key('/history',true);
+// 			$akey->setItem($sTempPath.'.'.$sMenuId,$arrHistory);
+// 		}
+// 		$this->getHistory();
 	}
 	
 	public function setMenuOpen($sControllerNamePage,$sViewPath,$sTempPath,$sMenuId)
@@ -1668,6 +1655,41 @@ class MenuOpen extends ControlPanel
 				$sXpathOld=$sXpath;
 			}
 		}
+	}
+	
+	public function getTempPath($sControllerName,$sViewPath,$sMenuId)
+	{
+		if( !class_exists($sControllerName) or !new $sControllerName() instanceof Controller)
+		{
+			$skey = "无此控制器";
+			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->getHistory();
+			return;
+		}
+		else {
+			$aController = new $sControllerName();
+			$aController->frame();
+		}
+		
+		// 检查视图
+		if( !$aView = $aController->view()->findXPath($aController->view(),$sViewPath))
+		{
+			$skey = "无此视图";
+			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->getHistory();
+			return;
+		}
+		
+		// 检查菜单
+		if( !$aMenu = $aView->widget($sMenuId) or !$aMenu instanceof Menu)
+		{
+			$skey = "无此菜单";
+			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->getHistory();
+			return;
+		}
+		
+		return $sTempPath = $aView->template();
 	}
 }
 
