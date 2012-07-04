@@ -23,8 +23,10 @@ class MenuEditer extends Extension
 		MenuEditer::getNewMenuTest();
 	}
 	
-	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
+	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,Widget $aWidget,$aFactory,$arrSettigBean)
 	{
+		$aWidget->view() ;
+		
 		$arrConfig = $arrSettigBean;//var_dump($arrSettigBean);exit;
 	}
 	
@@ -44,18 +46,20 @@ class MenuEditer extends Extension
 	}	
 	
 	static public function getNewMenuTest()
-	{	
+	{
 		$aSetting = Extension::flyweight('menuediter')->setting();
-		$aKey = $aSetting->key('/menu');
-		foreach($aKey->itemIterator() as $key=>$akey)
-		{	
-			EventManager::singleton()->registerEventHandle(
-				'org\jecat\framework\mvc\view\widget\Widget'
-			    ,Widget::beforeBuildBean
-				,array(__CLASS__,'buildNewControlPanelMenu')
-				,array($aKey->item($akey,array()))
-				,$akey				
-			);
+		if( $aKey = $aSetting->key('/menu') )
+		{
+			foreach($aKey->itemIterator() as $key=>$akey)
+			{	
+				EventManager::singleton()->registerEventHandle(
+					'org\jecat\framework\mvc\view\widget\Widget'
+				    ,Widget::beforeBuildBean
+					,array(__CLASS__,'buildNewControlPanelMenu')
+					,array($aKey->item($akey,array()))
+					,$akey				
+				);
+			}
 		}
 	}
 	
