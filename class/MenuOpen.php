@@ -1514,16 +1514,16 @@ class MenuOpen extends ControlPanel
 		$this->view->widget('hide_create_item_tempPath')->setValue($sTempPath);
 		$this->view->widget('hide_create_item_menuId')->setValue($sMenuId);
 		
-// 		if($sTempPath == 'coresystem:ControlPanelFrame.html')
-// 		{
-// 			$this->getHistory();
-// 		}else{
-// 			$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&temppath=$sTempPath&menuid=$sMenuId\">".'模板'.$sTempPath.'菜单'.$sMenuId.'</a>'.'</li>'.'</ul>';
-// 			$arrHistory = array($sHistoty);
-// 			$akey = $aSetting->key('/history',true);
-// 			$akey->setItem($sTempPath.'.'.$sMenuId,$arrHistory);
-// 		}
-// 		$this->getHistory();
+		if($sTempPath == 'coresystem:ControlPanelFrame.html' or $sTempPath == 'coresystem:FrontFrame.html')
+		{
+			$this->getHistory();
+		}else{
+			$sHistoty = '<ul>'.'<li>'."<a href=\"?c=org.opencomb.menuediter.MenuOpen&history=history&temppath=$sTempPath&menuid=$sMenuId\">".'模板'.$sTempPath.'菜单'.$sMenuId.'</a>'.'</li>'.'</ul>';
+			$arrHistory = array($sHistoty);
+			$akey = $aSetting->key('/history',true);
+			$akey->setItem($sTempPath.'.'.$sMenuId,$arrHistory);
+		}
+		$this->getHistory();
 	}
 	
 	public function setMenuOpen($sControllerNamePage,$sViewPath,$sTempPath,$sMenuId)
