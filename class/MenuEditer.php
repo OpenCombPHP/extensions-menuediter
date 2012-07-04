@@ -31,7 +31,7 @@ class MenuEditer extends Extension
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
 	{
-		$arrConfig['item:system']['item:platform-manage']['item:menuediter'] = array(
+		$arrConfig['item']['system']['item']['platform-manage']['item']['menuediter'] = array(
 				'title'=>'菜单编辑' ,
 				'link' => '?c=org.opencomb.menuediter.MenuOpen' ,
 				'query' => array(
