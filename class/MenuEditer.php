@@ -23,11 +23,9 @@ class MenuEditer extends Extension
 		MenuEditer::getNewMenuTest();
 	}
 	
-	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,Widget $aWidget,$aFactory,$arrSettigBean)
-	{
-		$aWidget->view() ;
-		
-		$arrConfig = $arrSettigBean;//var_dump($arrSettigBean);exit;
+	static public function buildNewControlPanelMenu(array & $arrConfig,$sNamespace,$aFactory,$arrSettigBean)
+	{	
+		$arrConfig = $arrSettigBean;
 	}
 	
 	static public function buildControlPanelMenu(array & $arrConfig)
