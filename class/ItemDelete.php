@@ -114,24 +114,16 @@ class ItemDelete extends ControlPanel
 		
 	}
 	
-	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)
+	public function settingItemDelete(&$arrSettingNew,$arrXpathTarget)
 	{
-		foreach($arrSettingNew as $key=>&$item)
-		{	
-			for($i=0;$i<count($arrXpathTarget);$i++)
-			{
-				if($key == $arrXpathTarget[$i])
-				{
-					if($i==count($arrXpathTarget)-1)
-					{
-						unset($arrSettingNew[$key]);
-					}
-					else {
-						$this->settingItemdelete($arrSettingNew[$key],$arrXpathTarget);
-					}
-				}
-			}
+		$sLastKey = array_pop($arrXpathTarget) ;
+		$arrCurrentKey =& $arrSettingNew ;
+		
+		foreach($arrXpathTarget as $sKey)
+		{
+			$arrCurrentKey =& $arrCurrentKey[$sKey] ;
 		}
+		unset($arrCurrentKey[$sLastKey]) ;
 	}
 	
 	public function itemSetting($aMenuIterator,&$arrSetting)

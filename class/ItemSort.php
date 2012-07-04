@@ -165,11 +165,11 @@ class ItemSort extends ControlPanel
 					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
 				}
 				
-				$akey->deleteItem($sTempPath.'.'.$sMenuId);
+				$akey->deleteItem($sTempPath.'-'.$sMenuId);
 				$arrItemSettingNew['id'] = $sMenuId;
 				$arrItemSettingNew['class'] = 'menu';
-				$akey->setItem($sTempPath.'.'.$sMenuId,$arrItemSettingNew);
-				$sControllerNamePage = str_replace('\\','.',$sControllerName);
+				$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
+				$sControllerNamePage = str_replace('\\','.',$sControllerName);echo $sControllerName;exit;
 				$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
 				$this->location($sUrl,0);
@@ -292,10 +292,10 @@ class ItemSort extends ControlPanel
 						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
 					}
 				
-					$akey->deleteItem($sTempPath.'.'.$sMenuId);
+					$akey->deleteItem($sTempPath.'-'.$sMenuId);
 					$arrItemSettingNew['id']=$sMenuId;
 					$arrItemSettingNew['class']='menu';
-					$akey->setItem($sTempPath.'.'.$sMenuId,$arrItemSettingNew);
+					$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
 					$sControllerNamePage=str_replace('\\','.',$sControllerName);
 					$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 					$this->view->createMessage(Message::success,"%s ",$skey='移动成功');

@@ -1055,26 +1055,17 @@ class MenuOpen extends ControlPanel
 	}
 	
 	//删除一个item
-	public function settingItemdelete(&$arrSettingDelete,$arrXpathTarget)
-	{
-		foreach($arrSettingDelete as $key=>&$item)
+	public function settingItemDelete(&$arrSettingNew,$arrXpathTarget)
+	{	
+		$sLastKey = array_pop($arrXpathTarget) ;
+		$arrCurrentKey =& $arrSettingNew ;
+		
+		foreach($arrXpathTarget as $sKey)
 		{
-			for($i=0;$i<count($arrXpathTarget);$i++)
-			{
-				if($key==$arrXpathTarget[$i])
-				{
-					if($i==count($arrXpathTarget)-1)
-					{
-						unset($arrSettingDelete[$key]);
-					}
-					else {
-						$this->settingItemdelete($arrSettingDelete[$key],$arrXpathTarget);
-					}
-				}
-			}
+			$arrCurrentKey =& $arrCurrentKey[$sKey] ;
 		}
+		unset($arrCurrentKey[$sLastKey]) ;
 	}
-	
 	
 	public function settingEditXpathOption($arrSetting,$sXpath,$sXpathTarget,$sXpathFirst,&$arrSettingNew,$arrSettingChild)
 	{
