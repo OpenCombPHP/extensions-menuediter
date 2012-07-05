@@ -36,12 +36,12 @@ class ItemDelete extends ControlPanel
 		
 		if($sFirstKey == 'item:system' and $sLastKey == 'item:menuediter')
 		{
-			$this->view()->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
+			$this->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
 			$sUrl = "?c=org.opencomb.menuediter.MenuOpen";
 			$this->location($sUrl,5);
 		}elseif($sXpathTo == "item:system/")
 		{
-			$this->view()->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
+			$this->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
 			$sUrl = "?c=org.opencomb.menuediter.MenuOpen";
 			$this->location($sUrl,5);
 		}
@@ -124,7 +124,7 @@ class ItemDelete extends ControlPanel
 			$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationdelete=locationdelete&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 		}
 
-		$this->view()->createMessage(Message::success,"%s ",$skey='删除成功');
+		$this->createMessage(Message::success,"%s ",$skey='删除成功');
 		$this->location($sUrl,0);
 		
 	}
