@@ -29,7 +29,22 @@ class ItemDelete extends ControlPanel
 	{	
 		$sXpathTo = $this->params->get('xpath');
 		$arrToXpath = explode('/',$sXpathTo);
+		$arrToXpathFirst = $arrToXpath;
 		array_pop($arrToXpath);
+		$sLastKey = array_pop($arrToXpath);
+		$sFirstKey = array_shift($arrToXpathFirst);
+		
+		if($sFirstKey == 'item:system' and $sLastKey == 'item:menuediter')
+		{
+			$this->view()->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
+			$sUrl = "?c=org.opencomb.menuediter.MenuOpen";
+			$this->location($sUrl,5);
+		}elseif($sXpathTo == "item:system/")
+		{
+			$this->view()->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
+			$sUrl = "?c=org.opencomb.menuediter.MenuOpen";
+			$this->location($sUrl,5);
+		}
 		$sTempXpathTo = $this->params->get('temppath');
 		if($sTempXpathTo)
 		{
