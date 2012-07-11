@@ -11,14 +11,14 @@
 	
 	<class>org.opencomb.menuediter.MenuEditer</class>
 	
-	<package folder="/class" namespace="org.opencomb.menuediter" />
+	<package folder="/class" namespace="org.opencomb.menuediter"/>
 	
-	<publicFolder folder="/public" />
+	<publicFolder folder="/public"/>
 
-	<template folder="/template" />
+	<template folder="/template"/>
 	
 	<priority>9</priority>
 	
 	<require type="extension" item="coresystem"><![CDATA[ >=0.1 ]]></require>
 	
-</Extension>
+<data><installer>org\opencomb\menuediter\setup\DataInstaller</installer></data></Extension>
