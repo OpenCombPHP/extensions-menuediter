@@ -341,7 +341,7 @@ class MenuOpen extends ControlPanel
 					$akey = $aSetting->key('/menu',true);
 					$sXpathFrom = $this->view->widget('hide_item_xpath')->value();
 					$sXpathOption = $this->params->get('xpathOption');
-			
+					
 					//判断移动的层级
 					if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
 					{
@@ -440,7 +440,7 @@ class MenuOpen extends ControlPanel
 			}else{
 				$aController = new $sControllerName();
 				$aController->frame();
-				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );//var_dump($aController);exit;
+				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );
 				$sTempPath = $aView->template();
 				if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
 				{
@@ -696,7 +696,7 @@ class MenuOpen extends ControlPanel
 				
 				$aController = new $sControllerName();
 				$aController->frame();
-				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );//var_dump($aController);exit;
+				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );
 				$sTempPath = $aView->template();
 				if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
 				{

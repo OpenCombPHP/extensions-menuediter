@@ -30,6 +30,8 @@ class ItemDelete extends ControlPanel
 		$sXpathTo = $this->params->get('xpath');
 		$arrToXpath = explode('/',$sXpathTo);
 		$arrToXpathFirst = $arrToXpath;
+		$arrToXpathTemp = $arrToXpath;
+		array_pop($arrToXpathTemp);
 		array_pop($arrToXpath);
 		$sLastKey = array_pop($arrToXpath);
 		$sFirstKey = array_shift($arrToXpathFirst);
@@ -59,7 +61,7 @@ class ItemDelete extends ControlPanel
 				$akey = $aSetting->key('/menu',true);
 				$arrSettingOld = $akey->Item($sTempXpathTo.'-'.$sMenuId);
 				$arrSettingNew = $arrSettingOld;
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$akey->deleteItem($sTempXpathTo.'-'.$sMenuId);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
@@ -75,7 +77,7 @@ class ItemDelete extends ControlPanel
 				$this->itemSetting($aMenu->itemIterator(),$arrSettingOld);
 				$arrSettingNew = $arrSettingOld;
 
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);//exit;//var_dump($arrToXpath);exit;
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
 				$akey->setItem($sTempXpathTo.'-'.$sMenuId,$arrSettingNew);
@@ -97,7 +99,7 @@ class ItemDelete extends ControlPanel
 				$akey = $aSetting->key('/menu',true);
 				$arrSettingOld = $akey->Item($sControllerName.'-'.$sViewPath.'-'.$sMenuId);
 				$arrSettingNew = $arrSettingOld;
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$akey->deleteItem($sControllerName.'-'.$sViewPath.'-'.$sMenuId);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
@@ -114,7 +116,7 @@ class ItemDelete extends ControlPanel
 				$this->itemSetting($aMenu->itemIterator(),$arrSettingOld);
 				$arrSettingNew = $arrSettingOld;
 			
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
 				$akey->setItem($sControllerName.'-'.$sViewPath.'.'.$sMenuId,$arrSettingNew);
