@@ -29,7 +29,24 @@ class ItemDelete extends ControlPanel
 	{	
 		$sXpathTo = $this->params->get('xpath');
 		$arrToXpath = explode('/',$sXpathTo);
+		$arrToXpathFirst = $arrToXpath;
+		$arrToXpathTemp = $arrToXpath;
+		array_pop($arrToXpathTemp);
 		array_pop($arrToXpath);
+		$sLastKey = array_pop($arrToXpath);
+		$sFirstKey = array_shift($arrToXpathFirst);
+		
+		if($sFirstKey == 'item:system' and $sLastKey == 'item:menuediter')
+		{
+			$this->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
+			$sUrl = "?c=org.opencomb.menuediter.MenuOpen";
+			$this->location($sUrl,5);
+		}elseif($sXpathTo == "item:system/")
+		{
+			$this->createMessage(Message::error, "%s ",$skey="无法删除系统菜单");
+			$sUrl = "?c=org.opencomb.menuediter.MenuOpen";
+			$this->location($sUrl,5);
+		}
 		$sTempXpathTo = $this->params->get('temppath');
 		if($sTempXpathTo)
 		{
@@ -44,7 +61,7 @@ class ItemDelete extends ControlPanel
 				$akey = $aSetting->key('/menu',true);
 				$arrSettingOld = $akey->Item($sTempXpathTo.'-'.$sMenuId);
 				$arrSettingNew = $arrSettingOld;
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$akey->deleteItem($sTempXpathTo.'-'.$sMenuId);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
@@ -60,7 +77,7 @@ class ItemDelete extends ControlPanel
 				$this->itemSetting($aMenu->itemIterator(),$arrSettingOld);
 				$arrSettingNew = $arrSettingOld;
 
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);//exit;//var_dump($arrToXpath);exit;
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
 				$akey->setItem($sTempXpathTo.'-'.$sMenuId,$arrSettingNew);
@@ -82,7 +99,7 @@ class ItemDelete extends ControlPanel
 				$akey = $aSetting->key('/menu',true);
 				$arrSettingOld = $akey->Item($sControllerName.'-'.$sViewPath.'-'.$sMenuId);
 				$arrSettingNew = $arrSettingOld;
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$akey->deleteItem($sControllerName.'-'.$sViewPath.'-'.$sMenuId);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
@@ -99,7 +116,7 @@ class ItemDelete extends ControlPanel
 				$this->itemSetting($aMenu->itemIterator(),$arrSettingOld);
 				$arrSettingNew = $arrSettingOld;
 			
-				$this->settingItemdelete($arrSettingNew, $arrToXpath);
+				$this->settingItemdelete($arrSettingNew, $arrToXpathTemp);
 				$arrSettingNew['id']=$sMenuId;
 				$arrSettingNew['class']='menu';
 				$akey->setItem($sControllerName.'-'.$sViewPath.'.'.$sMenuId,$arrSettingNew);
@@ -109,7 +126,7 @@ class ItemDelete extends ControlPanel
 			$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationdelete=locationdelete&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 		}
 
-		$this->view()->createMessage(Message::success,"%s ",$skey='删除成功');
+		$this->createMessage(Message::success,"%s ",$skey='删除成功');
 		$this->location($sUrl,0);
 		
 	}

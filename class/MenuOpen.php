@@ -309,7 +309,7 @@ class MenuOpen extends ControlPanel
 			if(empty($sEditTitle) ||  $sEditTitle==='')
 			{
 				$skey="请输入标题";
-				$this->view->createMessage(Message::error,"%s ",$skey);
+				$this->createMessage(Message::error,"%s ",$skey);
 				if(empty($sControllerName))
 				{
 					if($aSetting->hasItem('/menu',$sControllerName.'-'.$sViewPath.'-'.$sMenuId))
@@ -341,12 +341,12 @@ class MenuOpen extends ControlPanel
 					$akey = $aSetting->key('/menu',true);
 					$sXpathFrom = $this->view->widget('hide_item_xpath')->value();
 					$sXpathOption = $this->params->get('xpathOption');
-			
+					
 					//判断移动的层级
 					if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
 					{
 						$skey="移动层级错误";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readSettingTemp($sTempPath,$sMenuId);
 						$this->setMenuOpen(null,null,$sTempPath,$sMenuId);
 						return;
@@ -399,7 +399,7 @@ class MenuOpen extends ControlPanel
 					if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
 					{
 						$skey="移动层级错误";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readBeanConfigTemp($sTempPath,$sMenuId);
 						$this->setMenuOpen(null,null,$sTempPath,$sMenuId);
 						return;
@@ -440,7 +440,7 @@ class MenuOpen extends ControlPanel
 			}else{
 				$aController = new $sControllerName();
 				$aController->frame();
-				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );//var_dump($aController);exit;
+				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );
 				$sTempPath = $aView->template();
 				if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
 				{
@@ -453,7 +453,7 @@ class MenuOpen extends ControlPanel
 					if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
 					{
 						$skey="移动层级错误";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
 						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
 						return;
@@ -506,7 +506,7 @@ class MenuOpen extends ControlPanel
 					if(!$this->xPathOptionBool($sXpathFrom,$sXpathOption))
 					{
 						$skey="移动层级错误";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
 						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
 						return;
@@ -564,7 +564,7 @@ class MenuOpen extends ControlPanel
 			if(empty($sCreateTitle) ||  $sCreateTitle === '' || empty($sCreateItem) || $sCreateItem === '')
 			{
 				$skey = "请输入标题";
-				$this->view->createMessage(Message::error,"%s ",$skey);
+				$this->createMessage(Message::error,"%s ",$skey);
 // 				if($aSetting->hasItem('/menu',$sControllerName.'-'.$sViewPath.'-'.$sMenuId))
 // 				{
 // 					$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
@@ -620,7 +620,7 @@ class MenuOpen extends ControlPanel
 					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
 					{
 						$skey="项目ID重复";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readSettingTemp($sTempPath,$sMenuId);
 						$this->setMenuOpen(null,null,$sTempPath,$sMenuId);
 						return;
@@ -667,7 +667,7 @@ class MenuOpen extends ControlPanel
 					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
 					{
 						$skey="项目ID重复";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readBeanConfigTemp($sTempPath,$sMenuId);
 						$this->setMenuOpen(null,null,$sTempPath,sMenuId);
 						return;
@@ -696,7 +696,7 @@ class MenuOpen extends ControlPanel
 				
 				$aController = new $sControllerName();
 				$aController->frame();
-				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );//var_dump($aController);exit;
+				$aView = $aController->view()->findXPath($aController->view(),$sViewPath );
 				$sTempPath = $aView->template();
 				if($aSetting->hasItem('/menu',$sTempPath.'-'.$sMenuId))
 				{
@@ -722,7 +722,7 @@ class MenuOpen extends ControlPanel
 					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
 					{
 						$skey="项目ID重复";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readSetting($sControllerNamePage,$bFlag=true,$sControllerName,$sViewPath,$sMenuId);
 						$this->setMenuOpen($sControllerNamePage,$sViewPath,$sMenuId);
 						return;
@@ -771,7 +771,7 @@ class MenuOpen extends ControlPanel
 					if($this->idSearch($arrSettingOld,$sXpath,$sItemId,$bflag))
 					{
 						$skey="项目ID重复";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$this->readBeanConfig($sControllerNamePage,true,$sControllerName,$sViewPath,$sMenuId);
 						$this->setMenuOpen($sControllerNamePage,$sViewPath,'',$sMenuId);
 						return;
@@ -1360,7 +1360,7 @@ class MenuOpen extends ControlPanel
 		if( !class_exists($sControllerName) or !new $sControllerName() instanceof Controller)
 		{
 			$skey = "无此控制器";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}
@@ -1373,7 +1373,7 @@ class MenuOpen extends ControlPanel
 		if( !$aView = $aController->view()->findXPath($aController->view(),$sViewPath))
 		{
 			$skey = "无此视图";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}
@@ -1382,7 +1382,7 @@ class MenuOpen extends ControlPanel
 		if( !$aMenu = $aView->widget($sMenuId) or !$aMenu instanceof Menu)
 		{
 			$skey = "无此菜单";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}
@@ -1458,7 +1458,7 @@ class MenuOpen extends ControlPanel
 		if( !$aView = new View($sTempPath))
 		{
 			$skey = "无此视图";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}
@@ -1467,7 +1467,7 @@ class MenuOpen extends ControlPanel
 		if( !$aMenu = $aView->widget($sMenuId) or !$aMenu instanceof Menu)
 		{
 			$skey = "无此菜单";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		};
@@ -1662,7 +1662,7 @@ class MenuOpen extends ControlPanel
 		if( !class_exists($sControllerName) or !new $sControllerName() instanceof Controller)
 		{
 			$skey = "无此控制器";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}
@@ -1675,7 +1675,7 @@ class MenuOpen extends ControlPanel
 		if( !$aView = $aController->view()->findXPath($aController->view(),$sViewPath))
 		{
 			$skey = "无此视图";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}
@@ -1684,7 +1684,7 @@ class MenuOpen extends ControlPanel
 		if( !$aMenu = $aView->widget($sMenuId) or !$aMenu instanceof Menu)
 		{
 			$skey = "无此菜单";
-			$this->view->createMessage(Message::error,"%s ",$skey);
+			$this->createMessage(Message::error,"%s ",$skey);
 			$this->getHistory();
 			return;
 		}

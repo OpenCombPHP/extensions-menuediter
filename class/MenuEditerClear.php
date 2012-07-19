@@ -36,7 +36,7 @@ class MenuEditerClear extends ControlPanel
 			$akey = $aSetting->key('/menu',true);;
 			$akey->deleteItem($sTempPath.'-'.$sMenuId);
 			$skey = "清楚菜单成功";
-			$this->view->createMessage(Message::success,"%s ",$skey);
+			$this->createMessage(Message::success,"%s ",$skey);
 			$this->location('?c=org.opencomb.menuediter.MenuOpen',1);
 			
 		}else{
@@ -47,7 +47,7 @@ class MenuEditerClear extends ControlPanel
 			$akey = $aSetting->key('/menu',true);
 			$akey->deleteItem($sControllerName.'-'.$sViewPath.'.'.$sMenuId);
 			$skey = "清楚菜单成功";
-			$this->view->createMessage(Message::success,"%s ",$skey);
+			$this->createMessage(Message::success,"%s ",$skey);
 			$this->location('?c=org.opencomb.menuediter.MenuOpen',1);
 		}
 

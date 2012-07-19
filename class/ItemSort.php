@@ -88,10 +88,10 @@ class ItemSort extends ControlPanel
 						$sXpathUp = $this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else{
  						$skey = "只能在同级移动";
- 						$this->view->createMessage(Message::error,"%s ",$skey);
+ 						$this->createMessage(Message::error,"%s ",$skey);
  						$sControllerNamePage = str_replace('\\','.',$sControllerName);
  						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
- 						$this->location($sUrl,0);
+ 						$this->location($sUrl,2);
  						return;
 					};
 	
@@ -146,10 +146,10 @@ class ItemSort extends ControlPanel
 							$sXpathUp = $this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else{
 	 					$skey = "只能在同级移动";
-	 					$this->view->createMessage(Message::error,"%s ",$skey);
+	 					$this->createMessage(Message::error,"%s ",$skey);
 	 					$sControllerNamePage = str_replace('\\','.',$sControllerName);
 	 					$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-	 					$this->location($sUrl,0);
+	 					$this->location($sUrl,2);
 	 					return;
 					};
 							
@@ -171,8 +171,8 @@ class ItemSort extends ControlPanel
 				$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
 				$sControllerNamePage = str_replace('\\','.',$sControllerName);echo $sControllerName;exit;
 				$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
-				$this->location($sUrl,0);
+				$this->createMessage(Message::success,"%s ",$skey='移动成功');
+				$this->location($sUrl,2);
 			}else{
 				$i=0;
 				$arrXpath = array();
@@ -217,11 +217,11 @@ class ItemSort extends ControlPanel
 							$sXpathUp = $this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 						}else {
 		 						$skey = "只能在同级移动";
-		 						$this->view->createMessage(Message::error,"%s ",$skey);
+		 						$this->createMessage(Message::error,"%s ",$skey);
 		 						
 		 						$sControllerNamePage = str_replace('\\','.',$sControllerName);
 		 						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-		 						$this->location($sUrl,0);
+		 						$this->location($sUrl,2);
 		 						
 		 						//return;
 						};
@@ -273,11 +273,11 @@ class ItemSort extends ControlPanel
 							$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 						}else {
 	 						$skey="只能在同级移动";
-	 						$this->view->createMessage(Message::error,"%s ",$skey);
+	 						$this->createMessage(Message::error,"%s ",$skey);
 	
 	 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
 	 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-	 						$this->location($sUrl,0);
+	 						$this->location($sUrl,2);
 	 						
 	 						//return;
 						};		
@@ -298,8 +298,8 @@ class ItemSort extends ControlPanel
 					$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
 					$sControllerNamePage=str_replace('\\','.',$sControllerName);
 					$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-					$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
-					$this->location($sUrl,0);
+					$this->createMessage(Message::success,"%s ",$skey='移动成功');
+					$this->location($sUrl,2);
 			}
 		}else{
 			$sTempPath = $this->params->get('temppath');
@@ -337,9 +337,9 @@ class ItemSort extends ControlPanel
 						$sXpathUp = $this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else{
 						$skey = "只能在同级移动";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
-						$this->location($sUrl,0);
+						$this->location($sUrl,2);
 						return;
 					};
 					$arrXpathUp = explode('/',$sXpathUp);
@@ -388,9 +388,9 @@ class ItemSort extends ControlPanel
 						$sXpathUp = $this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else {
 						$skey = "只能在同级移动";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
-						$this->location($sUrl,0);
+						$this->location($sUrl,2);
 						return;
 					};
 					$arrXpathUp = explode('/',$sXpathUp);
@@ -408,7 +408,7 @@ class ItemSort extends ControlPanel
 				$arrItemSettingNew['class'] = 'menu';
 				$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
 				$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
-				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
+				$this->createMessage(Message::success,"%s ",$skey='移动成功');
 				$this->location($sUrl,0);
 			}else{
 				$i = 0;
@@ -451,9 +451,9 @@ class ItemSort extends ControlPanel
 						$sXpathUp=$this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else{
 						$skey="只能在同级移动";
-						$this->view()->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
-						//$this->location($sUrl,5);
+						$this->location($sUrl,5);
 						return;
 					};
 					$arrXpathUp = explode('/',$sXpathUp);
@@ -502,11 +502,11 @@ class ItemSort extends ControlPanel
 						$sXpathUp=$this->getDownKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
 					}else {
 						$skey="只能在同级移动";
-						$this->view->createMessage(Message::error,"%s ",$skey);
+						$this->createMessage(Message::error,"%s ",$skey);
 			
 						$sControllerNamePage=str_replace('\\','.',$sControllerName);
 						$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
-						$this->location($sUrl,0);
+						$this->location($sUrl,2);
 						return;
 		
 					//return;
@@ -526,10 +526,8 @@ class ItemSort extends ControlPanel
 				$arrItemSettingNew['class']='menu';
 				$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
 				$sUrl="?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&temppath=$sTempPath&menuid=$sMenuId";
-				$this->view->createMessage(Message::success,"%s ",$skey='移动成功');
-				//return;
-				//exit;
-				$this->location($sUrl,10);
+				$this->createMessage(Message::success,"%s ",$skey='移动成功');
+				$this->location($sUrl,2);
 			}	
 		}	
 	}
