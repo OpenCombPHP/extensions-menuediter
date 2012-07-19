@@ -21,4 +21,8 @@
 	
 	<require type="extension" item="coresystem"><![CDATA[ >=0.1 ]]></require>
 	
-<data><installer>org\opencomb\menuediter\setup\DataInstaller</installer></data></Extension>
+<data>
+<version>0.2</version>
+<installer>org\opencomb\menuediter\setup\DataInstaller</installer>
+</data>
+</Extension>
