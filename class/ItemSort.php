@@ -571,24 +571,16 @@ class ItemSort extends ControlPanel
 		return $h;
 	}
 	
-	public function settingItemdelete(&$arrSettingNew,$arrXpathTarget)
-	{	 
-		foreach($arrSettingNew as $key=>&$item)
+	public function settingItemDelete(&$arrSettingNew,$arrXpathTarget)
+	{
+		$sLastKey = array_pop($arrXpathTarget) ;
+		$arrCurrentKey =& $arrSettingNew ;
+		
+		foreach($arrXpathTarget as $sKey)
 		{
-			for($i=0;$i<count($arrXpathTarget);$i++)
-			{
-				if($key==$arrXpathTarget[$i])
-				{
-					if($i==count($arrXpathTarget)-1)
-					{
-						unset($arrSettingNew[$key]);
-					}
-					else {
-						$this->settingItemdelete($arrSettingNew[$key],$arrXpathTarget);
-					}
-				}
-			}
+			$arrCurrentKey =& $arrCurrentKey[$sKey] ;
 		}
+		unset($arrCurrentKey[$sLastKey]) ;
 	}
 	
 	//将BeanConfig中的Menue转换成数组存放在setting中
