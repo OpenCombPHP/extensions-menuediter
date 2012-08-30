@@ -100,13 +100,40 @@ class ItemSort extends ControlPanel
 					$arrXpathTo = explode('/',$sXpathTo);
 					array_pop($arrXpathTo);
 					
-					$arrSettingNew = $arrSettingOld;
-					//原菜单中删除被移动的菜单项目
+									$arrSettingNew = $arrSettingOld;
+					//删除目标数组
 					$this->settingItemdelete($arrSettingNew, $arrXpathUp);
-					//编辑被移动的菜单项目
+					//获得BOX数组
+					$arrSettingChildBox = array();
+					$bFlagBox = false;
+					if(count(explode('/',$this->getBox($sXpathUp)))>1)
+					{	
+						$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathUp),$arrSettingMiddle,$arrSettingChildBox);
+					}else{
+						$arrSettingChildBox = $arrSettingNew;
+						$bFlagBox = true;
+					}
+					//获得目标的数组
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
-					//编辑新菜单，并将被移动的菜单项目插入菜单中
-					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
+					
+					//获得BOX新数组
+					$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathUp,$arrXpathTo, $arrSettingChild);
+					
+					//将目标数组放置到大数组中
+					if($bFlagBox)
+					{
+						$arrItemSettingNew = $arrNewBox;
+					}else{
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+					}
+					
+					
+					if(count($arrItemSettingNew)){
+					}else{
+						
+						$arrItemSettingNew = $arrSettingNew;
+					}
+					
 				}elseif($sItem_go=='down'){
 					$iNubmerCons = 0;
 					//判断移动范围
@@ -160,16 +187,43 @@ class ItemSort extends ControlPanel
 					array_pop($arrXpathTo);
 					
 					$arrSettingNew = $arrSettingOld;
+					//删除原数组
 					$this->settingItemdelete($arrSettingNew, $arrXpathTo);
+					
+					$arrSettingChildBox = array();
+					$bFlagBox = false;
+					if(count(explode('/',$this->getBox($sXpathTo)))>1)
+					{
+						$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathTo),$arrSettingMiddle,$arrSettingChildBox);
+					}else{
+						$arrSettingChildBox = $arrSettingNew;
+						$bFlagBox = true;
+					}
+					
+					//获得原数组
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
-					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
+					//获得BOX新数组
+					$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathTo, $arrXpathUp, $arrSettingChild);
+					
+					if($bFlagBox)
+					{
+						$arrItemSettingNew = $arrNewBox;
+					}else{
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+					}
+					
+					if(count($arrItemSettingNew)){
+						
+					}else{
+						$arrItemSettingNew = $arrSettingNew;
+					}
 				}
 				
 				$akey->deleteItem($sTempPath.'-'.$sMenuId);
 				$arrItemSettingNew['id'] = $sMenuId;
 				$arrItemSettingNew['class'] = 'menu';
 				$akey->setItem($sTempPath.'-'.$sMenuId,$arrItemSettingNew);
-				$sControllerNamePage = str_replace('\\','.',$sControllerName);echo $sControllerName;exit;
+				$sControllerNamePage = str_replace('\\','.',$sControllerName);
 				$sUrl = "?c=org.opencomb.menuediter.MenuOpen&locationsort=locationsort&controllername=$sControllerNamePage&viewpath=$sViewPath&menuid=$sMenuId";
 				$this->createMessage(Message::success,"%s ",$skey='移动成功');
 				$this->location($sUrl,2);
@@ -231,10 +285,40 @@ class ItemSort extends ControlPanel
 						$arrXpathTo=explode('/',$sXpathTo);
 						array_pop($arrXpathTo);
 						
-						$arrSettingNew=$arrSettingOld;
+						$arrSettingNew = $arrSettingOld;
+						//删除目标数组
 						$this->settingItemdelete($arrSettingNew, $arrXpathUp);
+						//获得BOX数组
+						$arrSettingChildBox = array();
+						$bFlagBox = false;
+						if(count(explode('/',$this->getBox($sXpathUp)))>1)
+						{	
+							$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathUp),$arrSettingMiddle,$arrSettingChildBox);
+						}else{
+							$arrSettingChildBox = $arrSettingNew;
+							$bFlagBox = true;
+						}
+						//获得目标的数组
 						$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
-						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
+						
+						//获得BOX新数组
+						$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathUp,$arrXpathTo, $arrSettingChild);
+						
+						//将目标数组放置到大数组中
+						if($bFlagBox)
+						{
+							$arrItemSettingNew = $arrNewBox;
+						}else{
+							$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+						}
+						
+						
+						if(count($arrItemSettingNew)){
+						}else{
+							
+							$arrItemSettingNew = $arrSettingNew;
+						}
+						
 					}elseif($sItem_go=='down'){
 						$iNubmerCons = 0;
 						if(count(explode('/',$sXpathTo))>2)
@@ -286,10 +370,37 @@ class ItemSort extends ControlPanel
 						$arrXpathTo=explode('/',$sXpathTo);
 						array_pop($arrXpathTo);
 						
-						$arrSettingNew=$arrSettingOld;
+						$arrSettingNew = $arrSettingOld;
+						//删除原数组
 						$this->settingItemdelete($arrSettingNew, $arrXpathTo);
+						
+						$arrSettingChildBox = array();
+						$bFlagBox = false;
+						if(count(explode('/',$this->getBox($sXpathTo)))>1)
+						{
+							$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathTo),$arrSettingMiddle,$arrSettingChildBox);
+						}else{
+							$arrSettingChildBox = $arrSettingNew;
+							$bFlagBox = true;
+						}
+						
+						//获得原数组
 						$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
-						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);	
+						//获得BOX新数组
+						$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathTo, $arrXpathUp, $arrSettingChild);
+						
+						if($bFlagBox)
+						{
+							$arrItemSettingNew = $arrNewBox;
+						}else{
+							$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+						}
+						
+						if(count($arrItemSettingNew)){
+							
+						}else{
+							$arrItemSettingNew = $arrSettingNew;
+						}
 					}
 				
 					$akey->deleteItem($sTempPath.'-'.$sMenuId);
@@ -332,6 +443,7 @@ class ItemSort extends ControlPanel
 						}
 						$iNubmerCons = array_search($sTemp, $arrXpath);
 					}
+					
 					if($this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath))
 					{
 						$sXpathUp = $this->getUpKey($iNubmerTo, $iNubmerCons, $sXpathTo, $arrXpath);
@@ -342,15 +454,47 @@ class ItemSort extends ControlPanel
 						$this->location($sUrl,2);
 						return;
 					};
+					
+				
 					$arrXpathUp = explode('/',$sXpathUp);
 					array_pop($arrXpathUp);
 					$arrXpathTo = explode('/',$sXpathTo);
 					array_pop($arrXpathTo);
 		
 					$arrSettingNew = $arrSettingOld;
+					//删除目标数组
 					$this->settingItemdelete($arrSettingNew, $arrXpathUp);
+					//获得BOX数组
+					$arrSettingChildBox = array();
+					$bFlagBox = false;
+					if(count(explode('/',$this->getBox($sXpathUp)))>1)
+					{	
+						$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathUp),$arrSettingMiddle,$arrSettingChildBox);
+					}else{
+						$arrSettingChildBox = $arrSettingNew;
+						$bFlagBox = true;
+					}
+					//获得目标的数组
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
-					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
+					
+					//获得BOX新数组
+					$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathUp,$arrXpathTo, $arrSettingChild);
+					
+					//将目标数组放置到大数组中
+					if($bFlagBox)
+					{
+						$arrItemSettingNew = $arrNewBox;
+					}else{
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+					}
+					
+					
+					if(count($arrItemSettingNew)){
+					}else{
+						
+						$arrItemSettingNew = $arrSettingNew;
+					}
+					
 				}elseif($sItem_go=='down'){
 			
 					$iNubmerCons = 0;
@@ -393,15 +537,45 @@ class ItemSort extends ControlPanel
 						$this->location($sUrl,2);
 						return;
 					};
+					
+					
+					
 					$arrXpathUp = explode('/',$sXpathUp);
 					array_pop($arrXpathUp);
 					$arrXpathTo = explode('/',$sXpathTo);
 					array_pop($arrXpathTo);
 		
 					$arrSettingNew = $arrSettingOld;
+					//删除原数组
 					$this->settingItemdelete($arrSettingNew, $arrXpathTo);
+					
+					$arrSettingChildBox = array();
+					$bFlagBox = false;
+					if(count(explode('/',$this->getBox($sXpathTo)))>1)
+					{
+						$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathTo),$arrSettingMiddle,$arrSettingChildBox);
+					}else{
+						$arrSettingChildBox = $arrSettingNew;
+						$bFlagBox = true;
+					}
+					
+					//获得原数组
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
-					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);
+					//获得BOX新数组
+					$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathTo, $arrXpathUp, $arrSettingChild);
+					
+					if($bFlagBox)
+					{
+						$arrItemSettingNew = $arrNewBox;
+					}else{
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+					}
+					
+					if(count($arrItemSettingNew)){
+						
+					}else{
+						$arrItemSettingNew = $arrSettingNew;
+					}
 				}
 				$akey->deleteItem($sTempPath.'-'.$sMenuId);
 				$arrItemSettingNew['id'] = $sMenuId;
@@ -461,10 +635,40 @@ class ItemSort extends ControlPanel
 					$arrXpathTo = explode('/',$sXpathTo);
 					array_pop($arrXpathTo);
 		
-					$arrSettingNew = $arrSettingOld;
+									$arrSettingNew = $arrSettingOld;
+					//删除目标数组
 					$this->settingItemdelete($arrSettingNew, $arrXpathUp);
+					//获得BOX数组
+					$arrSettingChildBox = array();
+					$bFlagBox = false;
+					if(count(explode('/',$this->getBox($sXpathUp)))>1)
+					{	
+						$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathUp),$arrSettingMiddle,$arrSettingChildBox);
+					}else{
+						$arrSettingChildBox = $arrSettingNew;
+						$bFlagBox = true;
+					}
+					//获得目标的数组
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathUp,$arrSettingMiddle,$arrSettingChild);
-					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathTo,$arrItemSettingNew,$arrSettingChild);
+					
+					//获得BOX新数组
+					$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathUp,$arrXpathTo, $arrSettingChild);
+					
+					//将目标数组放置到大数组中
+					if($bFlagBox)
+					{
+						$arrItemSettingNew = $arrNewBox;
+					}else{
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+					}
+					
+					
+					if(count($arrItemSettingNew)){
+					}else{
+						
+						$arrItemSettingNew = $arrSettingNew;
+					}
+					
 				}elseif($sItem_go == 'down'){
 					$iNubmerCons = 0;
 					if(count(explode('/',$sXpathTo))>2)
@@ -516,10 +720,37 @@ class ItemSort extends ControlPanel
 					$arrXpathTo=explode('/',$sXpathTo);
 					array_pop($arrXpathTo);
 
-					$arrSettingNew=$arrSettingOld;
+					$arrSettingNew = $arrSettingOld;
+					//删除原数组
 					$this->settingItemdelete($arrSettingNew, $arrXpathTo);
+					
+					$arrSettingChildBox = array();
+					$bFlagBox = false;
+					if(count(explode('/',$this->getBox($sXpathTo)))>1)
+					{
+						$this->itemSettingEdit($arrSettingNew,$sXpath,$this->getBox($sXpathTo),$arrSettingMiddle,$arrSettingChildBox);
+					}else{
+						$arrSettingChildBox = $arrSettingNew;
+						$bFlagBox = true;
+					}
+					
+					//获得原数组
 					$this->itemSettingEdit($arrSettingOld,$sXpath,$sXpathTo,$arrSettingMiddle,$arrSettingChild);
-					$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrSettingChild);
+					//获得BOX新数组
+					$arrNewBox = $this->setBox($arrSettingChildBox, $arrXpathTo, $arrXpathUp, $arrSettingChild);
+					
+					if($bFlagBox)
+					{
+						$arrItemSettingNew = $arrNewBox;
+					}else{
+						$this->settingEditXpathOption1(0,$arrSettingNew,$arrXpathUp,$arrItemSettingNew,$arrNewBox);
+					}
+					
+					if(count($arrItemSettingNew)){
+						
+					}else{
+						$arrItemSettingNew = $arrSettingNew;
+					}
 				}
 				$akey->deleteItem($sTempPath.'-'.$sMenuId);
 				$arrItemSettingNew['id']=$sMenuId;
@@ -668,7 +899,7 @@ class ItemSort extends ControlPanel
 		}
 	}
 	
-	public function settingEditXpathOption1($i,$arrSetting,$arrXpathTo,&$arrSettingNew,$arrSettingChild)
+	public function settingEditXpathOption1($i,&$arrSetting,$arrXpathTo,&$arrSettingNew,$arrSettingChild)
 	{
 		if($arrXpathTo == 'Top/')
 		{
@@ -677,88 +908,99 @@ class ItemSort extends ControlPanel
 			$arrSettingNew=array_merge(array($arrXpathFrom[count($arrXpathFrom)-1]=>$arrSettingChild),$arrSetting);
 		}
 		else{
-			foreach($arrSetting as $key=>$item)
-			{	
-				if($key == $arrXpathTo[$i]){
-					if($i == count($arrXpathTo)-1){
-						$arrSettingNew[$key] = $arrSetting[$key];
-						$arrSettingNew[$arrSettingChild['xpath']] = $arrSettingChild;						
-						$i=0;
-					}
-					else {
-						if(array_key_exists('xpath',$arrSetting))
-						{
-							$arrSettingNew['xpath']=$arrSetting['xpath'];
-						}
-						if(array_key_exists('title',$arrSetting))
-						{
-							$arrSettingNew['title']=$arrSetting['title'];
-						}
-// 						if(array_key_exists('depth',$arrSetting))
-// 						{
-// 							$arrSettingNew['depth']=$arrSetting['depth'];
-// 						}
-						if(array_key_exists('link',$arrSetting))
-						{
-							$arrSettingNew['link']=$arrSetting['link'];
-						}
-						if(array_key_exists('menu',$arrSetting))
-						{
-							$arrSettingNew['menu']=$arrSetting['menu'];
-						}
-						if(array_key_exists('query',$arrSetting))
-						{
-							$arrSettingNew['query']=$arrSetting['query'];
-						}
-						if(substr($key,0,5)=='item:')
-						{
-							$arrSettingNew[$key]=array();
-						}
-						//$arrSettingNew[$key]=$arrSetting[$key];
-					}
-					if(count($arrXpathTo)>1)
-					{
-						$i++;
-					}
-				}
-				else
-				{	
-					if(array_key_exists('xpath',$arrSetting))
-					{
-						$arrSettingNew['xpath']=$arrSetting['xpath'];
-					}
-					if(array_key_exists('title',$arrSetting))
-					{
-						$arrSettingNew['title']=$arrSetting['title'];
-					}
-// 					if(array_key_exists('depth',$arrSetting))
-// 					{
-// 						$arrSettingNew['depth']=$arrSetting['depth'];
-// 					}
-					if(array_key_exists('link',$arrSetting))
-					{
-						$arrSettingNew['link']=$arrSetting['link'];
-					}
-					if(array_key_exists('menu',$arrSetting))
-					{
-						$arrSettingNew['menu']=$arrSetting['menu'];
-					}
-					if(array_key_exists('query',$arrSetting))
-					{
-						$arrSettingNew['query']=$arrSetting['query'];
-					}
-					if(substr($key,0,5)=='item:')
-					{
-						$arrSettingNew[$key]=array();
-					}
-					//$arrSettingNew[$key]=$arrSetting[$key];
-				}
-	
-				if(substr($key,0,5)=='item:')
-				{
-					$this->settingEditXpathOption1($i,$arrSetting[$key],$arrXpathTo,$arrSettingNew[$key],$arrSettingChild);
-				}
+			array_pop($arrXpathTo) ;//echo $sLastKey;exit;
+			$sLastKey = array_pop($arrXpathTo) ;
+			$arrCurrentKey =& $arrSetting ;
+			
+			foreach($arrXpathTo as $sKey)
+			{
+				$arrCurrentKey =& $arrCurrentKey[$sKey] ;
 			}
+			
+			$arrCurrentKey[$sLastKey] = $arrSettingChild;
+			
+// 			foreach($arrSetting as $key=>$item)
+// 			{	
+// 				if($key == $arrXpathTo[$i]){
+// 					if($i == count($arrXpathTo)-1){
+// 						$arrSettingNew[$key] = $arrSetting[$key];
+// 						$arrSettingNew[$arrSettingChild['xpath']] = $arrSettingChild;						
+// 						$i=0;
+// 					}
+// 					else {
+// 						if(array_key_exists('xpath',$arrSetting))
+// 						{
+// 							$arrSettingNew['xpath']=$arrSetting['xpath'];
+// 						}
+// 						if(array_key_exists('title',$arrSetting))
+// 						{
+// 							$arrSettingNew['title']=$arrSetting['title'];
+// 						}
+// 						if(array_key_exists('depth',$arrSetting))
+//  					{
+// 							$arrSettingNew['depth']=$arrSetting['depth'];
+//  					}
+// 						if(array_key_exists('link',$arrSetting))
+// 						{
+// 							$arrSettingNew['link']=$arrSetting['link'];
+// 						}
+// 						if(array_key_exists('menu',$arrSetting))
+// 						{
+// 							$arrSettingNew['menu']=$arrSetting['menu'];
+// 						}
+// 						if(array_key_exists('query',$arrSetting))
+// 						{
+// 							$arrSettingNew['query']=$arrSetting['query'];
+// 						}
+// 						if(substr($key,0,5)=='item:')
+// 						{
+// 							$arrSettingNew[$key]=array();
+// 						}
+// 						//$arrSettingNew[$key]=$arrSetting[$key];
+// 					}
+// 					if(count($arrXpathTo)>1)
+// 					{
+// 						$i++;
+// 					}
+// 				}
+// 				else
+// 				{	
+// 					if(array_key_exists('xpath',$arrSetting))
+// 					{
+// 						$arrSettingNew['xpath']=$arrSetting['xpath'];
+// 					}
+// 					if(array_key_exists('title',$arrSetting))
+// 					{
+// 						$arrSettingNew['title']=$arrSetting['title'];
+// 					}
+// // 					if(array_key_exists('depth',$arrSetting))
+// // 					{
+// // 						$arrSettingNew['depth']=$arrSetting['depth'];
+// // 					}
+// 					if(array_key_exists('link',$arrSetting))
+// 					{
+// 						$arrSettingNew['link']=$arrSetting['link'];
+// 					}
+// 					if(array_key_exists('menu',$arrSetting))
+// 					{
+// 						$arrSettingNew['menu']=$arrSetting['menu'];
+// 					}
+// 					if(array_key_exists('query',$arrSetting))
+// 					{
+// 						$arrSettingNew['query']=$arrSetting['query'];
+// 					}
+// 					if(substr($key,0,5)=='item:')
+// 					{
+// 						$arrSettingNew[$key]=array();
+// 					}
+// 					//$arrSettingNew[$key]=$arrSetting[$key];
+// 				}
+	
+// 				if(substr($key,0,5)=='item:')
+// 				{
+// 					$this->settingEditXpathOption1($i,$arrSetting[$key],$arrXpathTo,$arrSettingNew[$key],$arrSettingChild);
+// 				}
+// 			}
 		}
 	}
 	
@@ -880,6 +1122,43 @@ class ItemSort extends ControlPanel
 	
 		$sClear="<a href=\"?c=org.opencomb.menuediter.MenuEditerClear&controllername=$sControllerName&viewpath=$sViewPath&menuid=$sMenuId\">".'清除'.'</a>';
 		$this->viewMenuOpen->variables()->set('sClear',$sClear);
+	}
+	
+	public function getBox($sXpath)
+	{
+		$arrXpathUp = explode('/',$sXpath);
+		array_pop($arrXpathUp);
+		$sSencondPath = array_pop($arrXpathUp);
+		if(count($arrXpathUp))
+		{
+			$sBoxPath = '';
+			foreach($arrXpathUp as $key=>$value)
+			{
+				$sBoxPath = $sBoxPath.$value.'/';
+			}
+			return $sBoxPath;
+		}else{
+			$sBoxPath = $sSencondPath;
+			return $sBoxPath;
+		}
+	}
+	
+	public function setBox($arrBox,$arrXpathUp,$arrXpathTo,$arrChild)
+	{	
+		$sLastKey = array_pop($arrXpathUp);
+		$sTargetKey = array_pop($arrXpathTo);
+		$arrNewBox = array();
+		foreach($arrBox as $key=>$value)
+		{	
+			if($key==$sTargetKey)
+			{
+				$arrNewBox[$key] = $value;
+				$arrNewBox[$sLastKey] = $arrChild;
+			}else{
+				$arrNewBox[$key] = $value;
+			}
+		}
+		return $arrNewBox;	
 	}
 }
 
